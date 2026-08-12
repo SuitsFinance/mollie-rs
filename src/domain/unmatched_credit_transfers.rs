@@ -4,14 +4,23 @@
 //! transport kernel with sticky idempotency when supplied.
 #![warn(missing_docs)]
 
-use crate::domain::common::{client_with_key, next_cursor_from_links, validate_page_limit};
-use crate::pagination::{Page, PageCursor, PaginationGuard};
+use std::future::Future;
+use std::pin::Pin;
+
+use crate::domain::common::{
+    client_with_key, next_cursor_from_links, stream_items, stream_pages, validate_page_limit,
+};
+use crate::pagination::{AsyncPaginator, ItemStream, Page, PageCursor, PaginationGuard};
 use crate::types::{
     self, ListUnmatchedCreditTransfersResponse, UnmatchedCreditTransferActionResponse,
 };
 use crate::{
     IdempotencyKey, IntoMollieFuture, MollieClient, MollieResponse, MollieResult, ResponseEnvelope,
 };
+
+type UctPageFut = Pin<
+    Box<dyn Future<Output = MollieResult<Page<types::ListEntityUnmatchedCreditTransfer>>> + Send>,
+>;
 
 /// Unmatched credit transfer operations scoped to a [`MollieClient`].
 #[derive(Debug)]
@@ -62,6 +71,48 @@ impl UnmatchedCreditTransfersApi<'_> {
             }
         }
         Ok(items)
+    }
+
+    /// Streams UCT pages within [`PaginationGuard`] budgets.
+    pub fn stream_pages(
+        &self,
+        limit: Option<u32>,
+        guard: PaginationGuard,
+    ) -> AsyncPaginator<
+        impl FnMut(Option<PageCursor>) -> UctPageFut,
+        types::ListEntityUnmatchedCreditTransfer,
+    > {
+        let client = self.client.clone();
+        stream_pages(guard, move |cursor| -> UctPageFut {
+            let client = client.clone();
+            Box::pin(async move {
+                let _ = validate_page_limit(limit)?;
+                UnmatchedCreditTransfersApi { client: &client }
+                    .list_page(cursor.as_ref(), limit)
+                    .await
+            })
+        })
+    }
+
+    /// Streams UCT items within [`PaginationGuard`] budgets.
+    pub fn stream_items(
+        &self,
+        limit: Option<u32>,
+        guard: PaginationGuard,
+    ) -> ItemStream<
+        impl FnMut(Option<PageCursor>) -> UctPageFut,
+        types::ListEntityUnmatchedCreditTransfer,
+    > {
+        let client = self.client.clone();
+        stream_items(guard, move |cursor| -> UctPageFut {
+            let client = client.clone();
+            Box::pin(async move {
+                let _ = validate_page_limit(limit)?;
+                UnmatchedCreditTransfersApi { client: &client }
+                    .list_page(cursor.as_ref(), limit)
+                    .await
+            })
+        })
     }
 
     /// Fetches a single unmatched credit transfer.

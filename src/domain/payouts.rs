@@ -5,13 +5,21 @@
 //! [`CreatePayoutRequired`] so money and balance ids are validated before send.
 #![warn(missing_docs)]
 
-use crate::domain::common::{client_with_key, next_cursor_from_links, validate_page_limit};
-use crate::pagination::{Page, PageCursor, PaginationGuard};
+use std::future::Future;
+use std::pin::Pin;
+
+use crate::domain::common::{
+    client_with_key, next_cursor_from_links, stream_items, stream_pages, validate_page_limit,
+};
+use crate::pagination::{AsyncPaginator, ItemStream, Page, PageCursor, PaginationGuard};
 use crate::types::{self, EntityPayoutResponse, ListPayoutsResponse};
 use crate::{
     BalanceId, CreatePayoutRequired, IdempotencyKey, IntoMollieFuture, MollieClient,
     MollieResponse, MollieResult, ResponseEnvelope,
 };
+
+type PayoutPageFut =
+    Pin<Box<dyn Future<Output = MollieResult<Page<types::ListEntityPayout>>> + Send>>;
 
 /// Payout operations scoped to a [`MollieClient`].
 #[derive(Debug)]
@@ -107,6 +115,49 @@ impl PayoutsApi<'_> {
             }
         }
         Ok(items)
+    }
+
+    /// Streams payout pages within [`PaginationGuard`] budgets (never unbounded).
+    pub fn stream_pages(
+        &self,
+        balance_id: Option<&BalanceId>,
+        limit: Option<u32>,
+        guard: PaginationGuard,
+    ) -> AsyncPaginator<impl FnMut(Option<PageCursor>) -> PayoutPageFut, types::ListEntityPayout>
+    {
+        let client = self.client.clone();
+        let balance = balance_id.cloned();
+        stream_pages(guard, move |cursor| -> PayoutPageFut {
+            let client = client.clone();
+            let balance = balance.clone();
+            Box::pin(async move {
+                let _ = validate_page_limit(limit)?;
+                PayoutsApi { client: &client }
+                    .list_page(balance.as_ref(), cursor.as_ref(), limit)
+                    .await
+            })
+        })
+    }
+
+    /// Streams payout items within [`PaginationGuard`] budgets (never unbounded).
+    pub fn stream_items(
+        &self,
+        balance_id: Option<&BalanceId>,
+        limit: Option<u32>,
+        guard: PaginationGuard,
+    ) -> ItemStream<impl FnMut(Option<PageCursor>) -> PayoutPageFut, types::ListEntityPayout> {
+        let client = self.client.clone();
+        let balance = balance_id.cloned();
+        stream_items(guard, move |cursor| -> PayoutPageFut {
+            let client = client.clone();
+            let balance = balance.clone();
+            Box::pin(async move {
+                let _ = validate_page_limit(limit)?;
+                PayoutsApi { client: &client }
+                    .list_page(balance.as_ref(), cursor.as_ref(), limit)
+                    .await
+            })
+        })
     }
 }
 

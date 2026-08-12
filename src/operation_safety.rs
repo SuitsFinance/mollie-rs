@@ -150,33 +150,48 @@ impl RouteCapability {
         }
     }
 
-    /// Returns `true` when this operation is treated as a high-risk write for
-    /// the primary coverage metric (money movement, OAuth tokens, etc.).
+    /// Returns `true` when this operation is in the frozen high-risk write set
+    /// (INV-TIER-01 denominator; lockstep with
+    /// `scripts/check_dangerous_profile_drift.py`).
     pub fn is_high_risk_write(&self) -> bool {
-        matches!(
-            self.mutation_class(),
-            MutationClass::IdempotentWrite | MutationClass::FinancialOrNonRetryableWrite
-        ) && (self.route_group.contains("payout")
-            || self.route_group.contains("transfer")
-            || self.route_group.contains("payment")
-            || self.route_group.contains("refund")
-            || self.route_group.contains("capture")
-            || self.route_group.contains("oauth")
-            || self.route_group.contains("balance_transfer")
-            || self.route_group.contains("business_account")
-            || self.path.contains("payout")
-            || self.path.contains("transfer")
-            || self.path.contains("oauth")
-            || self.operation_id.contains("payout")
-            || self.operation_id.contains("transfer")
-            || self.operation_id.contains("oauth")
-            || self.operation_id.contains("payment")
-            || self.operation_id.contains("refund")
-            || self.operation_id.contains("capture")
-            || self.operation_id.contains("mandate")
-            || self.operation_id.contains("subscription"))
+        HIGH_RISK_WRITE_OPERATION_IDS.contains(&self.operation_id)
+    }
+
+    /// Returns `true` when profile + access mark this high-risk op as Tier-S
+    /// protected (`ValidatedFacade` + coherent write retry class).
+    pub fn is_fully_protected_high_risk(&self) -> bool {
+        self.is_high_risk_write()
+            && matches!(self.access, RouteAccess::ValidatedFacade)
+            && !matches!(self.retry_class, RetryClass::Unknown | RetryClass::SafeRead)
     }
 }
+
+/// Frozen high-risk write operation ids (CI denominator).
+pub const HIGH_RISK_WRITE_OPERATION_IDS: &[&str] = &[
+    "create_payment",
+    "cancel_payment",
+    "create_refund",
+    "cancel_refund",
+    "create_capture",
+    "create_subscription",
+    "cancel_subscription",
+    "create_mandate",
+    "create_payment_link",
+    "create_customer_payment",
+    "create_payout",
+    "cancel_payout",
+    "create_transfer",
+    "create_connect_balance_transfer",
+    "verify_payee",
+    "oauth_generate_tokens",
+    "oauth_revoke_tokens",
+    "payment_create_route",
+    "create_session",
+    "terminals_request_pairing_code",
+    "terminals_revoke_pairing_code",
+    "match_unmatched_credit_transfer",
+    "return_unmatched_credit_transfer",
+];
 
 /// Looks up the safety profile for an operation id.
 pub fn operation_safety_profile(operation_id: &str) -> Option<&'static OperationSafetyProfile> {
@@ -188,34 +203,17 @@ pub fn all_operation_safety_profiles() -> &'static [OperationSafetyProfile] {
     ROUTE_CAPABILITIES
 }
 
-/// Counts high-risk writes that have explicit retry + idempotency fields set
-/// (denominator/numerator helpers for the primary readiness metric).
+/// Counts fully protected high-risk writes vs frozen denominator.
+///
+/// Returns `(fully_protected, total_high_risk)`. Fully protected means
+/// [`RouteCapability::is_fully_protected_high_risk`].
 pub fn high_risk_coverage() -> (usize, usize) {
-    let high_risk: Vec<_> = ROUTE_CAPABILITIES
+    let total = HIGH_RISK_WRITE_OPERATION_IDS.len();
+    let fully = ROUTE_CAPABILITIES
         .iter()
-        .filter(|p| p.is_high_risk_write())
-        .collect();
-    let total = high_risk.len();
-    // "Enforced" at profile layer: retry_class is not Unknown and idempotency
-    // class is coherent. Transport proofs land in Phase 2 tests.
-    let enforced = high_risk
-        .iter()
-        .filter(|p| {
-            !matches!(p.retry_class, RetryClass::Unknown)
-                && matches!(
-                    p.idempotency_class(),
-                    IdempotencyClass::RequiredForRetry
-                        | IdempotencyClass::NeverRetry
-                        | IdempotencyClass::None
-                        | IdempotencyClass::Optional
-                )
-                && matches!(
-                    p.access,
-                    RouteAccess::GeneratedClient | RouteAccess::ValidatedFacade
-                )
-        })
+        .filter(|p| p.is_fully_protected_high_risk())
         .count();
-    (enforced, total)
+    (fully, total)
 }
 
 #[cfg(test)]
@@ -248,12 +246,16 @@ mod tests {
     }
 
     #[test]
-    fn high_risk_coverage_nonzero() {
-        let (enforced, total) = high_risk_coverage();
-        assert!(total > 0, "expected high-risk ops");
+    fn high_risk_coverage_is_complete() {
+        let (fully, total) = high_risk_coverage();
+        assert_eq!(total, HIGH_RISK_WRITE_OPERATION_IDS.len());
         assert_eq!(
-            enforced, total,
-            "profile fields must be set for all high-risk"
+            fully, total,
+            "every frozen high-risk op must be ValidatedFacade with write retry class"
         );
+        for id in HIGH_RISK_WRITE_OPERATION_IDS {
+            let p = operation_safety_profile(id).expect(id);
+            assert!(p.is_fully_protected_high_risk(), "{id}");
+        }
     }
 }

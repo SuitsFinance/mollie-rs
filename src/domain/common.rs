@@ -1,8 +1,11 @@
 //! Shared helpers for domain facades.
 
+use std::future::Future;
 use std::num::NonZeroU64;
 
-use crate::pagination::{PageCursor, MAX_PAGE_LIMIT};
+use crate::pagination::{
+    AsyncPaginator, ItemStream, Page, PageCursor, PaginationGuard, MAX_PAGE_LIMIT,
+};
 use crate::types::ListLinks;
 use crate::{MollieError, MollieResult};
 
@@ -35,6 +38,24 @@ pub(crate) fn client_with_key(
         Some(k) => client.clone().with_idempotency(k),
         None => client.clone(),
     }
+}
+
+/// Builds a guarded page stream from a list_page-style fetch closure.
+pub(crate) fn stream_pages<F, Fut, T>(guard: PaginationGuard, fetch: F) -> AsyncPaginator<F, T>
+where
+    F: FnMut(Option<PageCursor>) -> Fut,
+    Fut: Future<Output = MollieResult<Page<T>>>,
+{
+    AsyncPaginator::new(fetch, guard)
+}
+
+/// Builds a guarded item stream from a list_page-style fetch closure.
+pub(crate) fn stream_items<F, Fut, T>(guard: PaginationGuard, fetch: F) -> ItemStream<F, T>
+where
+    F: FnMut(Option<PageCursor>) -> Fut,
+    Fut: Future<Output = MollieResult<Page<T>>>,
+{
+    ItemStream::new(AsyncPaginator::new(fetch, guard))
 }
 
 #[cfg(test)]

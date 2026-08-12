@@ -1,13 +1,21 @@
 //! Payment-domain facade for create / get / list with safe defaults.
 #![warn(missing_docs)]
 
-use crate::domain::common::{client_with_key, next_cursor_from_links, validate_page_limit};
-use crate::pagination::{Page, PageCursor, PaginationGuard};
+use std::future::Future;
+use std::pin::Pin;
+
+use crate::domain::common::{
+    client_with_key, next_cursor_from_links, stream_items, stream_pages, validate_page_limit,
+};
+use crate::pagination::{AsyncPaginator, ItemStream, Page, PageCursor, PaginationGuard};
 use crate::types::{self, ListPaymentsResponse, PaymentResponse};
 use crate::{
-    CreatePaymentRequired, IdempotencyKey, IntoMollieFuture, MollieClient, MollieResponse,
-    MollieResult, PaymentId, ResponseEnvelope,
+    CreatePaymentRequired, CustomerId, IdempotencyKey, IntoMollieFuture, MollieClient,
+    MollieResponse, MollieResult, PaymentId, ResponseEnvelope,
 };
+
+type PaymentPageFut =
+    Pin<Box<dyn Future<Output = MollieResult<Page<types::ListPaymentResponse>>> + Send>>;
 
 /// Payment operations scoped to a [`MollieClient`].
 #[derive(Debug)]
@@ -59,6 +67,47 @@ impl PaymentsApi<'_> {
             .await
     }
 
+    /// Cancels a payment that is still cancelable (IdempotentWrite).
+    pub async fn cancel(
+        &self,
+        id: &PaymentId,
+        body: Option<&types::CancelPaymentBody>,
+        key: Option<IdempotencyKey>,
+    ) -> MollieResponse<PaymentResponse> {
+        let token = types::PaymentToken(id.as_str().to_string());
+        let default_body = types::CancelPaymentBody::default();
+        let body = body.unwrap_or(&default_body);
+        client_with_key(self.client, key)
+            .cancel_payment(&token, body)
+            .into_mollie_result()
+            .await
+    }
+
+    /// Creates a payment for an existing customer (IdempotentWrite).
+    pub async fn create_for_customer(
+        &self,
+        customer_id: &CustomerId,
+        required: CreatePaymentRequired,
+        key: Option<IdempotencyKey>,
+    ) -> MollieResponse<PaymentResponse> {
+        let body = required.into_payment_request();
+        self.create_for_customer_raw(customer_id, &body, key).await
+    }
+
+    /// Creates a customer payment from a generated body (advanced).
+    pub async fn create_for_customer_raw(
+        &self,
+        customer_id: &CustomerId,
+        body: &types::CreatePaymentRequest,
+        key: Option<IdempotencyKey>,
+    ) -> MollieResponse<PaymentResponse> {
+        let customer = types::CustomerToken(customer_id.as_str().to_string());
+        client_with_key(self.client, key)
+            .create_customer_payment(&customer, body)
+            .into_mollie_result()
+            .await
+    }
+
     /// Fetches one list page of payments (`from` / `limit` semantics).
     pub async fn list_page(
         &self,
@@ -97,6 +146,44 @@ impl PaymentsApi<'_> {
             }
         }
         Ok(items)
+    }
+
+    /// Streams payment pages within [`PaginationGuard`] budgets (never unbounded).
+    pub fn stream_pages(
+        &self,
+        limit: Option<u32>,
+        guard: PaginationGuard,
+    ) -> AsyncPaginator<impl FnMut(Option<PageCursor>) -> PaymentPageFut, types::ListPaymentResponse>
+    {
+        let client = self.client.clone();
+        stream_pages(guard, move |cursor| -> PaymentPageFut {
+            let client = client.clone();
+            Box::pin(async move {
+                let _ = validate_page_limit(limit)?;
+                PaymentsApi { client: &client }
+                    .list_page(cursor.as_ref(), limit)
+                    .await
+            })
+        })
+    }
+
+    /// Streams payment items within [`PaginationGuard`] budgets (never unbounded).
+    pub fn stream_items(
+        &self,
+        limit: Option<u32>,
+        guard: PaginationGuard,
+    ) -> ItemStream<impl FnMut(Option<PageCursor>) -> PaymentPageFut, types::ListPaymentResponse>
+    {
+        let client = self.client.clone();
+        stream_items(guard, move |cursor| -> PaymentPageFut {
+            let client = client.clone();
+            Box::pin(async move {
+                let _ = validate_page_limit(limit)?;
+                PaymentsApi { client: &client }
+                    .list_page(cursor.as_ref(), limit)
+                    .await
+            })
+        })
     }
 
     /// Creates a delayed Connect route for a payment (IdempotentWrite).

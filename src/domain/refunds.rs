@@ -1,13 +1,21 @@
 //! Refund-domain facade for payment-scoped refund operations.
 #![warn(missing_docs)]
 
-use crate::domain::common::{client_with_key, next_cursor_from_links, validate_page_limit};
-use crate::pagination::{Page, PageCursor, PaginationGuard};
+use std::future::Future;
+use std::pin::Pin;
+
+use crate::domain::common::{
+    client_with_key, next_cursor_from_links, stream_items, stream_pages, validate_page_limit,
+};
+use crate::pagination::{AsyncPaginator, ItemStream, Page, PageCursor, PaginationGuard};
 use crate::types::{self, EntityRefundResponse, ListRefundsResponse};
 use crate::{
     CreateRefundRequired, EmptyResponse, IdempotencyKey, IntoMollieFuture, MollieClient,
     MollieResponse, MollieResult, PaymentId, RefundId, ResponseEnvelope,
 };
+
+type RefundPageFut =
+    Pin<Box<dyn Future<Output = MollieResult<Page<types::ListEntityRefund>>> + Send>>;
 
 /// Refund operations scoped to a [`MollieClient`].
 #[derive(Debug)]
@@ -118,6 +126,49 @@ impl RefundsApi<'_> {
             }
         }
         Ok(items)
+    }
+
+    /// Streams refund pages for a payment within [`PaginationGuard`] budgets.
+    pub fn stream_pages(
+        &self,
+        payment_id: &PaymentId,
+        limit: Option<u32>,
+        guard: PaginationGuard,
+    ) -> AsyncPaginator<impl FnMut(Option<PageCursor>) -> RefundPageFut, types::ListEntityRefund>
+    {
+        let client = self.client.clone();
+        let payment = payment_id.clone();
+        stream_pages(guard, move |cursor| -> RefundPageFut {
+            let client = client.clone();
+            let payment = payment.clone();
+            Box::pin(async move {
+                let _ = validate_page_limit(limit)?;
+                RefundsApi { client: &client }
+                    .list_page(&payment, cursor.as_ref(), limit)
+                    .await
+            })
+        })
+    }
+
+    /// Streams refund items for a payment within [`PaginationGuard`] budgets.
+    pub fn stream_items(
+        &self,
+        payment_id: &PaymentId,
+        limit: Option<u32>,
+        guard: PaginationGuard,
+    ) -> ItemStream<impl FnMut(Option<PageCursor>) -> RefundPageFut, types::ListEntityRefund> {
+        let client = self.client.clone();
+        let payment = payment_id.clone();
+        stream_items(guard, move |cursor| -> RefundPageFut {
+            let client = client.clone();
+            let payment = payment.clone();
+            Box::pin(async move {
+                let _ = validate_page_limit(limit)?;
+                RefundsApi { client: &client }
+                    .list_page(&payment, cursor.as_ref(), limit)
+                    .await
+            })
+        })
     }
 }
 

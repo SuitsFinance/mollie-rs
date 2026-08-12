@@ -682,6 +682,156 @@ impl CreateTransferRequired {
     }
 }
 
+/// One side of a Connect balance transfer (organization party).
+#[derive(Clone, Debug)]
+pub struct ConnectBalanceTransferParty {
+    /// Organization id (`org_…`).
+    pub organization_id: String,
+    /// Party-facing description (ledger line).
+    pub description: String,
+}
+
+/// Validated required fields for creating a Connect balance transfer.
+#[derive(Clone, Debug)]
+pub struct CreateConnectBalanceTransferRequired {
+    /// Transfer amount.
+    pub amount: Money,
+    /// Initiating-party description.
+    pub description: String,
+    /// Source organization.
+    pub source: ConnectBalanceTransferParty,
+    /// Destination organization.
+    pub destination: ConnectBalanceTransferParty,
+    /// Optional Mollie category.
+    pub category: Option<types::BalanceTransferCategory>,
+    /// Optional structured metadata (≤ ~1KB).
+    pub metadata: Option<serde_json::Map<String, serde_json::Value>>,
+}
+
+impl CreateConnectBalanceTransferRequired {
+    /// Validates amount, descriptions, and organization ids.
+    pub fn new(
+        amount: Money,
+        description: impl Into<String>,
+        source_organization_id: impl Into<String>,
+        source_description: impl Into<String>,
+        destination_organization_id: impl Into<String>,
+        destination_description: impl Into<String>,
+    ) -> MollieResult<Self> {
+        let description = require_description(description, "connect balance transfer description")?;
+        let source = ConnectBalanceTransferParty {
+            organization_id: require_org_id(source_organization_id, "source organization id")?,
+            description: require_description(
+                source_description,
+                "connect balance transfer source description",
+            )?,
+        };
+        let destination = ConnectBalanceTransferParty {
+            organization_id: require_org_id(
+                destination_organization_id,
+                "destination organization id",
+            )?,
+            description: require_description(
+                destination_description,
+                "connect balance transfer destination description",
+            )?,
+        };
+        if source.organization_id == destination.organization_id {
+            return Err(MollieError::invalid_request(
+                "connect balance transfer source and destination organizations must differ",
+            ));
+        }
+        Ok(Self {
+            amount,
+            description,
+            source,
+            destination,
+            category: None,
+            metadata: None,
+        })
+    }
+
+    /// Sets optional transfer category.
+    pub fn with_category(mut self, category: types::BalanceTransferCategory) -> Self {
+        self.category = Some(category);
+        self
+    }
+
+    /// Sets optional metadata map.
+    pub fn with_metadata(
+        mut self,
+        metadata: serde_json::Map<String, serde_json::Value>,
+    ) -> MollieResult<Self> {
+        let encoded = serde_json::to_vec(&metadata)
+            .map_err(|error| MollieError::invalid_request(error.to_string()))?;
+        if encoded.len() > 1024 {
+            return Err(MollieError::invalid_request(
+                "connect balance transfer metadata must be at most ~1KB",
+            ));
+        }
+        self.metadata = Some(metadata);
+        Ok(self)
+    }
+
+    /// Builds a create body that serializes write fields only.
+    pub fn into_request(self) -> MollieResult<types::EntityBalanceTransfer> {
+        let amount = self.amount.into_amount();
+        let mut value = json!({
+            "amount": {
+                "currency": amount.currency,
+                "value": amount.value,
+            },
+            "description": self.description,
+            "source": {
+                "type": "organization",
+                "id": self.source.organization_id,
+                "description": self.source.description,
+            },
+            "destination": {
+                "type": "organization",
+                "id": self.destination.organization_id,
+                "description": self.destination.description,
+            },
+        });
+        if let Some(category) = self.category {
+            value["category"] = json!(category);
+        }
+        if let Some(metadata) = self.metadata {
+            value["metadata"] = serde_json::Value::Object(metadata);
+        }
+        serde_json::from_value(value)
+            .map_err(|error| MollieError::invalid_request(error.to_string()))
+    }
+}
+
+fn require_description(value: impl Into<String>, label: &str) -> MollieResult<String> {
+    let value = value.into();
+    let trimmed = value.trim();
+    let chars = trimmed.chars().count();
+    if chars == 0 || chars > 255 {
+        return Err(MollieError::invalid_request(format!(
+            "{label} must be 1..=255 characters"
+        )));
+    }
+    Ok(trimmed.to_string())
+}
+
+fn require_org_id(value: impl Into<String>, label: &str) -> MollieResult<String> {
+    let value = value.into();
+    let trimmed = value.trim();
+    if trimmed.is_empty() {
+        return Err(MollieError::invalid_request(format!(
+            "{label} must not be empty"
+        )));
+    }
+    if !trimmed.starts_with("org_") {
+        return Err(MollieError::invalid_request(format!(
+            "{label} must start with org_"
+        )));
+    }
+    Ok(trimmed.to_string())
+}
+
 /// Validated Verification-of-Payee request.
 #[derive(Clone, Debug)]
 pub struct VerifyPayeeRequired {

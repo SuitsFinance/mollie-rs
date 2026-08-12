@@ -5,6 +5,7 @@
 
 pub mod captures;
 mod common;
+pub mod connect_balance_transfers;
 pub mod mandates;
 pub mod oauth;
 pub mod payment_links;
@@ -20,6 +21,7 @@ pub mod verify_payee;
 pub mod webhooks;
 
 pub use captures::CapturesApi;
+pub use connect_balance_transfers::ConnectBalanceTransfersApi;
 pub use mandates::MandatesApi;
 pub use oauth::OAuthApi;
 pub use payment_links::PaymentLinksApi;

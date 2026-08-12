@@ -20,14 +20,22 @@ ROOT = Path(__file__).resolve().parents[1]
 CAPS = ROOT / "src" / "route_capabilities.rs"
 
 # High-risk operations that must remain profiled and write-classified.
+# Frozen denominator for INV-TIER-01 / 1.0 high-risk coverage metric.
 HIGH_RISK_WRITES = {
     "create_payment",
+    "cancel_payment",
     "create_refund",
+    "cancel_refund",
     "create_capture",
     "create_subscription",
+    "cancel_subscription",
+    "create_mandate",
+    "create_payment_link",
+    "create_customer_payment",
     "create_payout",
     "cancel_payout",
     "create_transfer",
+    "create_connect_balance_transfer",
     "verify_payee",
     "oauth_generate_tokens",
     "oauth_revoke_tokens",

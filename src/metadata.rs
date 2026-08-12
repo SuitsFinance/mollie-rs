@@ -28,7 +28,7 @@ pub struct ResponseMetadata {
     pub request_id: Option<String>,
     /// Resolved `Idempotency-Key` when known from request or response headers.
     pub idempotency_key: Option<String>,
-    /// Parsed `Retry-After` delay when the header is present and numeric.
+    /// Parsed `Retry-After` delay when the header is present (delta-seconds or HTTP-date).
     pub retry_after: Option<Duration>,
     /// Parsed rate-limit **limit** when available from structured headers.
     pub rate_limit_limit: Option<u64>,
@@ -250,10 +250,30 @@ fn first_header_str(headers: &HeaderMap, names: &[&str]) -> Option<String> {
     names.iter().find_map(|name| header_str(headers, name))
 }
 
-/// Parses `Retry-After` as delta-seconds; HTTP-date forms are ignored.
+/// Parses `Retry-After` as delta-seconds or HTTP-date (RFC 7231).
+///
+/// HTTP-date values in the past yield [`Duration::ZERO`] (caller should not sleep).
+/// Unparseable values are ignored.
 fn parse_retry_after(headers: &HeaderMap) -> Option<Duration> {
     let raw = header_str(headers, "retry-after")?;
-    raw.parse::<u64>().ok().map(Duration::from_secs)
+    if let Ok(secs) = raw.parse::<u64>() {
+        return Some(Duration::from_secs(secs));
+    }
+    http_date_to_delay(&raw)
+}
+
+/// Parses IMF-fix / RFC 2822 HTTP-date `Retry-After` into a delay from now.
+fn http_date_to_delay(raw: &str) -> Option<Duration> {
+    let parsed = chrono::DateTime::parse_from_rfc2822(raw).ok()?;
+    let target = parsed.with_timezone(&chrono::Utc);
+    let now = chrono::Utc::now();
+    let delta = target.signed_duration_since(now);
+    let secs = delta.num_seconds();
+    if secs <= 0 {
+        Some(Duration::ZERO)
+    } else {
+        Some(Duration::from_secs(secs as u64))
+    }
 }
 
 /// Best-effort parse of common rate-limit header shapes.
@@ -324,12 +344,32 @@ mod tests {
     }
 
     #[test]
-    fn ignores_non_numeric_retry_after() {
+    fn parses_past_http_date_retry_after_as_zero() {
         let mut headers = HeaderMap::new();
         headers.insert(
             "retry-after",
             HeaderValue::from_static("Wed, 21 Oct 2015 07:28:00 GMT"),
         );
+        let meta = ResponseMetadata::from_headers(&headers);
+        assert_eq!(meta.retry_after, Some(Duration::ZERO));
+    }
+
+    #[test]
+    fn parses_future_http_date_retry_after() {
+        let when = chrono::Utc::now() + chrono::Duration::seconds(120);
+        let raw = when.to_rfc2822();
+        let mut headers = HeaderMap::new();
+        headers.insert("retry-after", HeaderValue::from_str(&raw).expect("header"));
+        let meta = ResponseMetadata::from_headers(&headers);
+        let delay = meta.retry_after.expect("parsed");
+        assert!(delay >= Duration::from_secs(100));
+        assert!(delay <= Duration::from_secs(130));
+    }
+
+    #[test]
+    fn ignores_garbage_retry_after() {
+        let mut headers = HeaderMap::new();
+        headers.insert("retry-after", HeaderValue::from_static("not-a-date"));
         let meta = ResponseMetadata::from_headers(&headers);
         assert_eq!(meta.retry_after, None);
     }
