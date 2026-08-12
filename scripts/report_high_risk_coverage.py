@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Generate high-risk operation coverage report (INV-TIER-01).
 
-Reads `src/route_capabilities.rs` and the frozen HIGH_RISK_WRITES set from
-`check_dangerous_profile_drift.py` (imported via exec of the constant).
+Reads `src/route_capabilities.rs` and checks a frozen HIGH_RISK_WRITES set
+kept in lockstep with `check_dangerous_profile_drift.py`.
 
 Outputs:
   docs/registries/high-risk-coverage.md
