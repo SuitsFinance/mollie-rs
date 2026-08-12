@@ -8,9 +8,9 @@
 
 **Version:** `0.7.0` · **MSRV:** `1.88`
 
-Typed Rust SDK for the Mollie API. Built and maintained by **Suits Finance**.
+Typed Rust SDK for the Mollie API. Built and maintained by **Suits Finance B.V.**
 
-> **Unofficial community SDK.** This project is owned and maintained by Suits Finance. It is not affiliated with, endorsed by, or supported by Mollie B.V. “Mollie” is a trademark of Mollie B.V., used here only to describe API compatibility. For official product documentation see [docs.mollie.com](https://docs.mollie.com/).
+> **Unofficial community SDK.** This project is owned and maintained by Suits Finance B.V. It is not affiliated with, endorsed by, or supported by Mollie B.V. “Mollie” is a trademark of Mollie B.V., used here only to describe API compatibility. For official product documentation see [docs.mollie.com](https://docs.mollie.com/).
 
 `MollieClient` is the recommended entry point for application code. It builds a reusable HTTPS-capable `reqwest` client, configures typed bearer authentication, and still exposes the full typed route surface from `Client`.
 
@@ -302,7 +302,7 @@ Each example appends to `logs/<example>.log` and refreshes `docs/example-support
 
 ## License
 
-MIT — see [`LICENSE`](LICENSE). Copyright © 2026 Suits Finance.
+MIT — see [`LICENSE`](LICENSE). Copyright © 2026 Suits Finance B.V.
 
 **Third-party material:** the vendored Mollie OpenAPI documents (`specs.yaml`, `specs-3.0.yaml`) are copyright Mollie B.V. and licensed under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/), **not** MIT. They are excluded from the published crate. See [`NOTICE`](NOTICE) for full attribution and the implications for commercial use.
 
