@@ -1,0 +1,6 @@
+# Pin the developer/CI default toolchain. MSRV is declared separately via
+# `package.rust-version` in Cargo.toml (currently 1.88) and docs/compatibility.md.
+[toolchain]
+channel = "1.88.0"
+components = ["rustfmt", "clippy"]
+profile = "minimal"

@@ -1,0 +1,54 @@
+[package]
+name = "mollie-rs-fuzz"
+version = "0.0.0"
+publish = false
+edition = "2021"
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4"
+mollie-rs = { path = ".." }
+
+[[bin]]
+name = "webhook_signature"
+path = "fuzz_targets/webhook_signature.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "webhook_form"
+path = "fuzz_targets/webhook_form.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "money_amount"
+path = "fuzz_targets/money_amount.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "payment_id"
+path = "fuzz_targets/payment_id.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "page_cursor"
+path = "fuzz_targets/page_cursor.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "retry_after_header"
+path = "fuzz_targets/retry_after_header.rs"
+test = false
+doc = false
+bench = false

@@ -1,0 +1,236 @@
+﻿# Official SDK parity matrix (machine-readable)
+# mollie-rs 0.6.1 — audited 2026-08-04 against official Mollie SDKs + openapi
+
+meta:
+  crate: mollie-rs
+  version: "0.6.1"
+  branch: main
+  commit: d5a2527
+  msrv: "1.88"
+  local_operations: 100
+  upstream_operations: 124
+  missing_operations: 24
+  reference_sdks:
+    - mollie/mollie-api-php@main
+    - mollie/mollie-api-typescript@main
+    - mollie/mollie-api-golang@main
+    - mollie/mollie-api-java@main
+    - mollie/mollie-api-csharp@main
+  upstream_openapi: https://github.com/mollie/openapi/blob/main/specs.yaml
+
+status_enum:
+  - Implemented
+  - Partially implemented
+  - Generated only
+  - Facade missing
+  - Not applicable to Rust
+  - Should not be copied
+  - Requires provider-contract verification
+
+categories:
+  api_operation_coverage:
+    local_pin_ops: 100
+    upstream_ops: 124
+    status: Partially implemented
+    missing:
+      - cancel_payout
+      - create_payout
+      - create_session
+      - create_transfer
+      - get_business_account
+      - get_business_account_transaction
+      - get_payout
+      - get_session
+      - get_transfer
+      - get_unmatched_credit_transfer
+      - list_business_account_transactions
+      - list_business_accounts
+      - list_payouts
+      - list_unmatched_credit_transfers
+      - match_unmatched_credit_transfer
+      - oauth_generate_tokens
+      - oauth_revoke_tokens
+      - payment_get_route
+      - return_unmatched_credit_transfer
+      - terminals_get_pairing_code
+      - terminals_list_pairing_codes
+      - terminals_request_pairing_code
+      - terminals_revoke_pairing_code
+      - verify_payee
+
+  authentication:
+    api_key: Implemented
+    oauth_access_token: Implemented
+    basic_auth: Implemented
+    env_loading: Implemented
+    secret_redaction: Implemented
+    zeroize_feature: Implemented
+    scoped_credentials: Facade missing
+    oauth_token_endpoints: Requires provider-contract verification
+
+  client_context:
+    sticky_testmode: Implemented
+    sticky_profile_id: Facade missing
+    user_agent: Implemented
+    user_agent_suffix: Facade missing
+    operation_override_precedence: Partially implemented
+
+  idempotency:
+    header_always_sent: Implemented
+    sticky_key_scoping: Implemented
+    auto_uuid_when_unset: Implemented
+    write_retry_requires_sticky: Implemented
+
+  retry:
+    default_disabled: Implemented
+    safe_read_retry: Implemented
+    idempotent_write_retry: Implemented
+    route_aware_classification: Partially implemented
+    retry_after_header: Partially implemented
+    total_deadline_semantics: Partially implemented
+    operation_level_policy: Facade missing
+
+  pagination:
+    page_cursor: Implemented
+    cycle_detection: Implemented
+    budgets: Implemented
+    list_page_helpers: Partially implemented
+    stream_helpers: Partially implemented
+    unbounded_default: Should not be copied
+
+  webhooks:
+    classic_form: Implemented
+    hmac_raw_body: Implemented
+    secret_rotation: Implemented
+    bounded_body: Implemented
+    missing_vs_malformed: Implemented
+    replay_prevention: Should not be copied  # application-owned
+    integration_traits: Facade missing
+    framework_recipes: Partially implemented
+
+  errors_metadata:
+    structured_errors: Implemented
+    catalog: Implemented
+    request_id: Implemented
+    retry_after: Implemented
+    response_metadata: Implemented
+    connection_cancelled_helpers: Partially implemented
+
+  http_customization:
+    custom_base_url: Implemented
+    timeouts: Implemented
+    default_headers: Implemented
+    inject_reqwest: Partially implemented
+    hooks: Facade missing
+    proxy_tls: Implemented  # via user-provided reqwest client
+
+  observability:
+    tracing: Partially implemented
+    redacted_fields: Partially implemented
+    secret_leak_tests: Partially implemented
+
+  domain_facades:
+    payments: Implemented
+    refunds: Implemented
+    captures: Partially implemented
+    subscriptions: Implemented
+    mandates: Partially implemented
+    payment_links: Partially implemented
+    webhooks: Implemented
+    accounts: Requires provider-contract verification
+    payouts: Requires provider-contract verification
+    transfers: Requires provider-contract verification
+    sessions: Requires provider-contract verification
+    unmatched_credit_transfers: Requires provider-contract verification
+    verify_payee: Requires provider-contract verification
+    oauth: Requires provider-contract verification
+    connect: Generated only
+    settlements: Generated only
+    organizations: Generated only
+    invoices: Generated only
+
+  documentation:
+    contracts: Implemented
+    route_coverage: Implemented
+    examples: Implemented
+    guides: Facade missing
+    recipes: Facade missing
+    migration: Partially implemented
+
+  testing_ci:
+    unit_tests: Implemented
+    http_contract_wiremock: Implemented
+    doctests: Implemented
+    generation_reproducibility: Implemented
+    cargo_deny_blocking: Implemented
+    msrv: Implemented
+    upstream_drift_blocking: Partially implemented
+    property_tests: Facade missing
+    fuzz_targets: Facade missing
+    live_e2e_default_ci: Should not be copied
+
+  release_governance:
+    changelog: Implemented
+    compatibility_doc: Implemented
+    security_md: Implemented
+    version_truth: Partially implemented
+    public_api_diff_ci: Facade missing
+    release_parity_artifact: Facade missing
+
+gaps:
+  - id: openapi-24-ops
+    priority: P0
+    status: Requires provider-contract verification
+    evidence: "mollie/openapi specs.yaml 124 ops vs local 100"
+    rust_impl: "Re-pin specs-3.0.yaml; regenerate routes/types/capabilities"
+    crate_or_app: crate
+    tests: "generation reproducibility; route examples; wiremock for new writes"
+  - id: deadline-leftover-request
+    priority: P0
+    status: Partially implemented
+    evidence: "src/lib.rs Client::send leftover exec after total_deadline break"
+    rust_impl: "Stop without leftover send; expose retry_budget docs"
+    crate_or_app: crate
+    tests: "deterministic deadline exhaustion contract test"
+  - id: route-aware-retry-send
+    priority: P0
+    status: Partially implemented
+    evidence: "send uses classify_http_method; RouteCapability.retry_class unused at send"
+    rust_impl: "Map operation info to route_capability().retry_class"
+    crate_or_app: crate
+    tests: "NeverAutoRetry ops never multi-attempt"
+  - id: client-profile-context
+    priority: P1
+    status: Facade missing
+    evidence: "TS SDKOptions.profileId; Go WithProfileID"
+    rust_impl: "ClientContext + builder.profile_id + with_profile_id"
+    crate_or_app: crate
+    tests: "facades inject default profile; overrides win"
+  - id: with-credential
+    priority: P1
+    status: Facade missing
+    evidence: "Connect multi-merchant needs per-call token without rebuilding app graph"
+    rust_impl: "MollieClient::with_credential rebuilding Authorization header"
+    crate_or_app: crate
+    tests: "wiremock Authorization header swap"
+  - id: request-hooks
+    priority: P2
+    status: Facade missing
+    evidence: "TS src/hooks/types.ts BeforeRequest/AfterSuccess/AfterError"
+    rust_impl: "narrow RequestHook trait; no middleware ecosystem"
+    crate_or_app: crate
+    tests: "hook invocation order; redaction"
+  - id: oauth-facade
+    priority: P1
+    status: Requires provider-contract verification
+    evidence: "TS oauthGenerate/oauthRevoke; path /oauth2/tokens"
+    rust_impl: "OAuthApi after contract; Basic Auth client"
+    crate_or_app: crate
+    tests: "wiremock token form body"
+  - id: guides-recipes
+    priority: P2
+    status: Facade missing
+    evidence: "PHP docs/recipes/*"
+    rust_impl: "docs/guides + docs/recipes"
+    crate_or_app: crate (docs)
+    tests: "compile-checked recipes where possible"

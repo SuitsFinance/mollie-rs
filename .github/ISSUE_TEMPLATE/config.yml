@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/SuitsFinance/mollie-rs/security/advisories/new
+    about: Report security issues privately (do not open a public issue).
+  - name: Mollie API product questions
+    url: https://docs.mollie.com/
+    about: Provider product / account questions belong with Mollie, not this SDK.

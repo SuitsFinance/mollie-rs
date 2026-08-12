@@ -1,0 +1,56 @@
+name: Bug report
+description: Report incorrect SDK behavior or a contract mismatch
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for filing a bug. Do **not** include live API keys, OAuth tokens, or webhook signing secrets.
+  - type: input
+    id: version
+    attributes:
+      label: mollie-rs version
+      placeholder: "0.7.0"
+    validations:
+      required: true
+  - type: input
+    id: rust
+    attributes:
+      label: Rust version (`rustc -V`)
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Minimal reproduction
+      description: Redact credentials. Prefer mock/wiremock or public testmode-only snippets.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Payments / refunds / captures
+        - Subscriptions / mandates
+        - Webhooks
+        - OAuth / Connect
+        - Payouts / transfers
+        - Transport / retries / idempotency
+        - OpenAPI / generation
+        - Docs / examples
+        - Other
+    validations:
+      required: true

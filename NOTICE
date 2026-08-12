@@ -1,0 +1,66 @@
+mollie-rs
+Copyright (c) 2026 SF Global
+
+This product is licensed under the MIT License (see LICENSE).
+
+mollie-rs is an independent, community-maintained Rust SDK. It is NOT an
+official Mollie product and is not affiliated with, endorsed by, or supported
+by Mollie B.V. "Mollie" is a trademark of Mollie B.V. and is used here only to
+describe API compatibility (nominative fair use).
+
+--------------------------------------------------------------------------------
+THIRD-PARTY MATERIAL
+--------------------------------------------------------------------------------
+
+1. Mollie OpenAPI specification
+   Files: specs.yaml, specs-3.0.yaml
+   Source: Mollie API reference / OpenAPI documents published by Mollie B.V.
+   Copyright (c) Mollie B.V.
+   License: Creative Commons Attribution-NonCommercial-ShareAlike 4.0
+            International (CC BY-NC-SA 4.0)
+            https://creativecommons.org/licenses/by-nc-sa/4.0/
+
+   These files are redistributed here under their own CC BY-NC-SA 4.0 terms,
+   NOT under the MIT License that covers the rest of this repository. They are
+   vendored solely as the pinned contract input for code generation and for the
+   contract-drift CI gates.
+
+   Consequences you must respect:
+   - Attribution to Mollie B.V. is required.
+   - The specification files themselves may not be used for commercial
+     purposes under this license grant.
+   - Adaptations of the specification files must be shared under CC BY-NC-SA
+     4.0.
+
+   These files are excluded from the published crate (see the `exclude` key in
+   Cargo.toml), so the artifact on crates.io does not redistribute them.
+
+2. Generated Rust bindings derived from the Mollie OpenAPI specification
+   Files: src/types.rs and other generator output (see scripts/)
+
+   The generated bindings carry API field names, enum values, and documentation
+   strings taken verbatim from the Mollie OpenAPI specification described in
+   item 1. Attribution to Mollie B.V. is therefore preserved here. The
+   hand-written code in this repository (client, transport, retries, webhook
+   verification, error taxonomy, domain helpers) is original work licensed
+   under MIT.
+
+   If you require an unambiguous licence position for a commercial deployment,
+   obtain written clarification from Mollie B.V. regarding use of their API
+   description material.
+
+3. Mollie Postman collections
+   Not redistributed. Earlier revisions of this repository vendored six Postman
+   collections exported from Mollie's public Postman workspace. They are
+   copyright Mollie B.V., are no longer stored in this repository, and are
+   ignored by git.
+
+   Only deduplicated response fixtures derived from those collections are kept,
+   under tests/fixtures/. They exist to prove error-envelope and success-shape
+   handling and are retained as factual API response data for
+   interoperability testing.
+
+--------------------------------------------------------------------------------
+
+Rust crate dependencies retain their own licences; run `cargo deny check
+licenses` (configuration in deny.toml) for the current dependency licence set.

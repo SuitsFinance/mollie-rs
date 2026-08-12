@@ -1,0 +1,134 @@
+# Production CI for mollie-rs — blocking gates for public main.
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+  RUSTFLAGS: -Dwarnings
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  contract:
+    name: Contract & drift gates
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Generation reproducibility
+        run: python scripts/check_generation_reproducibility.py
+      - name: Dangerous profile drift
+        run: python scripts/check_dangerous_profile_drift.py
+      - name: Operation registry is committed
+        run: |
+          python scripts/export_operation_registry.py
+          git diff --exit-code -- docs/registries/operation-registry.yaml
+      - name: Upstream OpenAPI pin (digest)
+        run: |
+          set -euo pipefail
+          python scripts/fetch_upstream_openapi.py
+          # Exit 0 = match, 2 = inventory advisory (do not block PRs), other = fail.
+          set +e
+          python scripts/compare_upstream_openapi.py --require-upstream
+          code=$?
+          set -e
+          if [ "$code" -eq 0 ]; then
+            echo "upstream inventory matches local pin"
+          elif [ "$code" -eq 2 ]; then
+            echo "::warning::upstream inventory differs from local pin (advisory)"
+          else
+            echo "compare_upstream_openapi failed with exit $code"
+            exit "$code"
+          fi
+
+  quality:
+    name: fmt · clippy · test · docs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: "1.88.0"
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - name: Format
+        run: cargo fmt --all -- --check
+      - name: Clippy (all features)
+        run: cargo clippy --all-targets --all-features -- -D warnings
+      - name: Clippy (no default features)
+        run: cargo clippy --all-targets --no-default-features -- -D warnings
+      - name: Test (all features)
+        run: cargo test --all-features
+      - name: Test (no default features)
+        run: cargo test --lib --tests --no-default-features
+      - name: Doc tests
+        run: cargo test --doc --all-features
+      - name: Examples compile
+        run: cargo check --examples --all-features
+      - name: rustdoc
+        run: cargo doc --no-deps --all-features
+        env:
+          RUSTDOCFLAGS: -D warnings
+
+  deny:
+    name: cargo-deny
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: EmbarkStudios/cargo-deny-action@v2
+        with:
+          command: check
+          arguments: --all-features
+
+  msrv:
+    name: MSRV (1.88)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: "1.88.0"
+      - uses: Swatinem/rust-cache@v2
+      - name: Build + lib tests on MSRV
+        run: |
+          cargo check --all-features
+          cargo test --lib --all-features
+
+  package:
+    name: crates.io package dry-run
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: "1.88.0"
+      - uses: Swatinem/rust-cache@v2
+      - name: cargo package
+        run: cargo package --allow-dirty --no-verify
+      - name: cargo package (verify)
+        run: cargo package --allow-dirty
+
+  semver:
+    name: cargo-semver-checks
+    runs-on: ubuntu-latest
+    # Advisory until the crate is published; fails closed once crates.io has a baseline.
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: "1.88.0"
+      - uses: Swatinem/rust-cache@v2
+      - name: Install cargo-semver-checks
+        run: cargo install cargo-semver-checks --locked
+      - name: Check public API vs crates.io
+        run: cargo semver-checks check-release || echo "No crates.io baseline yet or intentional 0.x break — see CHANGELOG.md"

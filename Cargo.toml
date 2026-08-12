@@ -1,0 +1,128 @@
+[package]
+name = "mollie-rs"
+version = "0.7.0"
+edition = "2021"
+rust-version = "1.88"
+license = "MIT"
+authors = ["SuitsFinance"]
+description = "Typed Rust SDK for the Mollie payments API"
+documentation = "https://docs.rs/mollie-rs"
+homepage = "https://github.com/SuitsFinance/mollie-rs"
+repository = "https://github.com/SuitsFinance/mollie-rs"
+readme = "README.md"
+keywords = [
+    "mollie",
+    "payments",
+    "api",
+    "client",
+    "fintech",
+]
+categories = [
+    "api-bindings",
+    "asynchronous",
+    "web-programming::http-client",
+]
+exclude = [
+    "/.github/",
+    "/.xbp/",
+    "/docs/audits/",
+    "/docs/rc/",
+    "/docs/sdd/",
+    "/fuzz/",
+    "/logs/",
+    "/postman/",
+    "/scripts/",
+    "/specs/",
+    "/target/",
+    "/.env.default",
+    "/.env.example",
+    "/deny.toml",
+    "/dist-workspace.toml",
+    "/specs-3.0.yaml",
+    "/specs.yaml",
+]
+
+[features]
+default = ["app-helpers"]
+app-helpers = [
+    "dep:dotenvy",
+    "dep:tracing-subscriber",
+]
+zeroize = ["dep:zeroize"]
+
+[dependencies]
+base64 = "0.22"
+bytes = "1.9"
+futures-core = "0.3"
+getrandom = "0.2"
+hmac = "0.12"
+progenitor-client = "0.11.1"
+regress = "0.10"
+serde_json = "1.0"
+serde_urlencoded = "0.7"
+sha2 = "0.10"
+thiserror = "2.0"
+tracing = "0.1.44"
+
+[dependencies.dotenvy]
+version = "0.15.7"
+optional = true
+
+[dependencies.tokio]
+version = "1"
+default-features = false
+features = ["time"]
+
+[dependencies.zeroize]
+version = "1.8"
+optional = true
+features = ["std"]
+
+[dependencies.chrono]
+default-features = false
+features = [
+    "clock",
+    "serde",
+    "std",
+]
+version = "0.4"
+
+[dependencies.reqwest]
+default-features = false
+features = [
+    "json",
+    "rustls-tls",
+    "stream",
+]
+version = "0.12"
+
+[dependencies.serde]
+features = ["derive"]
+version = "1.0"
+
+[dependencies.tracing-subscriber]
+default-features = true
+features = ["env-filter"]
+optional = true
+version = "0.3.23"
+
+[dependencies.uuid]
+features = ["v4"]
+version = "1"
+
+[dev-dependencies.clap]
+features = [
+    "derive",
+    "env",
+]
+version = "4"
+
+[dev-dependencies.tokio]
+features = [
+    "macros",
+    "rt-multi-thread",
+]
+version = "1"
+
+[dev-dependencies.wiremock]
+version = "0.6"

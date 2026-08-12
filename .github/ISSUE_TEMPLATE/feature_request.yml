@@ -1,0 +1,28 @@
+name: Feature request
+description: Propose an SDK capability or API surface improvement
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem / use case
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope
+      options:
+        - label: Covered by official Mollie OpenAPI / docs
+        - label: Would require a new Tier-S facade or validated builder
+        - label: Breaking public API change

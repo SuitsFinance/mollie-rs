@@ -1,0 +1,40 @@
+# Build
+/target/
+**/*.rs.bk
+
+# Local secrets and runtime output
+.env
+.env.local
+.env.*.local
+logs/
+
+# Python generation helpers
+__pycache__/
+*.py[cod]
+.Python
+.venv/
+venv/
+
+# Tooling / local vendor
+.xbp/
+/vendor/
+/tmp/
+/specs/upstream-openapi.yaml
+
+# Third-party Postman collections (Mollie B.V. copyright, not redistributed).
+# Derived response fixtures live in tests/fixtures/ instead. See NOTICE.
+/postman/
+
+# IDE / OS
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Coverage / profiling
+*.profraw
+*.profdata
+/coverage/
+/lcov.info
