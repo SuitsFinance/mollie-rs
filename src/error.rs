@@ -764,13 +764,13 @@ impl MollieError {
 
     /// Best-effort [`crate::DeliveryOutcome`] for payment-safe caller decisions.
     ///
-    /// - Connect failures → [`DeliveryOutcome::NotSent`] (may retry under policy)
-    /// - Timeouts / cancel-after-transmit → [`DeliveryOutcome::Unknown`]
-    /// - Documented API 4xx → [`DeliveryOutcome::Rejected`]
-    /// - Local config/validation before send → [`DeliveryOutcome::NotSent`]
+    /// - Connect failures → [`DeliveryOutcome::NotSent`](crate::DeliveryOutcome::NotSent) (may retry under policy)
+    /// - Timeouts / cancel-after-transmit → [`DeliveryOutcome::Unknown`](crate::DeliveryOutcome::Unknown)
+    /// - Documented API 4xx → [`DeliveryOutcome::Rejected`](crate::DeliveryOutcome::Rejected)
+    /// - Local config/validation before send → [`DeliveryOutcome::NotSent`](crate::DeliveryOutcome::NotSent)
     ///
     /// **Cancellation (INV-CANCEL-01):** dropping an in-flight request future can
-    /// leave a write in [`DeliveryOutcome::Unknown`]. Applications must use a
+    /// leave a write in [`DeliveryOutcome::Unknown`](crate::DeliveryOutcome::Unknown). Applications must use a
     /// caller-owned sticky idempotency key for any write they may cancel and retry.
     pub fn delivery_outcome(&self) -> Option<crate::DeliveryOutcome> {
         use crate::DeliveryOutcome;
@@ -807,7 +807,7 @@ impl MollieError {
     /// `reqwest` does not always expose cancellation distinctly; this currently
     /// matches request-builder / body errors that mention cancel when present.
     ///
-    /// Treat cancellation after transmit like [`DeliveryOutcome::Unknown`] for
+    /// Treat cancellation after transmit like [`DeliveryOutcome::Unknown`](crate::DeliveryOutcome::Unknown) for
     /// financial writes — see [`Self::delivery_outcome`].
     pub fn is_cancelled(&self) -> bool {
         match self {

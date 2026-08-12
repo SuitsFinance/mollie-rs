@@ -67,7 +67,10 @@ jobs:
       - name: Clippy (all features)
         run: cargo clippy --all-targets --all-features -- -D warnings
       - name: Clippy (no default features)
-        run: cargo clippy --all-targets --no-default-features -- -D warnings
+        # Scoped to lib + tests, matching the no-default-features test step.
+        # Examples require the default `app-helpers` feature (try_init_tracing,
+        # dotenvy) and are compile-checked by the "Examples compile" step below.
+        run: cargo clippy --lib --tests --no-default-features -- -D warnings
       - name: Test (all features)
         run: cargo test --all-features
       - name: Test (no default features)

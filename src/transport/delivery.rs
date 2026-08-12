@@ -83,8 +83,8 @@ pub fn classify_http_status(status: reqwest::StatusCode) -> DeliveryOutcome {
 ///
 /// Invariants:
 /// - Policy/`RetryClass` sticky-key rules still apply via [`RetryPolicy::allows`].
-/// - [`DeliveryOutcome::Rejected`] / [`Succeeded`] never auto-retry.
-/// - [`Unknown`] only retries when the class is policy-eligible (reads, or
+/// - [`DeliveryOutcome::Rejected`] / [`DeliveryOutcome::Succeeded`] never auto-retry.
+/// - [`DeliveryOutcome::Unknown`] only retries when the class is policy-eligible (reads, or
 ///   idempotent writes with sticky key) — never upgrades a non-retryable write.
 pub fn should_auto_retry(
     outcome: DeliveryOutcome,

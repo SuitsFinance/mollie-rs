@@ -8,7 +8,7 @@
 //! The SDK emits structured events through the `tracing` crate. Call
 //! [`init_tracing`] or [`try_init_tracing`] once at process startup so those
 //! events are printed. Log level is controlled by `RUST_LOG` (see
-//! [`EnvFilter`]).
+//! [`EnvFilter`](tracing_subscriber::EnvFilter)).
 //!
 //! # Examples
 //!
