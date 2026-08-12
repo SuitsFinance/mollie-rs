@@ -589,15 +589,15 @@ operations:
     http_method: "POST"
     path: "/connect/balance-transfers"
     generated: true
-    facade: false
+    facade: true
     pagination: false
     idempotency: "supported"
     retry_class: "IdempotentWrite"
     mutation_class: "IdempotentWrite"
     supports_testmode: false
     requires_profile_scope: false
-    access: "GeneratedClient"
-    status: "Generated only"
+    access: "ValidatedFacade"
+    status: "Implemented"
     route_group: "balance_transfers_api"
   - operation_id: "list_connect_balance_transfers"
     http_method: "GET"
@@ -687,15 +687,15 @@ operations:
     http_method: "DELETE"
     path: "/payments/{paymentId}"
     generated: true
-    facade: false
+    facade: true
     pagination: false
     idempotency: "supported"
     retry_class: "IdempotentWrite"
     mutation_class: "IdempotentWrite"
     supports_testmode: false
     requires_profile_scope: false
-    access: "GeneratedClient"
-    status: "Generated only"
+    access: "ValidatedFacade"
+    status: "Implemented"
     route_group: "payments_api"
   - operation_id: "release_authorization"
     http_method: "POST"
@@ -939,15 +939,15 @@ operations:
     http_method: "DELETE"
     path: "/payments/{paymentId}/refunds/{refundId}"
     generated: true
-    facade: false
+    facade: true
     pagination: false
     idempotency: "supported"
     retry_class: "IdempotentWrite"
     mutation_class: "IdempotentWrite"
     supports_testmode: true
     requires_profile_scope: false
-    access: "GeneratedClient"
-    status: "Generated only"
+    access: "ValidatedFacade"
+    status: "Implemented"
     route_group: "refunds_api"
   - operation_id: "list_all_refunds"
     http_method: "GET"
@@ -1345,15 +1345,15 @@ operations:
     http_method: "POST"
     path: "/customers/{customerId}/payments"
     generated: true
-    facade: false
+    facade: true
     pagination: false
     idempotency: "supported"
     retry_class: "IdempotentWrite"
     mutation_class: "IdempotentWrite"
     supports_testmode: false
     requires_profile_scope: false
-    access: "GeneratedClient"
-    status: "Generated only"
+    access: "ValidatedFacade"
+    status: "Implemented"
     route_group: "customers_api"
   - operation_id: "list_customer_payments"
     http_method: "GET"
@@ -1485,15 +1485,15 @@ operations:
     http_method: "DELETE"
     path: "/customers/{customerId}/subscriptions/{subscriptionId}"
     generated: true
-    facade: false
+    facade: true
     pagination: false
     idempotency: "supported"
     retry_class: "IdempotentWrite"
     mutation_class: "IdempotentWrite"
     supports_testmode: false
     requires_profile_scope: false
-    access: "GeneratedClient"
-    status: "Generated only"
+    access: "ValidatedFacade"
+    status: "Implemented"
     route_group: "subscriptions_api"
   - operation_id: "list_all_subscriptions"
     http_method: "GET"

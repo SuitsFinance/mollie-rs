@@ -20,7 +20,7 @@ Mission brief (pasted 2026-08-12) describes a 0→34 phase exceptional program. 
 
 This plan is a **retrofit + residual program**: Phase 0 freezes truth; later phases implement only **Open/Partial** gaps. Greenfield “add payouts facade” work must not be re-opened as if missing.
 
-Evidence SSOT freeze: [`00-current-baseline.md`](00-current-baseline.md), [`01-high-risk-operation-inventory.md`](01-high-risk-operation-inventory.md), [`02-public-api-inventory.md`](02-public-api-inventory.md).  
+Evidence SSOT freeze: [`00-current-baseline.md`](00-current-baseline.md), [`01-high-risk-operation-inventory.md`](01-high-risk-operation-inventory.md), [`02-public-api-inventory.md`](02-public-api-inventory.md).
 Prior: `15-rc-baseline.md`, `FINDINGS.md`, `docs/rc/rc-checklist.md` (RC path).
 
 **Spec maturity:** Level 3 architecture specification (R13) for Tier S/G/kernel ownership.
@@ -98,12 +98,12 @@ True at every commit after Phase 1 exit. Doctor/CI must fail if false.
 
 ### Package must-never
 
-- Never log Authorization / client secrets / webhook secrets  
-- Never default RetryPolicy to on for writes  
-- Never follow redirects with credentials  
-- Never treat Unknown as safe replay without sticky key  
-- Never add float money  
-- Never dual-own capability tables  
+- Never log Authorization / client secrets / webhook secrets
+- Never default RetryPolicy to on for writes
+- Never follow redirects with credentials
+- Never treat Unknown as safe replay without sticky key
+- Never add float money
+- Never dual-own capability tables
 
 ### Surfaces
 
@@ -199,9 +199,9 @@ In: inventories, gate samples, stale banners. Out: product code.
 
 ### Work
 
-- Write `00-current-baseline.md`, `01-…`, `02-…`, this program  
-- Mark `00-baseline.md` / partial `15-rc-baseline.md` SHA drift  
-- Seed AD-* / findings  
+- Write `00-current-baseline.md`, `01-…`, `02-…`, this program
+- Mark `00-baseline.md` / partial `15-rc-baseline.md` SHA drift
+- Seed AD-* / findings
 
 ### Catalog IDs
 
@@ -216,9 +216,9 @@ CON-004 (stale counts), baseline for PAY/CON.
 
 ### Acceptance
 
-- [x] SHA/version/MSRV pinned  
-- [x] 124/124 remeasured  
-- [x] Mission map Closed/Open  
+- [x] SHA/version/MSRV pinned
+- [x] 124/124 remeasured
+- [x] Mission map Closed/Open
 - [ ] Full fmt/clippy/test matrix on this SHA (carry to Phase 0 exit PR)
 
 ### Residual risks
@@ -239,9 +239,9 @@ Publish invariants/ACT as fail-closed CI contracts; confirm profile SSOT; docume
 
 ### Work
 
-- Ensure CI jobs map 1:1 to INV-* / ACT-* in `docs/sdd/1.0-readiness/` matrix  
-- Optionally extend `operation_safety` docs only (no second registry)  
-- Dual-suite characterization: current gates PASS is baseline  
+- Ensure CI jobs map 1:1 to INV-* / ACT-* in `docs/sdd/1.0-readiness/` matrix
+- Optionally extend `operation_safety` docs only (no second registry)
+- Dual-suite characterization: current gates PASS is baseline
 
 ### Catalog IDs
 
@@ -255,9 +255,9 @@ OWN-001, CON-001, PAY-001/002.
 
 ### Acceptance
 
-- [ ] INV table merged and linked from README/API-STABILITY  
-- [ ] ACT commands pasteable in M-02  
-- [ ] No new parallel capability store  
+- [ ] INV table merged and linked from README/API-STABILITY
+- [ ] ACT commands pasteable in M-02
+- [ ] No new parallel capability store
 
 ### Residual risks
 
@@ -273,9 +273,9 @@ Single machine-readable high-risk set; auto report `fully_protected / total`.
 
 ### Work
 
-- Expand `HIGH_RISK_WRITES` (or generate from mutation class + explicit list) to include mission gaps: at least `cancel_payment`, `cancel_refund`, `create_customer_payment`, `create_connect_balance_transfer`, align `create_mandate`/`create_payment_link`  
-- `scripts/report_high_risk_coverage.py` → md+json  
-- Wire CI fail if coverage < 100% **after** Phase 3–4 close (gate starts advisory then blocking)  
+- Expand `HIGH_RISK_WRITES` (or generate from mutation class + explicit list) to include mission gaps: at least `cancel_payment`, `cancel_refund`, `create_customer_payment`, `create_connect_balance_transfer`, align `create_mandate`/`create_payment_link`
+- `scripts/report_high_risk_coverage.py` → md+json
+- Wire CI fail if coverage < 100% **after** Phase 3–4 close (gate starts advisory then blocking)
 
 ### Catalog IDs
 
@@ -290,9 +290,9 @@ PAY-008, CON-003, CI-001.
 
 ### Acceptance
 
-- [x] Denominator frozen in script + doc  
-- [x] Report generated in CI  
-- [x] HR-001 closed or explicitly Accepted with waiver  
+- [x] Denominator frozen in script + doc
+- [x] Report generated in CI
+- [x] HR-001 closed or explicitly Accepted with waiver
 
 ---
 
@@ -304,11 +304,11 @@ PAY-008, CON-003, CI-001.
 
 ### Work
 
-- `src/domain/connect_balance_transfers.rs` (name to confirm against domain grammar)  
-- Validated create request; get/list if supported  
-- Concurrency: credential/profile/idempotency isolation  
-- Example already exists: ensure Tier-S path preferred  
-- Mark ValidatedFacade + HIGH_RISK  
+- `src/domain/connect_balance_transfers.rs` (name to confirm against domain grammar)
+- Validated create request; get/list if supported
+- Concurrency: credential/profile/idempotency isolation
+- Example already exists: ensure Tier-S path preferred
+- Mark ValidatedFacade + HIGH_RISK
 
 ### Catalog IDs
 
@@ -324,10 +324,10 @@ CON-003, AUT-006/009, PAY-001/002.
 
 ### Acceptance
 
-- [x] Tier-S API public  
-- [x] Profile + tests  
-- [x] HR-002 closed  
-- [x] No secret logging of signing/credentials  
+- [x] Tier-S API public
+- [x] Profile + tests
+- [x] HR-002 closed
+- [x] No secret logging of signing/credentials
 
 ---
 
@@ -339,9 +339,9 @@ Parse HTTP-date `Retry-After`; never sleep past deadline; expand hostile failure
 
 ### Work
 
-- `parse_retry_after` HTTP-date branch + clock skew tests  
-- Hostile cases: reset, slow body, 429/5xx, malformed JSON, foreign redirect (extend existing)  
-- Document precedence: Retry-After vs backoff vs deadline  
+- `parse_retry_after` HTTP-date branch + clock skew tests
+- Hostile cases: reset, slow body, 429/5xx, malformed JSON, foreign redirect (extend existing)
+- Document precedence: Retry-After vs backoff vs deadline
 
 ### Catalog IDs
 
@@ -349,9 +349,9 @@ PAY-004, PAY-005.
 
 ### Acceptance
 
-- [x] HTTP-date honored within budget  
-- [x] KER-RA-01 closed  
-- [ ] create_payout timeout-after-send ⇒ Unknown + no auto duplicate  
+- [x] HTTP-date honored within budget
+- [x] KER-RA-01 closed
+- [ ] create_payout timeout-after-send ⇒ Unknown + no auto duplicate
 
 ---
 
@@ -363,9 +363,9 @@ Consistent `stream_pages`/`stream_items` where meaningful; response enum unknown
 
 ### Work
 
-- Shared helpers in `domain/common` preserving max pages/items, cycle, origin, credentials, deadline  
-- Tests: cyclic next, foreign next, http downgrade, huge pages  
-- Enum audit for critical response types; request enums stay closed  
+- Shared helpers in `domain/common` preserving max pages/items, cycle, origin, credentials, deadline
+- Tests: cyclic next, foreign next, http downgrade, huge pages
+- Enum audit for critical response types; request enums stay closed
 
 ### Catalog IDs
 
@@ -373,8 +373,8 @@ CON-006, PAG-001.
 
 ### Acceptance
 
-- [ ] At least payments/refunds/payouts/UCT expose streams or documented N/A  
-- [ ] Origin/cycle tests still green  
+- [ ] At least payments/refunds/payouts/UCT expose streams or documented N/A
+- [ ] Origin/cycle tests still green
 
 ---
 
@@ -386,9 +386,9 @@ Mission production guides; observability allowlist tests; error helper consisten
 
 ### Work
 
-- Add guides under `docs/guides/`: payments, refunds, payouts, transfers, oauth-connect, webhooks, retries-and-idempotency, delivery-outcomes, multi-merchant, pagination, error-handling, testing (merge with existing 3)  
-- Allowlist safe hook/tracing fields; tests for forbidden  
-- rustdoc Tier-S vs Tier-G clarity  
+- Add guides under `docs/guides/`: payments, refunds, payouts, transfers, oauth-connect, webhooks, retries-and-idempotency, delivery-outcomes, multi-merchant, pagination, error-handling, testing (merge with existing 3)
+- Allowlist safe hook/tracing fields; tests for forbidden
+- rustdoc Tier-S vs Tier-G clarity
 
 ### Catalog IDs
 
@@ -396,9 +396,9 @@ CON-004, AUT-003, WHK-002/006.
 
 ### Acceptance
 
-- [ ] Guide matrix ≥ mission list or explicit deferrals  
-- [x] DOC-GUIDE-01 closed  
-- [ ] Secret leak still PASS  
+- [ ] Guide matrix ≥ mission list or explicit deferrals
+- [x] DOC-GUIDE-01 closed
+- [ ] Secret leak still PASS
 
 ---
 
@@ -410,14 +410,14 @@ Close `docs/rc/rc-checklist.md`; SBOM/provenance; scorecard green; tag disciplin
 
 ### Work
 
-- Hostile security review doc signed  
-- Package audit + clean-room compile  
-- cargo audit triage process  
-- Live readonly green evidence (credentials)  
-- Sandbox write matrix documented limitations  
-- SBOM (e.g. cargo-cyclonedx / ecosystem standard)  
-- Generated 1.0 scorecard from coverage script  
-- Release pipeline includes mission gate list  
+- Hostile security review doc signed
+- Package audit + clean-room compile
+- cargo audit triage process
+- Live readonly green evidence (credentials)
+- Sandbox write matrix documented limitations
+- SBOM (e.g. cargo-cyclonedx / ecosystem standard)
+- Generated 1.0 scorecard from coverage script
+- Release pipeline includes mission gate list
 
 ### Catalog IDs
 
@@ -425,9 +425,9 @@ CI-001, REL-*.
 
 ### Acceptance
 
-- [ ] RC checklist P0=0  
-- [ ] Scorecard critical fields green  
-- [ ] REL-001/002 closed or Accepted with owner  
+- [ ] RC checklist P0=0
+- [ ] Scorecard critical fields green
+- [ ] REL-001/002 closed or Accepted with owner
 
 ---
 
@@ -439,13 +439,13 @@ Mutation testing on handwritten kernel; deeper fuzz; proptest if justified witho
 
 ### Work
 
-- Targeted mutation on retry/idempotency/origin/webhook/redaction  
-- Fuzz smoke in CI bounded  
-- Differential contract expansion  
+- Targeted mutation on retry/idempotency/origin/webhook/redaction
+- Fuzz smoke in CI bounded
+- Differential contract expansion
 
 ### Acceptance
 
-- [ ] TEST-MUT-01 addressed or deferred Accepted  
+- [ ] TEST-MUT-01 addressed or deferred Accepted
 
 ---
 
@@ -500,10 +500,10 @@ CI green on release commit
 
 ### Done this session
 
-- Phase 0 freeze docs at `e3358d2`  
-- High-risk + public API inventories  
-- Elite residual program with R13 invariants/ACT/AD  
-- Mission 0–34 mapped to Closed vs Phases 1–8  
+- Phase 0 freeze docs at `e3358d2`
+- High-risk + public API inventories
+- Elite residual program with R13 invariants/ACT/AD
+- Mission 0–34 mapped to Closed vs Phases 1–8
 
 ### Next commands
 
@@ -519,9 +519,9 @@ python scripts/check_dangerous_profile_drift.py
 
 ### Must not
 
-- Reimplement closed facades/kernel  
-- Dual capability registries  
-- Claim 1.0 READY on 16/16 alone while Connect/guides/RC open  
+- Reimplement closed facades/kernel
+- Dual capability registries
+- Claim 1.0 READY on 16/16 alone while Connect/guides/RC open
 
 ### Open AD / ACT red
 

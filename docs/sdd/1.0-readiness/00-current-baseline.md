@@ -13,17 +13,17 @@ After residual implementation (see `FINDINGS.md` and `docs/registries/high-risk-
 Items still open for public 1.0: credentialed live soak, sandbox write breadth, formal hostile review, crates.io soak.
 
 
-**Status:** Phase 0 freeze record (historical)  
-**Crate version:** `0.7.0` (`Cargo.toml`)  
-**HEAD:** `e3358d2e49cb065d690deea8b43cdf2c9ed93a8a`  
-**Branch:** feature branch (residual program)  
-**MSRV:** `1.88`  
-**Freeze date:** 2026-08-12  
-**Honest band:** **NEAR READY ? RC path** (kernel + high-risk facades landed; RC evidence + guide matrix incomplete)  
-**Profile:** `payment-sdk`  
-**Supersedes for inventory claims:**  
-- `docs/sdd/1.0-readiness/00-baseline.md` (HEAD `55187ee`, 7 Tier-S modules) ? **STALE facade inventory**  
-- `docs/sdd/1.0-readiness/15-rc-baseline.md` (HEAD `df6a9d4`) ? still useful for RC checklist shape; **re-pin SHA here**  
+**Status:** Phase 0 freeze record (historical)
+**Crate version:** `0.7.0` (`Cargo.toml`)
+**HEAD:** `e3358d2e49cb065d690deea8b43cdf2c9ed93a8a`
+**Branch:** feature branch (residual program)
+**MSRV:** `1.88`
+**Freeze date:** 2026-08-12
+**Honest band:** **NEAR READY ? RC path** (kernel + high-risk facades landed; RC evidence + guide matrix incomplete)
+**Profile:** `payment-sdk`
+**Supersedes for inventory claims:**
+- `docs/sdd/1.0-readiness/00-baseline.md` (HEAD `55187ee`, 7 Tier-S modules) ? **STALE facade inventory**
+- `docs/sdd/1.0-readiness/15-rc-baseline.md` (HEAD `df6a9d4`) ? still useful for RC checklist shape; **re-pin SHA here**
 - Mission paste ?implement payouts/transfers/oauth from scratch? ? **STALE** relative to HEAD (facades present)
 
 Companion program: [`16-exceptional-1.0-program.md`](16-exceptional-1.0-program.md)
@@ -180,11 +180,11 @@ Architecture non-goals (mission): no generic PSP layer, no ledger embedding, no 
 
 ## 7. Exit criteria for Phase 0
 
-- [x] HEAD/version/MSRV recorded  
-- [x] 124/124 parity re-measured  
-- [x] High-risk CI set re-measured (16)  
-- [x] Tier-S inventory re-measured (14)  
-- [x] Mission phases mapped Closed/Open/Partial  
-- [x] Stale audit SHAs marked  
-- [ ] Full gate matrix green this SHA (fmt/clippy/test/deny) ? complete in Phase 0 close-out or first implement slice  
+- [x] HEAD/version/MSRV recorded
+- [x] 124/124 parity re-measured
+- [x] High-risk CI set re-measured (16)
+- [x] Tier-S inventory re-measured (14)
+- [x] Mission phases mapped Closed/Open/Partial
+- [x] Stale audit SHAs marked
+- [ ] Full gate matrix green this SHA (fmt/clippy/test/deny) ? complete in Phase 0 close-out or first implement slice
 - [x] Follow-on inventories linked (`01`, `02`, program `16`)

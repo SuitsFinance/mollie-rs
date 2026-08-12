@@ -1,6 +1,6 @@
 # Release readiness — mollie-rs 0.7.x → 1.0
 
-**As of:** residual exceptional-1.0 program (public cleanup).  
+**As of:** residual exceptional-1.0 program (public cleanup).
 **Crate:** `mollie-rs` **0.7.0** · MSRV **1.88** · Tier-G **124/124** ops.
 
 ## 1.0 band (honest)

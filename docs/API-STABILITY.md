@@ -32,7 +32,8 @@ CI fails when any of the following hold:
 3. Write classes marked `safe_to_retry: true`
 4. GET ops not classified `SafeRead`
 5. Local OpenAPI pin vs capability inventory mismatch (check_generation_reproducibility.py)
-6. High-risk coverage below 100% fully protected (eport_high_risk_coverage.py --require-full)
+6. High-risk coverage below 100% fully protected (
+eport_high_risk_coverage.py --require-full)
 
 Additive new operations are allowed; they must appear in the capability table
 and registry export in the same change.

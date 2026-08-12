@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 """Fail CI on dangerous OperationSafetyProfile / capability drift.
 
 INV-DRIFT-01 / INV-PROFILE-01: high-risk write profiles must stay consistent

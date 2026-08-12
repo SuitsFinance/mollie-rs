@@ -1,4 +1,4 @@
-# Production CI for mollie-rs â€” blocking gates for public main.
+# Production CI for mollie-rs - blocking gates for public main.
 name: CI
 
 on:
@@ -141,4 +141,3 @@ jobs:
         run: cargo install cargo-semver-checks --version 0.44.0 --locked
       - name: Check public API vs crates.io
         run: cargo semver-checks check-release || echo "No crates.io baseline yet or intentional 0.x break â€” see CHANGELOG.md"
-
