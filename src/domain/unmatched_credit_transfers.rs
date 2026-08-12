@@ -87,7 +87,7 @@ impl UnmatchedCreditTransfersApi<'_> {
             let client = client.clone();
             Box::pin(async move {
                 let _ = validate_page_limit(limit)?;
-                UnmatchedCreditTransfersApi { client }
+                UnmatchedCreditTransfersApi { client: &client }
                     .list_page(cursor.as_ref(), limit)
                     .await
             })

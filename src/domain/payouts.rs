@@ -132,7 +132,7 @@ impl PayoutsApi<'_> {
             let balance = balance.clone();
             Box::pin(async move {
                 let _ = validate_page_limit(limit)?;
-                PayoutsApi { client }
+                PayoutsApi { client: &client }
                     .list_page(balance.as_ref(), cursor.as_ref(), limit)
                     .await
             })
