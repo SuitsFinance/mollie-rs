@@ -51,7 +51,7 @@ app-helpers = [
 zeroize = ["dep:zeroize"]
 
 [dependencies]
-base64 = "0.22"
+base64 = "0.23"
 bytes = "1.9"
 futures-core = "0.3"
 getrandom = "0.2"
