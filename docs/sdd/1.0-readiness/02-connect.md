@@ -1,4 +1,4 @@
-﻿# SDD 02 — Connect / multi-merchant safety
+# SDD 02 — Connect / multi-merchant safety
 
 ## Context
 Connect platforms hold many organization tokens. Concurrent requests must never cross-wire credentials.

@@ -1,4 +1,4 @@
-﻿# SDD 12 — Public API
+# SDD 12 — Public API
 
 Tier S stable intent; Tier G may churn with OpenAPI pin pre-1.0.
 Document in `docs/API-STABILITY.md` (Phase 7).

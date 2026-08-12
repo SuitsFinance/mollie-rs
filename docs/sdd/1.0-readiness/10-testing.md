@@ -1,4 +1,4 @@
-﻿# SDD 10 — Testing strategy
+# SDD 10 — Testing strategy
 
 ## Pyramid
 

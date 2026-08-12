@@ -1,4 +1,4 @@
-﻿//! Machine-readable Mollie route capabilities generated from `specs-3.0.yaml`.
+//! Machine-readable Mollie route capabilities generated from `specs-3.0.yaml`.
 //!
 //! This table is the checked-in **operation safety profile** SSOT
 //! ([`crate::OperationSafetyProfile`] aliases [`RouteCapability`]). Derived

@@ -1,4 +1,4 @@
-﻿# SDD 07 — Webhooks
+# SDD 07 — Webhooks
 
 ## Existing
 HMAC next-gen verify raw body; classic form parser; rotation secrets; guide refetch.

@@ -1,4 +1,4 @@
-﻿# Deep production-foundation audit — mollie-rs 0.6.1
+# Deep production-foundation audit — mollie-rs 0.6.1
 
 **Audit date:** 2026-08-04  
 **HEAD:** `bb5d460` — `feat: official SDK parity audit and client context foundations`  

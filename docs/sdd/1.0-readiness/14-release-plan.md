@@ -1,4 +1,4 @@
-﻿# SDD 14 — Release plan
+# SDD 14 — Release plan
 
 ## Ladder
 

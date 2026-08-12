@@ -1,19 +1,31 @@
-# SDD 00 — Current baseline freeze (`mollie-rs` exceptional 1.0 program)
+# SDD 00 - Current baseline freeze (`mollie-rs` exceptional 1.0 program)
 
-**Status:** Phase 0 freeze (this session)  
+## Post-freeze residual status
+
+After residual implementation (see `FINDINGS.md` and `docs/registries/high-risk-coverage.md`):
+
+- High-risk coverage **23/23** fully protected
+- Connect balance transfers Tier-S landed
+- Retry-After HTTP-date landed
+- List streams on key facades landed
+- Production guides + RC scorecard/SBOM notes landed
+
+Items still open for public 1.0: credentialed live soak, sandbox write breadth, formal hostile review, crates.io soak.
+
+
+**Status:** Phase 0 freeze record (historical)  
 **Crate version:** `0.7.0` (`Cargo.toml`)  
 **HEAD:** `e3358d2e49cb065d690deea8b43cdf2c9ed93a8a`  
-**Branch:** `floris-xlx-cuddly-umbrella`  
+**Branch:** feature branch (residual program)  
 **MSRV:** `1.88`  
 **Freeze date:** 2026-08-12  
-**Honest band:** **NEAR READY → RC path** (kernel + high-risk facades landed; RC evidence + guide matrix incomplete)  
+**Honest band:** **NEAR READY ? RC path** (kernel + high-risk facades landed; RC evidence + guide matrix incomplete)  
 **Profile:** `payment-sdk`  
 **Supersedes for inventory claims:**  
-- `docs/sdd/1.0-readiness/00-baseline.md` (HEAD `55187ee`, 7 Tier-S modules) — **STALE facade inventory**  
-- `docs/sdd/1.0-readiness/15-rc-baseline.md` (HEAD `df6a9d4`) — still useful for RC checklist shape; **re-pin SHA here**  
-- Mission paste “implement payouts/transfers/oauth from scratch” — **STALE** relative to HEAD (facades present)
+- `docs/sdd/1.0-readiness/00-baseline.md` (HEAD `55187ee`, 7 Tier-S modules) ? **STALE facade inventory**  
+- `docs/sdd/1.0-readiness/15-rc-baseline.md` (HEAD `df6a9d4`) ? still useful for RC checklist shape; **re-pin SHA here**  
+- Mission paste ?implement payouts/transfers/oauth from scratch? ? **STALE** relative to HEAD (facades present)
 
-Companion elite pack (corpus): `docs/sdd/xylex/mollie-rs/` under `XYLEX_SDD_ROOT`  
 Companion program: [`16-exceptional-1.0-program.md`](16-exceptional-1.0-program.md)
 
 ---
@@ -26,7 +38,7 @@ Primary release metric is **not** OpenAPI operation count (already 124/124).
 high_risk_operations_with_enforced_safety_invariants
 ---------------------------------------------------
 total_high_risk_operations
-                                          → 100% for 1.0.0
+                                          ? 100% for 1.0.0
 ```
 
 An operation counts as **fully protected** only when profile + transport enforcement + delivery semantics + secret-leak coverage + negative tests + justified Tier-S (when material) all hold. See `01-high-risk-operation-inventory.md`.
@@ -62,19 +74,19 @@ An operation counts as **fully protected** only when profile + transport enforce
 
 ```text
 Application
-    │
-    ▼
-Tier S — MollieClient domain facades, validated requests, typed IDs, webhooks
-    │
-    ▼
-Tier G — generated OpenAPI routes (124) + types
-    │
-    ▼
-Transport safety kernel — reqwest, OperationSafetyProfile/RouteCapability,
+    ?
+    ?
+Tier S ? MollieClient domain facades, validated requests, typed IDs, webhooks
+    ?
+    ?
+Tier G ? generated OpenAPI routes (124) + types
+    ?
+    ?
+Transport safety kernel ? reqwest, OperationSafetyProfile/RouteCapability,
   RetryPolicy (off by default), sticky idempotency, DeliveryOutcome,
   hooks, timeouts, redirect none, pagination origin allowlist
-    │
-    ▼
+    ?
+    ?
 Mollie API
 ```
 
@@ -91,7 +103,7 @@ Mollie API
 | `python scripts/report_api_drift.py` | **PASS** local 124 (no upstream snapshot this run) | Verified-build |
 | `cargo check --all-targets --all-features` | **PASS** | Verified-build |
 | `cargo fmt --check` | **NOT RE-RUN** this session | Unverified |
-| `cargo clippy … -D warnings` | **NOT RE-RUN** this session | Unverified |
+| `cargo clippy ? -D warnings` | **NOT RE-RUN** this session | Unverified |
 | `cargo test --all-features` | **NOT RE-RUN** this session | Unverified (prior RC freeze PASS) |
 | `cargo deny check` | **NOT RE-RUN** this session | Unverified (prior PASS) |
 | `cargo audit` | **NOT RUN** | Unverified |
@@ -105,7 +117,7 @@ Mollie API
 | --- | --- | --- |
 | P0 baseline freeze | **Refresh now** | This document |
 | P1 profile SSOT | **Closed v1** | Alias + derived classes; expand fields only if dual-core avoided |
-| P2 high-risk freeze | **Partial** | CI set=16; mission seed≈21 — denominator incomplete |
+| P2 high-risk freeze | **Partial** | CI set=16; mission seed?21 ? denominator incomplete |
 | P3 payouts Tier-S | **Closed** | `domain/payouts.rs` |
 | P4 transfers Tier-S | **Closed** | `domain/transfers.rs` + signature type |
 | P5 OAuth Tier-S | **Closed** | `domain/oauth.rs` + secret types |
@@ -151,9 +163,9 @@ Mollie API
 | PAG-001 | CON-003 | P2 | No `stream_pages`/`stream_items` grammar | Open |
 | DOC-GUIDE-01 | CON-004 | P1 | Mission production guides 3/12 | Open |
 | REL-001 | CI-001 | P1 | RC hostile review / package audit / live green missing | Open |
-| REL-002 | — | P2 | SBOM + provenance absent | Open |
-| TEST-MUT-01 | — | P3 | Mutation testing absent | Open |
-| KER-001…007 | PAY/AUT/WHK | P0 | Delivery, redirect, origin, profile, retry sim, cancel docs, concurrency | **Closed** (prior) |
+| REL-002 | ? | P2 | SBOM + provenance absent | Open |
+| TEST-MUT-01 | ? | P3 | Mutation testing absent | Open |
+| KER-001?007 | PAY/AUT/WHK | P0 | Delivery, redirect, origin, profile, retry sim, cancel docs, concurrency | **Closed** (prior) |
 | FAC-001 | CON-003 | P1 | Payouts/transfers/oauth facades | **Closed** |
 
 ---
@@ -174,5 +186,5 @@ Architecture non-goals (mission): no generic PSP layer, no ledger embedding, no 
 - [x] Tier-S inventory re-measured (14)  
 - [x] Mission phases mapped Closed/Open/Partial  
 - [x] Stale audit SHAs marked  
-- [ ] Full gate matrix green this SHA (fmt/clippy/test/deny) — complete in Phase 0 close-out or first implement slice  
+- [ ] Full gate matrix green this SHA (fmt/clippy/test/deny) ? complete in Phase 0 close-out or first implement slice  
 - [x] Follow-on inventories linked (`01`, `02`, program `16`)

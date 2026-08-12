@@ -1,4 +1,4 @@
-﻿# SDD 06 — Retries, idempotency, delivery outcomes (KERNEL)
+# SDD 06 — Retries, idempotency, delivery outcomes (KERNEL)
 
 ## Context
 Payment SDK correctness hinges on retry + idempotency + ambiguous delivery.

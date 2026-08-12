@@ -1,4 +1,4 @@
-﻿# Implementation completion report — official SDK parity modernization
+# Implementation completion report — official SDK parity modernization
 
 **Date:** 2026-08-04  
 **Crate:** mollie-rs **0.6.1**  

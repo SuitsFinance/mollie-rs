@@ -1,4 +1,4 @@
-﻿# SDD 03 — Payouts (Tier-S after kernel)
+# SDD 03 — Payouts (Tier-S after kernel)
 
 ## Context
 Payouts move money. Tier G routes exist (`list/create/get/cancel_payout`).

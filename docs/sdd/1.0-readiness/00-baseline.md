@@ -1,4 +1,4 @@
-﻿# SDD 00 — Baseline forensics (`mollie-rs` 0.7.0)
+# SDD 00 — Baseline forensics (`mollie-rs` 0.7.0)
 
 **Status:** Phase 0 freeze  
 **Crate version:** `0.7.0` (`Cargo.toml`)  

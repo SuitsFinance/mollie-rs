@@ -4,13 +4,15 @@
 
 Evolve `mollie-rs` `0.7.0` @ `e3358d2` into a **1.0.0** payment SDK judged by **enforced high-risk safety invariants**, not by OpenAPI operation count.
 
+## Implementation status
+
+Residual phases 2-7 implemented: high-risk 23/23, Connect Tier-S, Retry-After HTTP-date, list streams, guides, RC artifacts. Live soak and formal hostile review remain open (see `docs/release-readiness.md`).
+
 ## Repositories
 
 | Role | Repo | Branch / path |
 | --- | --- | --- |
-| Target | `SuitsFinance/mollie-rs` | `floris-xlx-cuddly-umbrella` @ `e3358d2e49cb065d690deea8b43cdf2c9ed93a8a` |
-| Workspace | worktree | `C:\Users\floris\.copilot\copilot-worktrees\mollie-rs\floris-xlx-cuddly-umbrella` |
-| Corpus pack | `spec-driven-development` | `docs/sdd/xylex/mollie-rs/` |
+| Target | `SuitsFinance/mollie-rs` | freeze SHA `e3358d2` (pre-residual); residual on feature branch |
 
 ## Context
 
@@ -180,7 +182,6 @@ True at every commit after Phase 1 exit. Doctor/CI must fail if false.
 | `16-exceptional-1.0-program.md` | This program SSOT |
 | `docs/API-STABILITY.md` | Stability tiers |
 | `docs/rc/rc-checklist.md` | RC evidence board |
-| Corpus `docs/sdd/xylex/mollie-rs/` | Elite pack mirror |
 
 ---
 
@@ -507,7 +508,7 @@ CI green on release commit
 ### Next commands
 
 ```powershell
-cd C:\Users\floris\.copilot\copilot-worktrees\mollie-rs\floris-xlx-cuddly-umbrella
+cd /path/to/mollie-rs
 cargo fmt --all -- --check
 cargo clippy --all-targets --all-features -- -D warnings
 cargo test --all-features
