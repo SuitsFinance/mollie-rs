@@ -124,7 +124,7 @@ impl ConnectBalanceTransfersApi<'_> {
             let client = client.clone();
             Box::pin(async move {
                 let _ = validate_page_limit(limit)?;
-                ConnectBalanceTransfersApi { client: &client }
+                ConnectBalanceTransfersApi { client }
                     .list_page(cursor.as_ref(), limit)
                     .await
             })
