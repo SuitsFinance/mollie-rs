@@ -50,6 +50,15 @@ let _ = payment;
 
 `RetryPolicy::total_deadline` (alias `retry_budget()`) is a wall-clock **retry budget** from the first attempt: when exhausted, the SDK returns the last attempt (or a budget error) and does **not** send an extra leftover request.
 
+## Retry-After
+
+When the provider returns `Retry-After`, the SDK accepts:
+
+- **delta-seconds** (e.g. `120`)
+- **HTTP-date** (IMF-fix / RFC 2822)
+
+Past dates yield a zero delay (no sleep). Sleep is always capped by the remaining retry budget so a large `Retry-After` cannot push a leftover attempt past the deadline.
+
 ## Delivery outcomes (ambiguous failure)
 
 Transport classifies attempts as:

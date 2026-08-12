@@ -110,9 +110,9 @@ pub use create_payment::{
 };
 pub use datetime::{Date, DateTime};
 pub use domain::{
-    CapturesApi, MandatesApi, OAuthApi, PaymentLinksApi, PaymentsApi, PayoutsApi, RefundsApi,
-    SessionsApi, SubscriptionsApi, TerminalsApi, TransferClientSignature, TransfersApi,
-    UnmatchedCreditTransfersApi, VerifyPayeeApi, WebhooksApi,
+    CapturesApi, ConnectBalanceTransfersApi, MandatesApi, OAuthApi, PaymentLinksApi, PaymentsApi,
+    PayoutsApi, RefundsApi, SessionsApi, SubscriptionsApi, TerminalsApi, TransferClientSignature,
+    TransfersApi, UnmatchedCreditTransfersApi, VerifyPayeeApi, WebhooksApi,
 };
 pub use empty::EmptyResponse;
 pub use env::{
@@ -148,7 +148,7 @@ pub use money::{
 pub use operation_safety::{
     all_operation_safety_profiles, high_risk_coverage, operation_safety_profile, AuthClass,
     IdempotencyClass, MutationClass, OperationSafetyProfile, PaginationPolicy, ProfileScope,
-    TestmodePolicy,
+    TestmodePolicy, HIGH_RISK_WRITE_OPERATION_IDS,
 };
 pub use pagination::{
     AsyncPaginator, ItemStream, Page, PageCursor, PaginationGuard, DEFAULT_PAGE_LIMIT,
@@ -170,7 +170,8 @@ pub use webhook_verify::{
     DEFAULT_MAX_WEBHOOK_BODY_BYTES, MOLLIE_SIGNATURE_HEADER,
 };
 pub use write_requests::{
-    CreateCaptureRequired, CreatePaymentLinkRequired, CreatePayoutRequired, CreateRefundRequired,
+    ConnectBalanceTransferParty, CreateCaptureRequired, CreateConnectBalanceTransferRequired,
+    CreatePaymentLinkRequired, CreatePayoutRequired, CreateRefundRequired,
     CreateSepaMandateRequired, CreateSubscriptionRequired, CreateTransferRequired,
     VerifyPayeeRequired,
 };

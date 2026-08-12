@@ -1,4 +1,4 @@
-# Mollie API Rust SDK
+ Mollie API Rust SDK
 
 [![CI](https://github.com/SuitsFinance/mollie-rs/actions/workflows/ci.yml/badge.svg)](https://github.com/SuitsFinance/mollie-rs/actions/workflows/ci.yml)
 [![crates.io](https://img.shields.io/crates/v/mollie-rs.svg)](https://crates.io/crates/mollie-rs)
@@ -6,7 +6,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![MSRV](https://img.shields.io/badge/MSRV-1.88-orange.svg)](docs/compatibility.md)
 
-**Version:** `0.7.0` · **MSRV:** `1.88`
+**Version:** `0.7.1` · **MSRV:** `1.88`
 
 Typed Rust SDK for the Mollie API. Built and maintained by **Suits Finance B.V.**
 
@@ -16,15 +16,16 @@ Typed Rust SDK for the Mollie API. Built and maintained by **Suits Finance B.V.*
 
 ## Status
 
-**Early production — use with caveats.** Core Payments, Refunds, Captures, Subscriptions, Mandates, Payment Links, and signed webhooks are covered by the pinned contract and exercised in CI. The crate is `0.x`, so minor releases may break the public API.
+**Early production - use with caveats.** Core Payments, Refunds, Captures, Subscriptions, Mandates, Payment Links, payouts/transfers, OAuth/Connect, and signed webhooks are covered by the pinned contract and exercised in CI. High-risk writes are fail-closed under a frozen **23/23** safety coverage metric. The crate is `0.x`, so minor releases may break the public API.
 
 Your application still owns idempotency keys, webhook dedupe, and authoritative refetch after classic webhooks — see [`docs/guides/safe-payment-retry.md`](docs/guides/safe-payment-retry.md) and [`SECURITY.md`](SECURITY.md).
 
 Read [`docs/release-readiness.md`](docs/release-readiness.md) and [`docs/audits/`](docs/audits/) before adopting this for production payment infrastructure; they document known gaps against the official SDKs honestly.
 
-**Compatibility:** see [`docs/compatibility.md`](docs/compatibility.md) (facade vs generated tiers, MSRV **1.88**, feature flags).  
-**API stability:** [`docs/API-STABILITY.md`](docs/API-STABILITY.md) · **Release readiness:** [`docs/release-readiness.md`](docs/release-readiness.md).  
+**Compatibility:** see [`docs/compatibility.md`](docs/compatibility.md) (facade vs generated tiers, MSRV **1.88**, feature flags).
+**API stability:** [`docs/API-STABILITY.md`](docs/API-STABILITY.md) · **Release readiness:** [`docs/release-readiness.md`](docs/release-readiness.md).
 **Safe retries / Unknown outcomes:** [`docs/guides/safe-payment-retry.md`](docs/guides/safe-payment-retry.md).
+**Guides index:** [`docs/guides/README.md`](docs/guides/README.md).
 
 ## Install
 
@@ -46,7 +47,7 @@ mollie-rs = { version = "0.7", default-features = false }
 - **Idempotency:** prefer `IdempotencyKey` on facade `create` methods; avoid long-lived sticky keys.
 - **Webhooks:** classic parse + Next-gen HMAC via `WebhookVerifier` / `client.webhooks()`; refetch for classic; event fetch for authenticity. See `SECURITY.md`.
 - **Metadata:** `response.metadata()` / `error.metadata()`.
-- **Domain facades:** payments, refunds, captures, subscriptions, mandates, payment links, webhooks, payouts, transfers, payee verifications, unmatched CT, sessions, terminals, OAuth — validated builders where available.
+- **Domain facades:** payments, refunds, captures, subscriptions, mandates, payment links, webhooks, payouts, transfers, Connect balance transfers, payee verifications, unmatched CT, sessions, terminals, OAuth — validated builders where available.
 - **Optional `zeroize`:** zero credential secret material on drop (`features = ["zeroize"]`).
 - **EmptyResponse:** typed empty cancel/revoke/delete bodies on facades.
 

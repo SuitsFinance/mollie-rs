@@ -1,4 +1,4 @@
-﻿# SDD 09 — Contract drift
+# SDD 09 — Contract drift
 
 ## Existing
 

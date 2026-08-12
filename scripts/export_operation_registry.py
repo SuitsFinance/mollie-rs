@@ -1,4 +1,4 @@
-﻿"""Export operation registry YAML from route_capabilities + known upstream gaps."""
+"""Export operation registry YAML from route_capabilities + known upstream gaps."""
 from __future__ import annotations
 import re
 from pathlib import Path

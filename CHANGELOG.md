@@ -1,24 +1,32 @@
-﻿# Changelog
+# Changelog
 
 ## [Unreleased]
 
+## [0.7.1] (2026-08-12)
+
 ### Features
 
+- **High-risk coverage metric (23/23):** frozen denominator in `operation_safety` + `check_dangerous_profile_drift.py`; CI report via `scripts/report_high_risk_coverage.py --require-full`.
+- **Connect balance transfers Tier-S:** `client.connect_balance_transfers()` with `CreateConnectBalanceTransferRequired`.
+- **Pagination streams:** `stream_pages` / `stream_items` on key list facades (payments, refunds, payouts, payment links, Connect, UCT).
+- **Retry-After HTTP-date:** IMF-fix / RFC 2822 in addition to delta-seconds.
+- **Production guides:** expanded `docs/guides/` index (payments, refunds, OAuth/Connect, pagination, multi-merchant, errors, testing).
 - **Transport safety kernel:** first-class `DeliveryOutcome` (NotSent / Rejected / Succeeded / Unknown), operation-aware retry simulation, pagination origin checks, redirect auth hardening.
 - **`OperationSafetyProfile` SSOT** via `route_capabilities` + `operation_safety`; dangerous-profile CI gate (`scripts/check_dangerous_profile_drift.py`).
-- **Tier-S facades:** OAuth, payouts, transfers (client signature), verify-payee, unmatched credit transfers, sessions, terminal pairing; delayed routes on payments.
-- **Docs:** `docs/API-STABILITY.md`, `docs/release-readiness.md`, `docs/sdd/1.0-readiness/*` program pack; expanded safe-retry guide (Unknown / cancellation).
+- **Tier-S facades:** OAuth, payouts, transfers (client signature), verify-payee, unmatched credit transfers, sessions, terminal pairing, Connect balance transfers; delayed routes on payments.
+- **Docs:** `docs/API-STABILITY.md`, `docs/release-readiness.md`, `docs/sdd/1.0-readiness/*` program pack; expanded safe-retry guide (Unknown / cancellation / Retry-After).
 
 ### Safety
 
-- High-risk writes marked `RouteAccess::ValidatedFacade` with profile invariants (16/16 metric).
+- High-risk writes marked `RouteAccess::ValidatedFacade` with profile invariants (**23/23** metric + coverage report). Coverage gate fails closed below 100%.
+- `EntityBalanceTransfer` create bodies omit response-only fields on the wire (same pattern as payouts).
 - Model tests: write ≤1 attempt without sticky key; no post-deadline attempt; NonRetryable never retries.
 
 ### Chores
 
 - Public-repo production hygiene: GitHub Actions CI (fmt/clippy/test/docs/MSRV/cargo-deny/drift/package), Dependabot, issue/PR templates, Code of Conduct.
 - crates.io metadata polish (`categories`, `homepage`, package `exclude` for non-crate artifacts).
-- Refreshed production assessment and checklist for the 0.7.x line.
+- Refreshed production assessment, RC checklist/scorecard/SBOM notes, and docs index for the 0.7.x line.
 
 ## [0.7.0] (2026-08-09)
 
@@ -156,4 +164,3 @@
 
 - Release channel: stable
 - Tag: `v0.1.0`
-

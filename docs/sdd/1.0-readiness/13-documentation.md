@@ -1,4 +1,4 @@
-﻿# SDD 13 — Documentation
+# SDD 13 — Documentation
 
 Guides under `docs/guides/`:
 

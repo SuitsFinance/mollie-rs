@@ -1,4 +1,4 @@
-﻿# SDD 01 — 1.0 acceptance criteria
+# SDD 01 — 1.0 acceptance criteria
 
 **Depends on:** `00-baseline.md`  
 **Crate target band:** do **not** ship `1.0.0` until this document’s gates pass; prefer `0.8` / `0.9` / `1.0.0-rc.N`.

@@ -1,4 +1,4 @@
-﻿//! Machine-readable Mollie route capabilities generated from `specs-3.0.yaml`.
+//! Machine-readable Mollie route capabilities generated from `specs-3.0.yaml`.
 //!
 //! This table is the checked-in **operation safety profile** SSOT
 //! ([`crate::OperationSafetyProfile`] aliases [`RouteCapability`]). Derived
@@ -589,7 +589,7 @@ pub const ROUTE_CAPABILITIES: &[RouteCapability] = &[
         retry_class: RetryClass::IdempotentWrite,
         paginated: false,
         requires_profile_scope: false,
-        access: RouteAccess::GeneratedClient,
+        access: RouteAccess::ValidatedFacade,
     },
     RouteCapability {
         operation_id: "list_connect_balance_transfers",
@@ -680,7 +680,7 @@ pub const ROUTE_CAPABILITIES: &[RouteCapability] = &[
         retry_class: RetryClass::IdempotentWrite,
         paginated: false,
         requires_profile_scope: false,
-        access: RouteAccess::GeneratedClient,
+        access: RouteAccess::ValidatedFacade,
     },
     RouteCapability {
         operation_id: "release_authorization",
@@ -914,7 +914,7 @@ pub const ROUTE_CAPABILITIES: &[RouteCapability] = &[
         retry_class: RetryClass::IdempotentWrite,
         paginated: false,
         requires_profile_scope: false,
-        access: RouteAccess::GeneratedClient,
+        access: RouteAccess::ValidatedFacade,
     },
     RouteCapability {
         operation_id: "list_all_refunds",
@@ -1291,7 +1291,7 @@ pub const ROUTE_CAPABILITIES: &[RouteCapability] = &[
         retry_class: RetryClass::IdempotentWrite,
         paginated: false,
         requires_profile_scope: false,
-        access: RouteAccess::GeneratedClient,
+        access: RouteAccess::ValidatedFacade,
     },
     RouteCapability {
         operation_id: "list_customer_payments",
@@ -1421,7 +1421,7 @@ pub const ROUTE_CAPABILITIES: &[RouteCapability] = &[
         retry_class: RetryClass::IdempotentWrite,
         paginated: false,
         requires_profile_scope: false,
-        access: RouteAccess::GeneratedClient,
+        access: RouteAccess::ValidatedFacade,
     },
     RouteCapability {
         operation_id: "list_all_subscriptions",

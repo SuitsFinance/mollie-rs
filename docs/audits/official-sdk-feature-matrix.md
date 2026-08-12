@@ -1,4 +1,4 @@
-﻿# Official SDK feature matrix (`mollie-rs` 0.6.1)
+# Official SDK feature matrix (`mollie-rs` 0.6.1)
 
 Cross-SDK comparison. Status values: **Y** full, **P** partial, **G** generated-only, **N** no, **n/a** not applicable, **!** should not copy, **?** needs contract verify.
 

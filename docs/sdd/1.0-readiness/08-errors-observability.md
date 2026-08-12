@@ -1,4 +1,4 @@
-﻿# SDD 08 — Errors & observability
+# SDD 08 — Errors & observability
 
 ## Existing
 Rich `MollieError` + is_timeout/connection/cancelled/authz/retryable/rate_limited; Annotated transport context; hooks with redacted URL.

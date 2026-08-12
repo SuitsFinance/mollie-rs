@@ -1,0 +1,260 @@
+{
+  "high_risk_total": 23,
+  "fully_protected": 23,
+  "ratio": "23/23",
+  "operations": [
+    {
+      "operation_id": "cancel_payment",
+      "status": "full",
+      "access": "ValidatedFacade",
+      "retry_class": "IdempotentWrite",
+      "supports_idempotency": true,
+      "http_method": "DELETE",
+      "path": "/payments/{paymentId}",
+      "tier_s_module": "payments",
+      "tier_s": true
+    },
+    {
+      "operation_id": "cancel_payout",
+      "status": "full",
+      "access": "ValidatedFacade",
+      "retry_class": "IdempotentWrite",
+      "supports_idempotency": true,
+      "http_method": "DELETE",
+      "path": "/payouts/{payoutId}",
+      "tier_s_module": "payouts",
+      "tier_s": true
+    },
+    {
+      "operation_id": "cancel_refund",
+      "status": "full",
+      "access": "ValidatedFacade",
+      "retry_class": "IdempotentWrite",
+      "supports_idempotency": true,
+      "http_method": "DELETE",
+      "path": "/payments/{paymentId}/refunds/{refundId}",
+      "tier_s_module": "refunds",
+      "tier_s": true
+    },
+    {
+      "operation_id": "cancel_subscription",
+      "status": "full",
+      "access": "ValidatedFacade",
+      "retry_class": "IdempotentWrite",
+      "supports_idempotency": true,
+      "http_method": "DELETE",
+      "path": "/customers/{customerId}/subscriptions/{subscriptionId}",
+      "tier_s_module": "subscriptions",
+      "tier_s": true
+    },
+    {
+      "operation_id": "create_capture",
+      "status": "full",
+      "access": "ValidatedFacade",
+      "retry_class": "IdempotentWrite",
+      "supports_idempotency": true,
+      "http_method": "POST",
+      "path": "/payments/{paymentId}/captures",
+      "tier_s_module": "captures",
+      "tier_s": true
+    },
+    {
+      "operation_id": "create_connect_balance_transfer",
+      "status": "full",
+      "access": "ValidatedFacade",
+      "retry_class": "IdempotentWrite",
+      "supports_idempotency": true,
+      "http_method": "POST",
+      "path": "/connect/balance-transfers",
+      "tier_s_module": "connect_balance_transfers",
+      "tier_s": true
+    },
+    {
+      "operation_id": "create_customer_payment",
+      "status": "full",
+      "access": "ValidatedFacade",
+      "retry_class": "IdempotentWrite",
+      "supports_idempotency": true,
+      "http_method": "POST",
+      "path": "/customers/{customerId}/payments",
+      "tier_s_module": "payments",
+      "tier_s": true
+    },
+    {
+      "operation_id": "create_mandate",
+      "status": "full",
+      "access": "ValidatedFacade",
+      "retry_class": "IdempotentWrite",
+      "supports_idempotency": true,
+      "http_method": "POST",
+      "path": "/customers/{customerId}/mandates",
+      "tier_s_module": "mandates",
+      "tier_s": true
+    },
+    {
+      "operation_id": "create_payment",
+      "status": "full",
+      "access": "ValidatedFacade",
+      "retry_class": "IdempotentWrite",
+      "supports_idempotency": true,
+      "http_method": "POST",
+      "path": "/payments",
+      "tier_s_module": "payments",
+      "tier_s": true
+    },
+    {
+      "operation_id": "create_payment_link",
+      "status": "full",
+      "access": "ValidatedFacade",
+      "retry_class": "IdempotentWrite",
+      "supports_idempotency": true,
+      "http_method": "POST",
+      "path": "/payment-links",
+      "tier_s_module": "payment_links",
+      "tier_s": true
+    },
+    {
+      "operation_id": "create_payout",
+      "status": "full",
+      "access": "ValidatedFacade",
+      "retry_class": "IdempotentWrite",
+      "supports_idempotency": true,
+      "http_method": "POST",
+      "path": "/payouts",
+      "tier_s_module": "payouts",
+      "tier_s": true
+    },
+    {
+      "operation_id": "create_refund",
+      "status": "full",
+      "access": "ValidatedFacade",
+      "retry_class": "IdempotentWrite",
+      "supports_idempotency": true,
+      "http_method": "POST",
+      "path": "/payments/{paymentId}/refunds",
+      "tier_s_module": "refunds",
+      "tier_s": true
+    },
+    {
+      "operation_id": "create_session",
+      "status": "full",
+      "access": "ValidatedFacade",
+      "retry_class": "IdempotentWrite",
+      "supports_idempotency": true,
+      "http_method": "POST",
+      "path": "/sessions",
+      "tier_s_module": "sessions",
+      "tier_s": true
+    },
+    {
+      "operation_id": "create_subscription",
+      "status": "full",
+      "access": "ValidatedFacade",
+      "retry_class": "IdempotentWrite",
+      "supports_idempotency": true,
+      "http_method": "POST",
+      "path": "/customers/{customerId}/subscriptions",
+      "tier_s_module": "subscriptions",
+      "tier_s": true
+    },
+    {
+      "operation_id": "create_transfer",
+      "status": "full",
+      "access": "ValidatedFacade",
+      "retry_class": "IdempotentWrite",
+      "supports_idempotency": true,
+      "http_method": "POST",
+      "path": "/business-accounts/transfers",
+      "tier_s_module": "transfers",
+      "tier_s": true
+    },
+    {
+      "operation_id": "match_unmatched_credit_transfer",
+      "status": "full",
+      "access": "ValidatedFacade",
+      "retry_class": "NonRetryableWrite",
+      "supports_idempotency": true,
+      "http_method": "POST",
+      "path": "/unmatched-credit-transfers/{unmatchedCreditTransferId}/match",
+      "tier_s_module": "unmatched_credit_transfers",
+      "tier_s": true
+    },
+    {
+      "operation_id": "oauth_generate_tokens",
+      "status": "full",
+      "access": "ValidatedFacade",
+      "retry_class": "NonRetryableWrite",
+      "supports_idempotency": true,
+      "http_method": "POST",
+      "path": "/oauth2/tokens",
+      "tier_s_module": "oauth",
+      "tier_s": true
+    },
+    {
+      "operation_id": "oauth_revoke_tokens",
+      "status": "full",
+      "access": "ValidatedFacade",
+      "retry_class": "NonRetryableWrite",
+      "supports_idempotency": true,
+      "http_method": "DELETE",
+      "path": "/oauth2/tokens",
+      "tier_s_module": "oauth",
+      "tier_s": true
+    },
+    {
+      "operation_id": "payment_create_route",
+      "status": "full",
+      "access": "ValidatedFacade",
+      "retry_class": "IdempotentWrite",
+      "supports_idempotency": true,
+      "http_method": "POST",
+      "path": "/payments/{paymentId}/routes",
+      "tier_s_module": "payments",
+      "tier_s": true
+    },
+    {
+      "operation_id": "return_unmatched_credit_transfer",
+      "status": "full",
+      "access": "ValidatedFacade",
+      "retry_class": "NonRetryableWrite",
+      "supports_idempotency": true,
+      "http_method": "POST",
+      "path": "/unmatched-credit-transfers/{unmatchedCreditTransferId}/return",
+      "tier_s_module": "unmatched_credit_transfers",
+      "tier_s": true
+    },
+    {
+      "operation_id": "terminals_request_pairing_code",
+      "status": "full",
+      "access": "ValidatedFacade",
+      "retry_class": "NonRetryableWrite",
+      "supports_idempotency": true,
+      "http_method": "POST",
+      "path": "/terminals/pairing-codes",
+      "tier_s_module": "terminals",
+      "tier_s": true
+    },
+    {
+      "operation_id": "terminals_revoke_pairing_code",
+      "status": "full",
+      "access": "ValidatedFacade",
+      "retry_class": "NonRetryableWrite",
+      "supports_idempotency": true,
+      "http_method": "DELETE",
+      "path": "/terminals/pairing-codes/{pairingCodeId}",
+      "tier_s_module": "terminals",
+      "tier_s": true
+    },
+    {
+      "operation_id": "verify_payee",
+      "status": "full",
+      "access": "ValidatedFacade",
+      "retry_class": "NonRetryableWrite",
+      "supports_idempotency": true,
+      "http_method": "POST",
+      "path": "/business-accounts/payee-verifications",
+      "tier_s_module": "verify_payee",
+      "tier_s": true
+    }
+  ]
+}

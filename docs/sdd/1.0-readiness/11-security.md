@@ -1,4 +1,4 @@
-﻿# SDD 11 — Security (host, redirect, limits)
+# SDD 11 — Security (host, redirect, limits)
 
 ## Context
 Auth headers on default client; provider-controlled pagination URLs; redirects.

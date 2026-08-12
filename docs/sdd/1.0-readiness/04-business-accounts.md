@@ -1,4 +1,4 @@
-﻿# SDD 04 — Business accounts & transfers
+# SDD 04 — Business accounts & transfers
 
 ## Context
 BA accounts/transactions (read) and transfers (write + signing headers already partially wired).

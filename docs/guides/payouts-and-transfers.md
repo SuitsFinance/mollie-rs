@@ -1,4 +1,4 @@
-﻿# High-risk money: payouts & transfers
+# High-risk money: payouts & transfers
 
 Use **Tier-S** facades (`client.payouts()`, `client.transfers()`) — not ad-hoc JSON — for money movement. Writes inherit the transport safety kernel.
 
@@ -58,9 +58,16 @@ let _ = client.transfers().create(required, &key, sig).await?;
 
 Classified **NonRetryableWrite** — transport never auto-retries. Treat timeouts as **Unknown**; do not invent a second distinct request body without operator policy.
 
+## Connect balance transfers
+
+Platform-to-merchant (and similar) balance movement uses
+`client.connect_balance_transfers()` with `CreateConnectBalanceTransferRequired`.
+See [`oauth-connect.md`](oauth-connect.md).
+
 ## See also
 
 - [`safe-payment-retry.md`](safe-payment-retry.md) — DeliveryOutcome, cancellation
+- [`oauth-connect.md`](oauth-connect.md) — OAuth + Connect
 - [`../API-STABILITY.md`](../API-STABILITY.md) — public surface
 - [`../release-readiness.md`](../release-readiness.md) — 1.0 band
 

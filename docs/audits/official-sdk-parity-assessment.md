@@ -1,4 +1,4 @@
-﻿# Official Mollie SDK parity assessment (`mollie-rs` 0.6.1)
+# Official Mollie SDK parity assessment (`mollie-rs` 0.6.1)
 
 > **STALE (2026-08-10).** This audit describes **0.6.1** @ `d5a2527`.  
 > Do **not** treat the “24 missing operations”, missing `with_credential`, or missing request hooks claims as current.  

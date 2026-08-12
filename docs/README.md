@@ -15,63 +15,69 @@ running the examples — those are marked below. Do not hand-edit them.
 | [`architecture.png`](architecture.png) | How the layers fit together |
 | [`compatibility.md`](compatibility.md) | Supported Rust versions and platforms |
 | [`API-STABILITY.md`](API-STABILITY.md) | What is stable, what is beta, what may change |
+| [`release-readiness.md`](release-readiness.md) | Honest 0.7 → 1.0 readiness band |
 | [`production-checklist.md`](production-checklist.md) | Before you go live |
+| [`guides/README.md`](guides/README.md) | Task-oriented production guides |
 
 ## Guides
 
 Task-oriented walkthroughs in [`guides/`](guides):
 
-- [`safe-payment-retry.md`](guides/safe-payment-retry.md) — retrying without
-  double-charging
-- [`handle-signed-webhook.md`](guides/handle-signed-webhook.md) — verifying
-  Next-gen webhook signatures
-- [`payouts-and-transfers.md`](guides/payouts-and-transfers.md) — balance to bank
+- [`safe-payment-retry.md`](guides/safe-payment-retry.md) — sticky idempotency, retries, `DeliveryOutcome`
+- [`payments.md`](guides/payments.md) — create, cancel, customer payments, streams
+- [`refunds.md`](guides/refunds.md) — refund create/cancel/list
+- [`handle-signed-webhook.md`](guides/handle-signed-webhook.md) — Next-gen webhook signatures
+- [`payouts-and-transfers.md`](guides/payouts-and-transfers.md) — payouts and business-account transfers
+- [`oauth-connect.md`](guides/oauth-connect.md) — OAuth tokens and Connect balance transfers
+- [`pagination.md`](guides/pagination.md) — cursors, budgets, streams
+- [`multi-merchant.md`](guides/multi-merchant.md) — credential and profile scoping
+- [`error-handling.md`](guides/error-handling.md) — structured errors and safe logging
+- [`testing.md`](guides/testing.md) — unit, contract, live, and fuzz layers
 
 ## Contracts and specifications
 
 | Directory | Contents |
 | --- | --- |
-| [`contracts/`](contracts) | Per-type field contracts — one file per data type (`amountValue`, `countryCode`, `apiKey`, …), 35 in total |
-| [`specs/`](specs) | Design specifications and audits: domain facade contract, webhook verification, baseline forensics |
-| [`iso/`](iso) | The ISO standards this crate enforces (3166-1, 4217, 8601, 15897) and how |
-| [`sdd/`](sdd) | Spec-driven development documents, `00`–`16`, tracking requirements per domain |
+| [`contracts/`](contracts) | Per-type field contracts |
+| [`specs/`](specs) | Design specifications and audits |
+| [`iso/`](iso) | ISO standards enforced by the crate |
+| [`sdd/`](sdd) | Spec-driven development / 1.0 readiness program |
 
 ## Coverage and drift
 
-Generated — rebuilt by tooling, not by hand:
+Generated — rebuilt by tooling, not by hand (except where noted):
 
 | Document | Rebuilt by |
 | --- | --- |
 | [`route-coverage.md`](route-coverage.md) | Client generation |
 | [`route-examples.md`](route-examples.md) | `scripts/check_route_examples.sh` |
-| [`example-support-matrix.md`](example-support-matrix.md) | Running any example (or `scripts/rebuild_example_support_matrix.py`) |
+| [`example-support-matrix.md`](example-support-matrix.md) | Examples / `scripts/rebuild_example_support_matrix.py` |
 | [`postman-response-matrix.md`](postman-response-matrix.md) | `scripts/generate_postman_matrix.py` |
 | [`api-drift-report.md`](api-drift-report.md), [`api-drift-report-upstream.md`](api-drift-report-upstream.md) | `scripts/report_api_drift.py` |
 | [`registries/operation-registry.yaml`](registries/operation-registry.yaml) | `scripts/export_operation_registry.py` |
+| [`registries/high-risk-coverage.md`](registries/high-risk-coverage.md) | `scripts/report_high_risk_coverage.py` |
 
 The operation registry is a CI-enforced source of truth: it must agree with
-`src/route_capabilities.rs` and `specs/upstream-pin.toml`.
+`src/route_capabilities.rs` and `specs/upstream-pin.toml`. High-risk coverage
+must stay at 100% fully protected under the frozen denominator.
 
 ## Release and audit evidence
 
 | Directory | Contents |
 | --- | --- |
-| [`rc/`](rc) | Release-candidate evidence: checklist, baseline, live test matrix, hostile-transport evidence |
+| [`rc/`](rc) | Release-candidate evidence: checklist, scorecard, live matrix, SBOM notes |
 | [`audits/`](audits) | Point-in-time audits and official-SDK parity assessments |
 
-These are historical records tied to specific versions. They are kept for
-traceability and are **not** continuously updated — check the version each one
-refers to before relying on it.
+These are historical records tied to specific versions. Check the version each
+one refers to before relying on it.
 
 ## Generation and tooling
 
 - [`openapi-generation.md`](openapi-generation.md) — how the client is generated
-- [`example-runtime-config.md`](example-runtime-config.md) — env and CLI options
-  shared by all examples
+- [`example-runtime-config.md`](example-runtime-config.md) — env and CLI options shared by examples
 - [`dependency-graph.png`](dependency-graph.png) — module dependency direction
 
-See also [`/specs/README.md`](../specs/README.md) for the upstream spec pin and
-drift policy.
+See also [`/specs/README.md`](../specs/README.md) for the upstream spec pin and drift policy.
 
 ## Licensing note
 

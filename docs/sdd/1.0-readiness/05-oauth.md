@@ -1,4 +1,4 @@
-﻿# SDD 05 — OAuth token lifecycle
+# SDD 05 — OAuth token lifecycle
 
 ## Context
 `POST/DELETE /oauth2/tokens` outside `/v2`; Basic client credentials; high secret sensitivity.
