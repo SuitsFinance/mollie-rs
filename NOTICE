@@ -1,12 +1,16 @@
 mollie-rs
-Copyright (c) 2026 SF Global
+Copyright (c) 2026 Suits Finance
 
-This product is licensed under the MIT License (see LICENSE).
+Suits Finance is the owner and maintainer of this project. All original code,
+documentation, tests, tooling, and generated bindings in this repository are
+copyright Suits Finance and licensed under the MIT License (see LICENSE),
+except for the third-party material listed below.
 
-mollie-rs is an independent, community-maintained Rust SDK. It is NOT an
-official Mollie product and is not affiliated with, endorsed by, or supported
-by Mollie B.V. "Mollie" is a trademark of Mollie B.V. and is used here only to
-describe API compatibility (nominative fair use).
+mollie-rs is an independent, community-maintained Rust SDK owned and maintained
+by Suits Finance. It is NOT an official Mollie product and is not affiliated
+with, endorsed by, or supported by Mollie B.V. "Mollie" is a trademark of
+Mollie B.V. and is used here only to describe API compatibility (nominative
+fair use).
 
 --------------------------------------------------------------------------------
 THIRD-PARTY MATERIAL
@@ -42,8 +46,8 @@ THIRD-PARTY MATERIAL
    strings taken verbatim from the Mollie OpenAPI specification described in
    item 1. Attribution to Mollie B.V. is therefore preserved here. The
    hand-written code in this repository (client, transport, retries, webhook
-   verification, error taxonomy, domain helpers) is original work licensed
-   under MIT.
+   verification, error taxonomy, domain helpers) is original work of
+   Suits Finance, licensed under MIT.
 
    If you require an unambiguous licence position for a commercial deployment,
    obtain written clarification from Mollie B.V. regarding use of their API

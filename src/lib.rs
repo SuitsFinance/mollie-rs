@@ -1,5 +1,8 @@
 //! Typed Mollie API client for Rust.
 //!
+//! Owned and maintained by Suits Finance. This is an unofficial SDK: it is not
+//! affiliated with, endorsed by, or supported by Mollie B.V.
+//!
 //! The generated [`Client`] exposes one typed async method for every operation
 //! in the checked-in Mollie OpenAPI spec. [`MollieClient`] is the ergonomic
 //! facade for applications: it builds the HTTP client, sets authentication, and
