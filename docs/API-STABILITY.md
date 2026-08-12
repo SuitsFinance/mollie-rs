@@ -1,4 +1,4 @@
- API stability (mollie-rs 0.7.x → 1.0)
+# API stability (mollie-rs 0.7.x → 1.0)
 
 This document is the public contract posture for the crate. It is **not** a
 semver promise of 1.0 readiness.
