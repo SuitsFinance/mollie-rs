@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.7.1] (2026-08-12)
+
 ### Features
 
 - **High-risk coverage metric (23/23):** frozen denominator in `operation_safety` + `check_dangerous_profile_drift.py`; CI report via `scripts/report_high_risk_coverage.py --require-full`.

@@ -6,7 +6,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![MSRV](https://img.shields.io/badge/MSRV-1.88-orange.svg)](docs/compatibility.md)
 
-**Version:** `0.7.0` · **MSRV:** `1.88`
+**Version:** `0.7.1` · **MSRV:** `1.88`
 
 Typed Rust SDK for the Mollie API. Built and maintained by **Suits Finance B.V.**
 
