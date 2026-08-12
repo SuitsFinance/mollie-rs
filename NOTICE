@@ -1,10 +1,11 @@
 mollie-rs
 Copyright (c) 2026 Suits Finance B.V.
 
-Suits Finance B.V. is the owner and maintainer of this project. All original code,
-documentation, tests, tooling, and generated bindings in this repository are
-copyright Suits Finance B.V. and licensed under the MIT License (see LICENSE),
-except for the third-party material listed below.
+Suits Finance B.V. is the owner and maintainer of this project. mollie-rs is
+free, open-source software. All original code, documentation, tests, tooling,
+and generated bindings in this repository are copyright Suits Finance B.V. and
+licensed under the MIT License (see LICENSE), except for the third-party
+material listed below.
 
 mollie-rs is an independent, community-maintained Rust SDK owned and maintained
 by Suits Finance B.V. It is NOT an official Mollie product and is not affiliated
@@ -36,6 +37,11 @@ THIRD-PARTY MATERIAL
    - Adaptations of the specification files must be shared under CC BY-NC-SA
      4.0.
 
+   This project is a non-commercial, open-source effort, which is compatible
+   with the NonCommercial term of the licence covering these files. Anyone
+   redistributing or building on this repository must keep that constraint in
+   mind for their own use.
+
    These files are excluded from the published crate (see the `exclude` key in
    Cargo.toml), so the artifact on crates.io does not redistribute them.
 
@@ -49,9 +55,9 @@ THIRD-PARTY MATERIAL
    verification, error taxonomy, domain helpers) is original work of
    Suits Finance B.V., licensed under MIT.
 
-   If you require an unambiguous licence position for a commercial deployment,
-   obtain written clarification from Mollie B.V. regarding use of their API
-   description material.
+   mollie-rs is published as free, open-source software and is not operated as
+   a commercial product, so no commercial licence grant is sought or claimed
+   for the underlying API description material.
 
 3. Mollie Postman collections
    Not redistributed. Earlier revisions of this repository vendored six Postman

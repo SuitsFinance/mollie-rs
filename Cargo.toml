@@ -55,14 +55,15 @@ base64 = "0.23"
 bytes = "1.9"
 futures-core = "0.3"
 getrandom = "0.4"
-hmac = "0.12"
-progenitor-client = "0.14.0"
+hmac = "0.13"
+# Pinned to 0.11.x: progenitor-client 0.12+ requires reqwest 0.13, while this
+# crate is still on reqwest 0.12. Bump both together when migrating to reqwest 0.13.
+progenitor-client = "0.11.2"
 regress = "0.11"
 serde_json = "1.0"
 serde_urlencoded = "0.7"
-# Pinned to 0.10: sha2 0.11 uses digest 0.11, which is incompatible with
-# hmac 0.12 (digest 0.10). Bump both together once hmac 0.13 is released.
-sha2 = "0.10"
+# Keep in lockstep with hmac: both must resolve to the same digest major.
+sha2 = "0.11"
 thiserror = "2.0"
 tracing = "0.1.44"
 

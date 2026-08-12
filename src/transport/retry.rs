@@ -42,9 +42,7 @@ pub fn compute_backoff(
 }
 
 fn random_u64() -> Option<u64> {
-    let mut buf = [0u8; 8];
-    getrandom::getrandom(&mut buf).ok()?;
-    Some(u64::from_le_bytes(buf))
+    getrandom::u64().ok()
 }
 
 /// Status codes the transport may retry under a permissive policy.

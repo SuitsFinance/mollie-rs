@@ -13,7 +13,7 @@
 use std::fmt;
 use std::time::Duration;
 
-use hmac::{Hmac, Mac};
+use hmac::{Hmac, KeyInit, Mac};
 use sha2::Sha256;
 
 use crate::{MollieError, MollieResult};

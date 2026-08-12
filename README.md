@@ -304,7 +304,7 @@ Each example appends to `logs/<example>.log` and refreshes `docs/example-support
 
 MIT — see [`LICENSE`](LICENSE). Copyright © 2026 Suits Finance B.V.
 
-**Third-party material:** the vendored Mollie OpenAPI documents (`specs.yaml`, `specs-3.0.yaml`) are copyright Mollie B.V. and licensed under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/), **not** MIT. They are excluded from the published crate. See [`NOTICE`](NOTICE) for full attribution and the implications for commercial use.
+**Third-party material:** the vendored Mollie OpenAPI documents (`specs.yaml`, `specs-3.0.yaml`) are copyright Mollie B.V. and licensed under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/), **not** MIT. They are excluded from the published crate. mollie-rs is a non-commercial, open-source project, which is compatible with that licence; see [`NOTICE`](NOTICE) for full attribution and the constraints that carry over to anyone building on this repository.
 
 ## Security & conduct
 
