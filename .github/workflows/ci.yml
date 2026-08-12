@@ -24,6 +24,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Install Python deps
+        run: python -m pip install pyyaml
       - name: Generation reproducibility
         run: python scripts/check_generation_reproducibility.py
       - name: Dangerous profile drift
