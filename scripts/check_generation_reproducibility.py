@@ -16,37 +16,51 @@ import re
 import sys
 from pathlib import Path
 
-try:
-    import yaml
-except ImportError as exc:  # pragma: no cover
-    print("error: PyYAML is required (pip install pyyaml)", file=sys.stderr)
-    raise SystemExit(1) from exc
-
 ROOT = Path(__file__).resolve().parents[1]
 SPEC = ROOT / "specs-3.0.yaml"
 CAPABILITIES = ROOT / "src" / "route_capabilities.rs"
 
 
 def load_spec_operations(path: Path) -> set[str]:
-    data = yaml.safe_load(path.read_text(encoding="utf-8"))
     ops: set[str] = set()
-    paths = data.get("paths") or {}
-    for _path, methods in paths.items():
-        if not isinstance(methods, dict):
+    text = path.read_text(encoding="utf-8", errors="replace")
+    lines = text.splitlines()
+    start = None
+    for i, line in enumerate(lines):
+        if line.startswith("paths:"):
+            start = i + 1
+            break
+    if start is None:
+        return ops
+    end = len(lines)
+    for i in range(start, len(lines)):
+        if lines[i] and not lines[i].startswith(" ") and not lines[i].startswith("#"):
+            end = i
+            break
+    cur_path = None
+    cur_method = None
+    for i in range(start, end):
+        line = lines[i]
+        m = re.match(r"^  (/[^:\n]+):\s*$", line)
+        if m:
+            cur_path = m.group(1)
+            cur_method = None
             continue
-        for method, body in methods.items():
-            if method.startswith("x-") or not isinstance(body, dict):
-                continue
-            op_id = body.get("operationId")
-            if not op_id:
-                continue
+        m = re.match(r"^    (get|post|put|patch|delete|head|options):\s*$", line, re.I)
+        if m:
+            if cur_path:
+                cur_method = m.group(1)
+            continue
+        m = re.match(r"^      operationId:\s*(\S+)", line)
+        if m and cur_path and cur_method:
             # Generator normalizes to snake_case for Rust.
-            ops.add(_to_snake(op_id))
+            ops.add(_to_snake(m.group(1)))
     return ops
 
 
 def _to_snake(value: str) -> str:
     """Normalize OpenAPI operationId to the crate's snake_case form."""
+    value = value.strip().strip('"').strip("'")
     value = value.replace("-", "_")
     value = re.sub(r"([a-z0-9])([A-Z])", r"\1_\2", value)
     value = re.sub(r"__+", "_", value)
