@@ -160,7 +160,7 @@ impl PaymentsApi<'_> {
             let client = client.clone();
             Box::pin(async move {
                 let _ = validate_page_limit(limit)?;
-                PaymentsApi { client: &client }
+                PaymentsApi { client }
                     .list_page(cursor.as_ref(), limit)
                     .await
             })
