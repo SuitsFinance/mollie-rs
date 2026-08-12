@@ -313,7 +313,13 @@ MIT — see [`LICENSE`](LICENSE). Copyright © 2026 Suits Finance B.V.
 
 ## Regenerating the Client
 
-`specs-3.0.yaml` and `specs.yaml` are the pinned Mollie OpenAPI documents (third-party, CC BY-NC-SA 4.0 — see [`NOTICE`](NOTICE)). After updating them, regenerate the checked-in typed client and examples:
+`specs-3.0.yaml` and `specs.yaml` are the pinned Mollie OpenAPI documents (third-party, CC BY-NC-SA 4.0 — see [`NOTICE`](NOTICE)). The generation and contract-gate scripts need PyYAML:
+
+```sh
+python -m pip install -r scripts/requirements.txt
+```
+
+After updating the specs, regenerate the checked-in typed client and examples:
 
 ```sh
 sh scripts/generate_openapi_client.sh
