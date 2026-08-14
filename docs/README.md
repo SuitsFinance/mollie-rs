@@ -55,6 +55,7 @@ Generated — rebuilt by tooling, not by hand (except where noted):
 | [`postman-response-matrix.md`](postman-response-matrix.md) | `scripts/generate_postman_matrix.py` |
 | [`api-drift-report.md`](api-drift-report.md), [`api-drift-report-upstream.md`](api-drift-report-upstream.md) | `scripts/report_api_drift.py` |
 | [`registries/operation-registry.yaml`](registries/operation-registry.yaml) | `scripts/export_operation_registry.py` |
+| [`registries/provider-maturity.yaml`](registries/provider-maturity.yaml) | Hand-maintained; consumed by `export_operation_registry.py` |
 | [`registries/high-risk-coverage.md`](registries/high-risk-coverage.md) | `scripts/report_high_risk_coverage.py` |
 
 The operation registry is a CI-enforced source of truth: it must agree with

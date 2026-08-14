@@ -11,6 +11,34 @@ semver promise of 1.0 readiness.
 | **G** | Generated `Client` route methods + `types::*` | Tracks the pinned OpenAPI (`specs-3.0.yaml`). Field/enum churn follows provider pin. |
 | **Kernel** | Transport retry, delivery outcomes, redirects, pagination host policy, `OperationSafetyProfile` | Behavioral safety contracts. Tightening is allowed; loosening financial fail-closed rules is **not**. |
 
+## Provider API maturity (Mollie lifecycle)
+
+Separate from Tier S/G: Mollie marks some route groups as beta or private beta
+in the pinned OpenAPI descriptions. `mollie-rs` tracks that lifecycle in
+`docs/registries/provider-maturity.yaml` and projects it onto every operation in
+`docs/registries/operation-registry.yaml` as `provider_maturity`.
+
+| Value | Meaning |
+| ----- | ------- |
+| `ga` | Generally available at Mollie; no beta banner in the pinned OpenAPI operation descriptions |
+| `beta` | Public beta banner in the pinned OpenAPI descriptions |
+| `private_beta` | Private beta banner in the pinned OpenAPI descriptions |
+
+Generated route rustdocs mirror OpenAPI descriptions. When Mollie removes a beta
+banner (as with **Sales Invoices**, now `ga` in official SDKs), the local pin
+and docs must reflect GA — not leave stale 🚧 warnings or beta-only registry
+labels.
+
+**Sales Invoices (`sales_invoices_api`):** provider maturity is **`ga`**. Tier
+coverage remains **Generated only** (Tier G routes; no Tier-S facade).
+
+Route groups still marked beta/private beta in the current pin include Sessions,
+Transfers, Capabilities, Verify payee, and Unmatched credit transfers. Next-gen
+Webhooks are documented separately in `docs/contracts/webhooks.md`.
+
+Review `provider-maturity.yaml` when repinning OpenAPI or when official SDK
+release notes report a maturity change.
+
 ## OperationSafetyProfile SSOT
 
 Per-operation policy lives in `src/route_capabilities.rs` and is exported as

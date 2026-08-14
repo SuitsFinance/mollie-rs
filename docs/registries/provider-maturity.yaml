@@ -1,0 +1,35 @@
+# Provider API maturity for Mollie route groups (separate from Tier S/G SDK stability).
+#
+# Values:
+#   ga            — generally available at Mollie; safe to treat as stable provider contract
+#   beta          — public beta banner in the pinned OpenAPI operation descriptions
+#   private_beta  — private beta banner in the pinned OpenAPI operation descriptions
+#
+# `scripts/export_operation_registry.py` projects this file onto every operation in
+# `docs/registries/operation-registry.yaml` via each operation's `route_group`.
+#
+# Review when repinning `specs-3.0.yaml` or when official SDK release notes flag a
+# maturity change (see SUI-2335 / SUI-2369).
+
+meta:
+  reviewed: "2026-08-14"
+  source_spec: "specs-3.0.yaml"
+  evidence: "Mollie OpenAPI operation descriptions; official SDK GA/beta notes (SUI-2369)"
+
+defaults:
+  provider_maturity: ga
+
+route_groups:
+  sales_invoices_api:
+    provider_maturity: ga
+    note: "GA in official Mollie SDKs; OpenAPI descriptions no longer carry beta banners."
+  capabilities_api:
+    provider_maturity: beta
+  sessions_api:
+    provider_maturity: private_beta
+  transfers_api:
+    provider_maturity: beta
+  verify_payee_api:
+    provider_maturity: beta
+  unmatched_credit_transfers_api:
+    provider_maturity: beta

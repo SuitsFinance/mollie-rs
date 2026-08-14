@@ -2,6 +2,8 @@
 
 Cross-SDK comparison. Status values: **Y** full, **P** partial, **G** generated-only, **N** no, **n/a** not applicable, **!** should not copy, **?** needs contract verify.
 
+Provider lifecycle maturity (`ga` / `beta` / `private_beta`) is tracked separately in `docs/registries/provider-maturity.yaml` (see SUI-2369 for Sales Invoices GA).
+
 Evidence bases: local `main` 0.6.1; PHP/TS/Go/Java/C# default branches as of 2026-08-04; official openapi 124 ops.
 
 | Feature | PHP | TS | Go | Java | C# | mollie-rs | Status label |
@@ -15,7 +17,7 @@ Evidence bases: local `main` 0.6.1; PHP/TS/Go/Java/C# default branches as of 202
 | Organizations / permissions / clients | Y | Y | Y | Y | Y | Y | Generated only |
 | Connect balance transfers | Y | Y | Y | Y | Y | Y | Generated only |
 | Balances / settlements / invoices | Y | Y | Y | Y | Y | Y | Generated only |
-| Sales invoices | Y | Y | Y | Y | Y | Y | Generated only |
+| Sales invoices | Y | Y | Y | Y | Y | Y | Generated only (provider GA) |
 | Terminals list/get | Y | Y | Y | Y | Y | Y | Generated only |
 | Terminal pairing codes | Y | Y | Y | Y | Y | N | Requires provider-contract verification |
 | Webhooks CRUD + events | Y | Y | Y | Y | Y | Y | Partially (facade for CRUD) |

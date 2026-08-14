@@ -37,7 +37,7 @@ let response = client
 | Webhooks | Generated webhook-management routes, `WebhookUrl`, and classic `WebhookNotification` parsing |
 | Recurring payments and mandates | Customers, mandates, subscriptions, and payment routes |
 | Mollie Connect | OAuth bearer credentials, Basic Auth for token-management calls, organizations, profiles, permissions, and onboarding routes |
-| Business operations | Balances, settlements, invoices, transactions, and related generated routes; test-mode support is route-specific and documented in `contracts/test-mode.md` |
+| Business operations | Balances, settlements, merchant invoices, **sales invoices** (GA at Mollie), transactions, and related generated routes; test-mode support is route-specific and documented in `contracts/test-mode.md` |
 | Payment links and terminals | Generated payment-link and terminal routes |
 
 The generated route client is the native escape hatch for operations that are

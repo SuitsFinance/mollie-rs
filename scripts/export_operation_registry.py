@@ -1,54 +1,128 @@
 """Export operation registry YAML from route_capabilities + known upstream gaps."""
 from __future__ import annotations
+
 import re
+import sys
 from pathlib import Path
+
+try:
+    import yaml
+except ImportError as exc:  # pragma: no cover
+    print("error: PyYAML is required (pip install pyyaml)", file=sys.stderr)
+    raise SystemExit(1) from exc
 
 ROOT = Path(__file__).resolve().parents[1]
 CAPS = ROOT / "src" / "route_capabilities.rs"
+MATURITY = ROOT / "docs" / "registries" / "provider-maturity.yaml"
 OUT = ROOT / "docs" / "registries" / "operation-registry.yaml"
 
 # After Phase 2 OpenAPI re-pin (2026-08-04), local pin matches upstream 124 ops.
 # Keep this list empty unless compare_upstream_openapi.py reports intentional gaps.
 UPSTREAM_GAPS: list[dict] = []
 
+SALES_INVOICE_OPS = {
+    "create_sales_invoice",
+    "list_sales_invoices",
+    "get_sales_invoice",
+    "update_sales_invoice",
+    "delete_sales_invoice",
+}
+
+
 def parse_capabilities(text: str):
     ops = []
     for block in text.split("RouteCapability {")[1:]:
         def field(name):
             m = re.search(rf'{name}:\s*"([^"]*)"', block)
-            if m: return m.group(1)
-            m = re.search(rf'{name}:\s*(true|false)', block)
-            if m: return m.group(1) == "true"
-            m = re.search(rf'{name}:\s*RetryClass::(\w+)', block)
-            if m: return m.group(1)
-            m = re.search(rf'{name}:\s*RouteAccess::(\w+)', block)
-            if m: return m.group(1)
+            if m:
+                return m.group(1)
+            m = re.search(rf"{name}:\s*(true|false)", block)
+            if m:
+                return m.group(1) == "true"
+            m = re.search(rf"{name}:\s*RetryClass::(\w+)", block)
+            if m:
+                return m.group(1)
+            m = re.search(rf"{name}:\s*RouteAccess::(\w+)", block)
+            if m:
+                return m.group(1)
             return None
-        ops.append({
-            "operation_id": field("operation_id"),
-            "route_group": field("route_group"),
-            "http_method": field("http_method"),
-            "path": field("path"),
-            "supports_testmode": field("supports_testmode"),
-            "supports_idempotency": field("supports_idempotency"),
-            "safe_to_retry": field("safe_to_retry"),
-            "retry_class": field("retry_class"),
-            "paginated": field("paginated"),
-            "requires_profile_scope": field("requires_profile_scope"),
-            "access": field("access"),
-            "generated": True,
-            "facade": field("access") == "ValidatedFacade",
-            "status": "Implemented" if field("access") == "ValidatedFacade" else "Generated only",
-        })
+
+        ops.append(
+            {
+                "operation_id": field("operation_id"),
+                "route_group": field("route_group"),
+                "http_method": field("http_method"),
+                "path": field("path"),
+                "supports_testmode": field("supports_testmode"),
+                "supports_idempotency": field("supports_idempotency"),
+                "safe_to_retry": field("safe_to_retry"),
+                "retry_class": field("retry_class"),
+                "paginated": field("paginated"),
+                "requires_profile_scope": field("requires_profile_scope"),
+                "access": field("access"),
+                "generated": True,
+                "facade": field("access") == "ValidatedFacade",
+                "status": "Implemented"
+                if field("access") == "ValidatedFacade"
+                else "Generated only",
+            }
+        )
     return ops
 
+
+def load_provider_maturity() -> tuple[str, dict[str, str]]:
+    data = yaml.safe_load(MATURITY.read_text(encoding="utf-8"))
+    default = (data.get("defaults") or {}).get("provider_maturity", "ga")
+    by_group: dict[str, str] = {}
+    for group, entry in (data.get("route_groups") or {}).items():
+        if isinstance(entry, dict):
+            by_group[group] = entry.get("provider_maturity", default)
+        else:
+            by_group[group] = entry
+    return default, by_group
+
+
+def provider_maturity_for(route_group: str, default: str, by_group: dict[str, str]) -> str:
+    return by_group.get(route_group, default)
+
+
+def validate_sales_invoice_maturity(ops: list[dict], default: str, by_group: dict[str, str]) -> None:
+    for op in ops:
+        op_id = op["operation_id"]
+        if op_id not in SALES_INVOICE_OPS:
+            continue
+        maturity = provider_maturity_for(op["route_group"], default, by_group)
+        if maturity != "ga":
+            raise SystemExit(
+                f"provider maturity for {op_id} must be ga (got {maturity!r}); "
+                f"update docs/registries/provider-maturity.yaml"
+            )
+        if op["route_group"] != "sales_invoices_api":
+            raise SystemExit(
+                f"{op_id} must stay in sales_invoices_api (got {op['route_group']!r})"
+            )
+
+
 def yaml_escape(s: str) -> str:
-    if s is None: return "null"
-    if isinstance(s, bool): return "true" if s else "false"
+    if s is None:
+        return "null"
+    if isinstance(s, bool):
+        return "true" if s else "false"
     return '"' + str(s).replace('"', '\\"') + '"'
 
+
 def main():
-    caps = [op for op in parse_capabilities(CAPS.read_text(encoding="utf-8")) if op.get("operation_id")]
+    if not MATURITY.is_file():
+        raise SystemExit(f"missing {MATURITY}")
+
+    default_maturity, maturity_by_group = load_provider_maturity()
+    caps = [
+        op
+        for op in parse_capabilities(CAPS.read_text(encoding="utf-8"))
+        if op.get("operation_id")
+    ]
+    validate_sales_invoice_maturity(caps, default_maturity, maturity_by_group)
+
     # Deterministic output (no timestamps) so CI can `git diff --exit-code`.
     lines = [
         "# Machine-readable Mollie operation registry for mollie-rs",
@@ -62,38 +136,43 @@ def main():
         f"  missing_operation_count: {len(UPSTREAM_GAPS)}",
         '  crate_version: "0.7.0"',
         '  source_spec: "specs-3.0.yaml"',
+        '  provider_maturity_source: "docs/registries/provider-maturity.yaml"',
         '  upstream_reference: "https://github.com/mollie/openapi/blob/main/specs.yaml"',
         "operations:",
     ]
     for op in caps:
+        maturity = provider_maturity_for(op["route_group"], default_maturity, maturity_by_group)
         lines.append(f"  - operation_id: {yaml_escape(op['operation_id'])}")
         lines.append(f"    http_method: {yaml_escape(op['http_method'])}")
         lines.append(f"    path: {yaml_escape(op['path'])}")
-        lines.append(f"    generated: true")
+        lines.append("    generated: true")
         lines.append(f"    facade: {yaml_escape(op['facade'])}")
         lines.append(f"    pagination: {yaml_escape(op['paginated'])}")
-        lines.append(f"    idempotency: {yaml_escape('supported' if op['supports_idempotency'] else 'not_applicable')}")
+        lines.append(
+            f"    idempotency: {yaml_escape('supported' if op['supports_idempotency'] else 'not_applicable')}"
+        )
         lines.append(f"    retry_class: {yaml_escape(op['retry_class'])}")
         mutation = {
-            'SafeRead': 'Read',
-            'IdempotentWrite': 'IdempotentWrite',
-            'NonRetryableWrite': 'FinancialOrNonRetryableWrite',
-            'FinancialWrite': 'FinancialOrNonRetryableWrite',
-        }.get(op['retry_class'], 'Unknown')
+            "SafeRead": "Read",
+            "IdempotentWrite": "IdempotentWrite",
+            "NonRetryableWrite": "FinancialOrNonRetryableWrite",
+            "FinancialWrite": "FinancialOrNonRetryableWrite",
+        }.get(op["retry_class"], "Unknown")
         lines.append(f"    mutation_class: {yaml_escape(mutation)}")
         lines.append(f"    supports_testmode: {yaml_escape(op['supports_testmode'])}")
         lines.append(f"    requires_profile_scope: {yaml_escape(op['requires_profile_scope'])}")
         lines.append(f"    access: {yaml_escape(op['access'])}")
         lines.append(f"    status: {yaml_escape(op['status'])}")
+        lines.append(f"    provider_maturity: {yaml_escape(maturity)}")
         lines.append(f"    route_group: {yaml_escape(op['route_group'])}")
     lines.append("upstream_gaps:")
     for g in UPSTREAM_GAPS:
         lines.append(f"  - operation_id: {yaml_escape(g['operation_id'])}")
         lines.append(f"    http_method: {yaml_escape(g['http_method'])}")
         lines.append(f"    path: {yaml_escape(g['path'])}")
-        lines.append(f"    generated: false")
-        lines.append(f"    facade: false")
-        lines.append(f"    status: \"Requires provider-contract verification\"")
+        lines.append("    generated: false")
+        lines.append("    facade: false")
+        lines.append('    status: "Requires provider-contract verification"')
         lines.append(f"    tag: {yaml_escape(g['tag'])}")
         if g.get("notes"):
             lines.append(f"    notes: {yaml_escape(g['notes'])}")
@@ -101,6 +180,6 @@ def main():
     OUT.write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(f"wrote {OUT} ({len(caps)} local + {len(UPSTREAM_GAPS)} gaps)")
 
+
 if __name__ == "__main__":
     main()
-
