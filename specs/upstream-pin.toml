@@ -9,10 +9,10 @@ url = "https://raw.githubusercontent.com/mollie/openapi/main/specs.yaml"
 repository = "https://github.com/mollie/openapi"
 ref = "main"
 path = "specs.yaml"
-# Snapshot verified 2026-08-09 (fetch script re-checks on each CI run).
-sha256 = "8b6839e22c14dc341ec76d3f71b3292fd03502db204387918fbd607f90591010"
+# Snapshot verified 2026-08-14 (fetch script re-checks on each CI run).
+sha256 = "d2a3bd80c1fa029268521066e1082aa781b2ddeee911c6172be0321f0ba8014e"
 operation_count = 124
-pinned_date = "2026-08-09"
+pinned_date = "2026-08-14"
 notes = "Phase 2 re-pin: local specs-3.0.yaml adapted from upstream 3.1 → 3.0.3; 124/124 ops generated"
 
 [local]
