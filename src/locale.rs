@@ -39,8 +39,12 @@ pub enum Locale {
     DeDe,
     /// German (Luxembourg) — `de_LU` (valid `xx_XX`; not in Mollie possible-values list).
     DeLu,
+    /// English (Belgium) — `en_BE`.
+    EnBe,
     /// English (United Kingdom) — `en_GB`.
     EnGb,
+    /// English (Netherlands) — `en_NL`.
+    EnNl,
     /// English (United States) — `en_US`.
     EnUs,
     /// Spanish (Spain) — `es_ES`.
@@ -96,8 +100,12 @@ impl Locale {
     pub const DE_DE: Self = Self::DeDe;
     /// German (Luxembourg).
     pub const DE_LU: Self = Self::DeLu;
+    /// English (Belgium).
+    pub const EN_BE: Self = Self::EnBe;
     /// English (United Kingdom).
     pub const EN_GB: Self = Self::EnGb;
+    /// English (Netherlands).
+    pub const EN_NL: Self = Self::EnNl;
     /// English (United States).
     pub const EN_US: Self = Self::EnUs;
     /// Spanish (Spain).
@@ -138,9 +146,11 @@ impl Locale {
     /// Mollie-documented possible locale values (ISO 15897 `xx_XX`).
     ///
     /// Order matches common API docs: `en_US`, `en_GB`, `nl_NL`, …
-    pub const POSSIBLE: [Self; 22] = [
+    pub const POSSIBLE: [Self; 24] = [
         Self::EnUs,
         Self::EnGb,
+        Self::EnBe,
+        Self::EnNl,
         Self::NlNl,
         Self::NlBe,
         Self::FrFr,
@@ -164,7 +174,7 @@ impl Locale {
     ];
 
     /// Alias for [`Self::POSSIBLE`] (hosted payment-page languages).
-    pub const HOSTED: [Self; 22] = Self::POSSIBLE;
+    pub const HOSTED: [Self; 24] = Self::POSSIBLE;
 
     /// Parses a locale string.
     ///
@@ -211,7 +221,9 @@ impl Locale {
             Self::DeCh => "de_CH",
             Self::DeDe => "de_DE",
             Self::DeLu => "de_LU",
+            Self::EnBe => "en_BE",
             Self::EnGb => "en_GB",
+            Self::EnNl => "en_NL",
             Self::EnUs => "en_US",
             Self::EsEs => "es_ES",
             Self::FiFi => "fi_FI",
@@ -255,6 +267,8 @@ impl Locale {
             self,
             Self::EnUs
                 | Self::EnGb
+                | Self::EnBe
+                | Self::EnNl
                 | Self::NlNl
                 | Self::NlBe
                 | Self::FrFr
@@ -358,6 +372,8 @@ impl Locale {
         match self {
             Self::EnUs => Ok(types::LocaleInner::EnUs),
             Self::EnGb => Ok(types::LocaleInner::EnGb),
+            Self::EnBe => Ok(types::LocaleInner::EnBe),
+            Self::EnNl => Ok(types::LocaleInner::EnNl),
             Self::NlNl => Ok(types::LocaleInner::NlNl),
             Self::NlBe => Ok(types::LocaleInner::NlBe),
             Self::DeDe => Ok(types::LocaleInner::DeDe),
@@ -457,7 +473,9 @@ impl FromStr for Locale {
             "de_CH" => Ok(Self::DeCh),
             "de_DE" => Ok(Self::DeDe),
             "de_LU" => Ok(Self::DeLu),
+            "en_BE" => Ok(Self::EnBe),
             "en_GB" => Ok(Self::EnGb),
+            "en_NL" => Ok(Self::EnNl),
             "en_US" => Ok(Self::EnUs),
             "es_ES" => Ok(Self::EsEs),
             "fi_FI" => Ok(Self::FiFi),
@@ -508,6 +526,8 @@ impl From<types::LocaleInner> for Locale {
         match value {
             types::LocaleInner::EnUs => Self::EnUs,
             types::LocaleInner::EnGb => Self::EnGb,
+            types::LocaleInner::EnBe => Self::EnBe,
+            types::LocaleInner::EnNl => Self::EnNl,
             types::LocaleInner::NlNl => Self::NlNl,
             types::LocaleInner::NlBe => Self::NlBe,
             types::LocaleInner::DeDe => Self::DeDe,
@@ -570,6 +590,18 @@ mod tests {
     fn parse_hosted_and_other_iso_locales() {
         assert_eq!(Locale::parse("nl_NL").unwrap(), Locale::NlNl);
         assert_eq!(Locale::parse("en_US").unwrap(), Locale::EnUs);
+        assert_eq!(Locale::parse("en_BE").unwrap(), Locale::EnBe);
+        assert_eq!(Locale::parse("en_NL").unwrap(), Locale::EnNl);
+        assert!(Locale::EnBe.is_possible());
+        assert!(Locale::EnNl.is_possible());
+        assert_eq!(
+            Locale::EnBe.into_generated().unwrap().0,
+            Some(types::LocaleInner::EnBe)
+        );
+        assert_eq!(
+            Locale::EnNl.into_generated().unwrap().0,
+            Some(types::LocaleInner::EnNl)
+        );
         assert_eq!(Locale::parse("cs_CZ").unwrap(), Locale::CsCz);
         assert_eq!(Locale::parse("de_LU").unwrap(), Locale::DeLu);
         assert_eq!(Locale::parse("fr_LU").unwrap(), Locale::FrLu);
@@ -594,8 +626,8 @@ mod tests {
 
     #[test]
     fn possible_table_round_trips_and_maps_to_generated() {
-        assert_eq!(Locale::POSSIBLE.len(), 22);
-        assert_eq!(Locale::HOSTED.len(), 22);
+        assert_eq!(Locale::POSSIBLE.len(), 24);
+        assert_eq!(Locale::HOSTED.len(), 24);
         for locale in Locale::POSSIBLE {
             assert!(locale.is_possible());
             assert!(locale.is_hosted());

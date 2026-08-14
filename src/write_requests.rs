@@ -255,6 +255,8 @@ pub struct CreateCaptureRequired {
     pub description: Option<PaymentDescription>,
     /// Optional metadata.
     pub metadata: Option<serde_json::Value>,
+    /// Whether to create the capture in test mode for organization-level credentials.
+    pub testmode: Option<bool>,
 }
 
 impl CreateCaptureRequired {
@@ -264,6 +266,7 @@ impl CreateCaptureRequired {
             amount: None,
             description: None,
             metadata: None,
+            testmode: None,
         }
     }
 
@@ -273,6 +276,7 @@ impl CreateCaptureRequired {
             amount: Some(amount),
             description: None,
             metadata: None,
+            testmode: None,
         }
     }
 
@@ -285,6 +289,12 @@ impl CreateCaptureRequired {
     /// Sets metadata.
     pub fn with_metadata(mut self, value: serde_json::Value) -> Self {
         self.metadata = Some(value);
+        self
+    }
+
+    /// Sets the request-body test-mode value for organization-level credentials.
+    pub fn with_testmode(mut self, value: bool) -> Self {
+        self.testmode = Some(value);
         self
     }
 
@@ -306,6 +316,9 @@ impl CreateCaptureRequired {
         }
         if let Some(metadata) = self.metadata {
             value["metadata"] = metadata;
+        }
+        if let Some(testmode) = self.testmode {
+            value["testmode"] = json!(testmode);
         }
         serde_json::from_value(value)
             .map_err(|error| MollieError::invalid_request(error.to_string()))
@@ -1017,11 +1030,13 @@ mod tests {
         let request = CreateCaptureRequired::partial(Money::new("EUR", "5.00").unwrap())
             .with_description("Partial capture")
             .unwrap()
+            .with_testmode(true)
             .into_request()
             .unwrap();
         let value = serde_json::to_value(request).unwrap();
         assert_eq!(value["amount"]["value"], "5.00");
         assert_eq!(value["description"], "Partial capture");
+        assert_eq!(value["testmode"], true);
         assert!(value.get("id").is_none());
         assert!(value.get("status").is_none());
         assert!(value.get("paymentId").is_none());
@@ -1032,6 +1047,7 @@ mod tests {
         let request = CreateCaptureRequired::full().into_request().unwrap();
         let value = serde_json::to_value(request).unwrap();
         assert!(value.get("amount").is_none() || value["amount"].is_null());
+        assert!(value.get("testmode").is_none() || value["testmode"].is_null());
     }
 
     #[test]
