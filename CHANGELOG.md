@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Docs
+
+- **Sales Invoices provider maturity (SUI-2369):** record `sales_invoices_api` as
+  GA in `docs/registries/provider-maturity.yaml`; project `provider_maturity`
+  onto `docs/registries/operation-registry.yaml`; document provider maturity in
+  `docs/API-STABILITY.md`. Tier coverage stays Generated only (no API shape
+  change).
+
 ## [0.7.1] (2026-08-12)
 
 ### Features

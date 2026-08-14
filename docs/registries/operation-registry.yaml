@@ -9,6 +9,7 @@ meta:
   missing_operation_count: 0
   crate_version: "0.7.0"
   source_spec: "specs-3.0.yaml"
+  provider_maturity_source: "docs/registries/provider-maturity.yaml"
   upstream_reference: "https://github.com/mollie/openapi/blob/main/specs.yaml"
 operations:
   - operation_id: "oauth_generate_tokens"
@@ -24,6 +25,7 @@ operations:
     requires_profile_scope: false
     access: "ValidatedFacade"
     status: "Implemented"
+    provider_maturity: "ga"
     route_group: "oauth_api"
   - operation_id: "oauth_revoke_tokens"
     http_method: "DELETE"
@@ -38,6 +40,7 @@ operations:
     requires_profile_scope: false
     access: "ValidatedFacade"
     status: "Implemented"
+    provider_maturity: "ga"
     route_group: "oauth_api"
   - operation_id: "list_balances"
     http_method: "GET"
@@ -52,6 +55,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "balances_api"
   - operation_id: "get_balance"
     http_method: "GET"
@@ -66,6 +70,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "balances_api"
   - operation_id: "get_primary_balance"
     http_method: "GET"
@@ -80,6 +85,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "balances_api"
   - operation_id: "get_balance_report"
     http_method: "GET"
@@ -94,6 +100,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "balances_api"
   - operation_id: "list_balance_transactions"
     http_method: "GET"
@@ -108,6 +115,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "balances_api"
   - operation_id: "list_settlements"
     http_method: "GET"
@@ -122,6 +130,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "settlements_api"
   - operation_id: "get_settlement"
     http_method: "GET"
@@ -136,6 +145,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "settlements_api"
   - operation_id: "get_open_settlement"
     http_method: "GET"
@@ -150,6 +160,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "settlements_api"
   - operation_id: "get_next_settlement"
     http_method: "GET"
@@ -164,6 +175,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "settlements_api"
   - operation_id: "list_settlement_payments"
     http_method: "GET"
@@ -178,6 +190,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "settlements_api"
   - operation_id: "list_settlement_captures"
     http_method: "GET"
@@ -192,6 +205,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "settlements_api"
   - operation_id: "list_settlement_refunds"
     http_method: "GET"
@@ -206,6 +220,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "settlements_api"
   - operation_id: "list_settlement_chargebacks"
     http_method: "GET"
@@ -220,6 +235,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "settlements_api"
   - operation_id: "list_invoices"
     http_method: "GET"
@@ -234,6 +250,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "invoices_api"
   - operation_id: "get_invoice"
     http_method: "GET"
@@ -248,6 +265,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "invoices_api"
   - operation_id: "list_permissions"
     http_method: "GET"
@@ -262,6 +280,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "permissions_api"
   - operation_id: "get_permission"
     http_method: "GET"
@@ -276,6 +295,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "permissions_api"
   - operation_id: "get_organization"
     http_method: "GET"
@@ -290,6 +310,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "organizations_api"
   - operation_id: "get_current_organization"
     http_method: "GET"
@@ -304,6 +325,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "organizations_api"
   - operation_id: "get_partner_status"
     http_method: "GET"
@@ -318,6 +340,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "organizations_api"
   - operation_id: "create_profile"
     http_method: "POST"
@@ -332,6 +355,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "profiles_api"
   - operation_id: "list_profiles"
     http_method: "GET"
@@ -346,6 +370,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "profiles_api"
   - operation_id: "get_profile"
     http_method: "GET"
@@ -360,6 +385,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "profiles_api"
   - operation_id: "update_profile"
     http_method: "PATCH"
@@ -374,6 +400,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "profiles_api"
   - operation_id: "delete_profile"
     http_method: "DELETE"
@@ -388,6 +415,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "profiles_api"
   - operation_id: "get_current_profile"
     http_method: "GET"
@@ -402,6 +430,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "profiles_api"
   - operation_id: "get_onboarding_status"
     http_method: "GET"
@@ -416,6 +445,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "onboarding_api"
   - operation_id: "submit_onboarding_data"
     http_method: "POST"
@@ -430,6 +460,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "onboarding_api"
   - operation_id: "list_capabilities"
     http_method: "GET"
@@ -444,6 +475,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "beta"
     route_group: "capabilities_api"
   - operation_id: "list_clients"
     http_method: "GET"
@@ -458,6 +490,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "clients_api"
   - operation_id: "get_client"
     http_method: "GET"
@@ -472,6 +505,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "clients_api"
   - operation_id: "create_client_link"
     http_method: "POST"
@@ -486,6 +520,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "client_links_api"
   - operation_id: "create_webhook"
     http_method: "POST"
@@ -500,6 +535,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "webhooks_api"
   - operation_id: "list_webhooks"
     http_method: "GET"
@@ -514,6 +550,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "webhooks_api"
   - operation_id: "update_webhook"
     http_method: "PATCH"
@@ -528,6 +565,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "webhooks_api"
   - operation_id: "get_webhook"
     http_method: "GET"
@@ -542,6 +580,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "webhooks_api"
   - operation_id: "delete_webhook"
     http_method: "DELETE"
@@ -556,6 +595,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "webhooks_api"
   - operation_id: "test_webhook"
     http_method: "POST"
@@ -570,6 +610,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "webhooks_api"
   - operation_id: "get_webhook_event"
     http_method: "GET"
@@ -584,6 +625,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "webhook_events_api"
   - operation_id: "create_connect_balance_transfer"
     http_method: "POST"
@@ -598,6 +640,7 @@ operations:
     requires_profile_scope: false
     access: "ValidatedFacade"
     status: "Implemented"
+    provider_maturity: "ga"
     route_group: "balance_transfers_api"
   - operation_id: "list_connect_balance_transfers"
     http_method: "GET"
@@ -612,6 +655,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "balance_transfers_api"
   - operation_id: "get_connect_balance_transfer"
     http_method: "GET"
@@ -626,6 +670,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "balance_transfers_api"
   - operation_id: "create_payment"
     http_method: "POST"
@@ -640,6 +685,7 @@ operations:
     requires_profile_scope: false
     access: "ValidatedFacade"
     status: "Implemented"
+    provider_maturity: "ga"
     route_group: "payments_api"
   - operation_id: "list_payments"
     http_method: "GET"
@@ -654,6 +700,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "payments_api"
   - operation_id: "get_payment"
     http_method: "GET"
@@ -668,6 +715,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "payments_api"
   - operation_id: "update_payment"
     http_method: "PATCH"
@@ -682,6 +730,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "payments_api"
   - operation_id: "cancel_payment"
     http_method: "DELETE"
@@ -696,6 +745,7 @@ operations:
     requires_profile_scope: false
     access: "ValidatedFacade"
     status: "Implemented"
+    provider_maturity: "ga"
     route_group: "payments_api"
   - operation_id: "release_authorization"
     http_method: "POST"
@@ -710,6 +760,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "payments_api"
   - operation_id: "list_unmatched_credit_transfers"
     http_method: "GET"
@@ -724,6 +775,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "beta"
     route_group: "unmatched_credit_transfers_api"
   - operation_id: "get_unmatched_credit_transfer"
     http_method: "GET"
@@ -738,6 +790,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "beta"
     route_group: "unmatched_credit_transfers_api"
   - operation_id: "match_unmatched_credit_transfer"
     http_method: "POST"
@@ -752,6 +805,7 @@ operations:
     requires_profile_scope: false
     access: "ValidatedFacade"
     status: "Implemented"
+    provider_maturity: "beta"
     route_group: "unmatched_credit_transfers_api"
   - operation_id: "return_unmatched_credit_transfer"
     http_method: "POST"
@@ -766,6 +820,7 @@ operations:
     requires_profile_scope: false
     access: "ValidatedFacade"
     status: "Implemented"
+    provider_maturity: "beta"
     route_group: "unmatched_credit_transfers_api"
   - operation_id: "create_session"
     http_method: "POST"
@@ -780,6 +835,7 @@ operations:
     requires_profile_scope: false
     access: "ValidatedFacade"
     status: "Implemented"
+    provider_maturity: "private_beta"
     route_group: "sessions_api"
   - operation_id: "get_session"
     http_method: "GET"
@@ -794,6 +850,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "private_beta"
     route_group: "sessions_api"
   - operation_id: "list_methods"
     http_method: "GET"
@@ -808,6 +865,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "methods_api"
   - operation_id: "list_all_methods"
     http_method: "GET"
@@ -822,6 +880,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "methods_api"
   - operation_id: "get_method"
     http_method: "GET"
@@ -836,6 +895,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "methods_api"
   - operation_id: "enable_method"
     http_method: "POST"
@@ -850,6 +910,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "methods_api"
   - operation_id: "disable_method"
     http_method: "DELETE"
@@ -864,6 +925,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "methods_api"
   - operation_id: "enable_method_issuer"
     http_method: "POST"
@@ -878,6 +940,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "methods_api"
   - operation_id: "disable_method_issuer"
     http_method: "DELETE"
@@ -892,6 +955,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "methods_api"
   - operation_id: "create_refund"
     http_method: "POST"
@@ -906,6 +970,7 @@ operations:
     requires_profile_scope: false
     access: "ValidatedFacade"
     status: "Implemented"
+    provider_maturity: "ga"
     route_group: "refunds_api"
   - operation_id: "list_refunds"
     http_method: "GET"
@@ -920,6 +985,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "refunds_api"
   - operation_id: "get_refund"
     http_method: "GET"
@@ -934,6 +1000,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "refunds_api"
   - operation_id: "cancel_refund"
     http_method: "DELETE"
@@ -948,6 +1015,7 @@ operations:
     requires_profile_scope: false
     access: "ValidatedFacade"
     status: "Implemented"
+    provider_maturity: "ga"
     route_group: "refunds_api"
   - operation_id: "list_all_refunds"
     http_method: "GET"
@@ -962,6 +1030,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "refunds_api"
   - operation_id: "list_chargebacks"
     http_method: "GET"
@@ -976,6 +1045,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "chargebacks_api"
   - operation_id: "get_chargeback"
     http_method: "GET"
@@ -990,6 +1060,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "chargebacks_api"
   - operation_id: "list_all_chargebacks"
     http_method: "GET"
@@ -1004,6 +1075,7 @@ operations:
     requires_profile_scope: true
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "chargebacks_api"
   - operation_id: "create_capture"
     http_method: "POST"
@@ -1018,6 +1090,7 @@ operations:
     requires_profile_scope: false
     access: "ValidatedFacade"
     status: "Implemented"
+    provider_maturity: "ga"
     route_group: "captures_api"
   - operation_id: "list_captures"
     http_method: "GET"
@@ -1032,6 +1105,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "captures_api"
   - operation_id: "get_capture"
     http_method: "GET"
@@ -1046,6 +1120,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "captures_api"
   - operation_id: "request_apple_pay_payment_session"
     http_method: "POST"
@@ -1060,6 +1135,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "wallets_api"
   - operation_id: "create_payment_link"
     http_method: "POST"
@@ -1074,6 +1150,7 @@ operations:
     requires_profile_scope: false
     access: "ValidatedFacade"
     status: "Implemented"
+    provider_maturity: "ga"
     route_group: "payment_links_api"
   - operation_id: "list_payment_links"
     http_method: "GET"
@@ -1088,6 +1165,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "payment_links_api"
   - operation_id: "get_payment_link"
     http_method: "GET"
@@ -1102,6 +1180,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "payment_links_api"
   - operation_id: "update_payment_link"
     http_method: "PATCH"
@@ -1116,6 +1195,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "payment_links_api"
   - operation_id: "delete_payment_link"
     http_method: "DELETE"
@@ -1130,6 +1210,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "payment_links_api"
   - operation_id: "get_payment_link_payments"
     http_method: "GET"
@@ -1144,6 +1225,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "payment_links_api"
   - operation_id: "list_terminals"
     http_method: "GET"
@@ -1158,6 +1240,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "terminals_api"
   - operation_id: "get_terminal"
     http_method: "GET"
@@ -1172,6 +1255,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "terminals_api"
   - operation_id: "terminals_request_pairing_code"
     http_method: "POST"
@@ -1186,6 +1270,7 @@ operations:
     requires_profile_scope: false
     access: "ValidatedFacade"
     status: "Implemented"
+    provider_maturity: "ga"
     route_group: "terminals_api"
   - operation_id: "terminals_list_pairing_codes"
     http_method: "GET"
@@ -1200,6 +1285,7 @@ operations:
     requires_profile_scope: true
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "terminals_api"
   - operation_id: "terminals_get_pairing_code"
     http_method: "GET"
@@ -1214,6 +1300,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "terminals_api"
   - operation_id: "terminals_revoke_pairing_code"
     http_method: "DELETE"
@@ -1228,6 +1315,7 @@ operations:
     requires_profile_scope: false
     access: "ValidatedFacade"
     status: "Implemented"
+    provider_maturity: "ga"
     route_group: "terminals_api"
   - operation_id: "payment_create_route"
     http_method: "POST"
@@ -1242,6 +1330,7 @@ operations:
     requires_profile_scope: false
     access: "ValidatedFacade"
     status: "Implemented"
+    provider_maturity: "ga"
     route_group: "delayed_routing_api"
   - operation_id: "payment_list_routes"
     http_method: "GET"
@@ -1256,6 +1345,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "delayed_routing_api"
   - operation_id: "payment_get_route"
     http_method: "GET"
@@ -1270,6 +1360,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "delayed_routing_api"
   - operation_id: "create_customer"
     http_method: "POST"
@@ -1284,6 +1375,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "customers_api"
   - operation_id: "list_customers"
     http_method: "GET"
@@ -1298,6 +1390,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "customers_api"
   - operation_id: "get_customer"
     http_method: "GET"
@@ -1312,6 +1405,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "customers_api"
   - operation_id: "update_customer"
     http_method: "PATCH"
@@ -1326,6 +1420,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "customers_api"
   - operation_id: "delete_customer"
     http_method: "DELETE"
@@ -1340,6 +1435,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "customers_api"
   - operation_id: "create_customer_payment"
     http_method: "POST"
@@ -1354,6 +1450,7 @@ operations:
     requires_profile_scope: false
     access: "ValidatedFacade"
     status: "Implemented"
+    provider_maturity: "ga"
     route_group: "customers_api"
   - operation_id: "list_customer_payments"
     http_method: "GET"
@@ -1368,6 +1465,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "customers_api"
   - operation_id: "create_mandate"
     http_method: "POST"
@@ -1382,6 +1480,7 @@ operations:
     requires_profile_scope: false
     access: "ValidatedFacade"
     status: "Implemented"
+    provider_maturity: "ga"
     route_group: "mandates_api"
   - operation_id: "list_mandates"
     http_method: "GET"
@@ -1396,6 +1495,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "mandates_api"
   - operation_id: "get_mandate"
     http_method: "GET"
@@ -1410,6 +1510,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "mandates_api"
   - operation_id: "revoke_mandate"
     http_method: "DELETE"
@@ -1424,6 +1525,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "mandates_api"
   - operation_id: "create_subscription"
     http_method: "POST"
@@ -1438,6 +1540,7 @@ operations:
     requires_profile_scope: false
     access: "ValidatedFacade"
     status: "Implemented"
+    provider_maturity: "ga"
     route_group: "subscriptions_api"
   - operation_id: "list_subscriptions"
     http_method: "GET"
@@ -1452,6 +1555,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "subscriptions_api"
   - operation_id: "get_subscription"
     http_method: "GET"
@@ -1466,6 +1570,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "subscriptions_api"
   - operation_id: "update_subscription"
     http_method: "PATCH"
@@ -1480,6 +1585,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "subscriptions_api"
   - operation_id: "cancel_subscription"
     http_method: "DELETE"
@@ -1494,6 +1600,7 @@ operations:
     requires_profile_scope: false
     access: "ValidatedFacade"
     status: "Implemented"
+    provider_maturity: "ga"
     route_group: "subscriptions_api"
   - operation_id: "list_all_subscriptions"
     http_method: "GET"
@@ -1508,6 +1615,7 @@ operations:
     requires_profile_scope: true
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "subscriptions_api"
   - operation_id: "list_subscription_payments"
     http_method: "GET"
@@ -1522,6 +1630,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "subscriptions_api"
   - operation_id: "create_sales_invoice"
     http_method: "POST"
@@ -1536,6 +1645,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "sales_invoices_api"
   - operation_id: "list_sales_invoices"
     http_method: "GET"
@@ -1550,6 +1660,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "sales_invoices_api"
   - operation_id: "get_sales_invoice"
     http_method: "GET"
@@ -1564,6 +1675,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "sales_invoices_api"
   - operation_id: "update_sales_invoice"
     http_method: "PATCH"
@@ -1578,6 +1690,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "sales_invoices_api"
   - operation_id: "delete_sales_invoice"
     http_method: "DELETE"
@@ -1592,6 +1705,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "sales_invoices_api"
   - operation_id: "list_business_accounts"
     http_method: "GET"
@@ -1606,6 +1720,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "accounts_api"
   - operation_id: "get_business_account"
     http_method: "GET"
@@ -1620,6 +1735,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "accounts_api"
   - operation_id: "list_business_account_transactions"
     http_method: "GET"
@@ -1634,6 +1750,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "accounts_api"
   - operation_id: "get_business_account_transaction"
     http_method: "GET"
@@ -1648,6 +1765,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "accounts_api"
   - operation_id: "create_transfer"
     http_method: "POST"
@@ -1662,6 +1780,7 @@ operations:
     requires_profile_scope: false
     access: "ValidatedFacade"
     status: "Implemented"
+    provider_maturity: "beta"
     route_group: "transfers_api"
   - operation_id: "get_transfer"
     http_method: "GET"
@@ -1676,6 +1795,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "beta"
     route_group: "transfers_api"
   - operation_id: "verify_payee"
     http_method: "POST"
@@ -1690,6 +1810,7 @@ operations:
     requires_profile_scope: false
     access: "ValidatedFacade"
     status: "Implemented"
+    provider_maturity: "beta"
     route_group: "verify_payee_api"
   - operation_id: "create_payout"
     http_method: "POST"
@@ -1704,6 +1825,7 @@ operations:
     requires_profile_scope: false
     access: "ValidatedFacade"
     status: "Implemented"
+    provider_maturity: "ga"
     route_group: "payouts_api"
   - operation_id: "list_payouts"
     http_method: "GET"
@@ -1718,6 +1840,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "payouts_api"
   - operation_id: "get_payout"
     http_method: "GET"
@@ -1732,6 +1855,7 @@ operations:
     requires_profile_scope: false
     access: "GeneratedClient"
     status: "Generated only"
+    provider_maturity: "ga"
     route_group: "payouts_api"
   - operation_id: "cancel_payout"
     http_method: "DELETE"
@@ -1746,5 +1870,6 @@ operations:
     requires_profile_scope: false
     access: "ValidatedFacade"
     status: "Implemented"
+    provider_maturity: "ga"
     route_group: "payouts_api"
 upstream_gaps:

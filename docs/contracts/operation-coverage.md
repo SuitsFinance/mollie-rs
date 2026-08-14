@@ -9,6 +9,7 @@
 Machine-readable inventory:
 
 * `docs/registries/operation-registry.yaml`
+* `docs/registries/provider-maturity.yaml` (Mollie GA/beta lifecycle by route group)
 * `src/route_capabilities.rs`
 * Live compare: `python scripts/compare_upstream_openapi.py --require-upstream`
 

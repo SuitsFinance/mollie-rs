@@ -10,6 +10,10 @@ describes every local operation:
 * `requires_profile_scope`
 * `access` (`ValidatedFacade` | `GeneratedClient`)
 
+Provider lifecycle maturity (`ga` | `beta` | `private_beta`) is **not** on
+`RouteCapability`; see `docs/registries/provider-maturity.yaml` and the
+`provider_maturity` field on each entry in `docs/registries/operation-registry.yaml`.
+
 ## Rules
 
 1. Capabilities must match `specs-3.0.yaml` operation inventory (CI).
