@@ -1,13 +1,3 @@
-# Mollie OpenAPI specification - THIRD-PARTY FILE
-# Copyright (c) Mollie B.V.
-# Licensed under Creative Commons Attribution-NonCommercial-ShareAlike 4.0
-# International (CC BY-NC-SA 4.0):
-#   https://creativecommons.org/licenses/by-nc-sa/4.0/
-#
-# This file is NOT covered by the MIT License that applies to the rest of this
-# repository. It is vendored only as the pinned contract input for code
-# generation and CI drift gates, and is excluded from the published crate.
-# See NOTICE at the repository root.
 openapi: 3.0.3
 info:
   title: Mollie API
@@ -2504,7 +2494,7 @@ paths:
                           documentation.'
                         type: array
                         items:
-                          $ref: '#/components/schemas/list-entity-settlement'
+                          $ref: '#/components/schemas/entity-settlement'
                   _links:
                     $ref: '#/components/schemas/list-links'
               examples:
@@ -2839,16 +2829,22 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/entity-settlement'
+                allOf:
+                - $ref: '#/components/schemas/entity-settlement-base'
+                - properties:
+                    id:
+                      $ref: '#/components/schemas/open-settlement-id'
+                    _links:
+                      $ref: '#/components/schemas/settlement-convenience-links'
               examples:
-                get-settlement-200-1:
-                  summary: The settlement object
+                get-open-settlement-200-1:
+                  summary: The open settlement object
                   value:
                     resource: settlement
-                    id: stl_jDk30akdN
-                    reference: 1234567.2404.03
+                    id: open
+                    reference: null
                     createdAt: '2024-04-06T09:41:44+00:00'
-                    status: paidout
+                    status: open
                     amount:
                       currency: EUR
                       value: '39.75'
@@ -2913,29 +2909,14 @@ paths:
                             amountGross:
                               currency: EUR
                               value: '0.6050'
-                          invoiceId: inv_FrvewDA3Pr
-                    settledAt: '2024-04-06T09:41:44+00:00'
+                          invoiceId: null
+                    settledAt: null
                     _links:
                       self:
-                        href: '...'
-                        type: application/hal+json
-                      payments:
-                        href: https://api.mollie.com/v2/settlements/stl_jDk30akdN/payments
-                        type: application/hal+json
-                      refunds:
-                        href: https://api.mollie.com/v2/settlements/stl_jDk30akdN/refunds
-                        type: application/hal+json
-                      chargebacks:
-                        href: https://api.mollie.com/v2/settlements/stl_jDk30akdN/chargebacks
-                        type: application/hal+json
-                      captures:
-                        href: https://api.mollie.com/v2/settlements/stl_jDk30akdN/captures
-                        type: application/hal+json
-                      invoice:
-                        href: https://api.mollie.com/v2/invoices/inv_FrvewDA3Pr
+                        href: https://api.mollie.com/v2/settlements/open
                         type: application/hal+json
                       documentation:
-                        href: '...'
+                        href: https://docs.mollie.com/reference/get-open-settlement
                         type: text/html
         '429':
           $ref: '#/components/responses/429-rate-limit'
@@ -3021,16 +3002,22 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/entity-settlement'
+                allOf:
+                - $ref: '#/components/schemas/entity-settlement-base'
+                - properties:
+                    id:
+                      $ref: '#/components/schemas/next-settlement-id'
+                    _links:
+                      $ref: '#/components/schemas/settlement-convenience-links'
               examples:
-                get-settlement-200-1:
-                  summary: The settlement object
+                get-next-settlement-200-1:
+                  summary: The next settlement object
                   value:
                     resource: settlement
-                    id: stl_jDk30akdN
-                    reference: 1234567.2404.03
+                    id: next
+                    reference: null
                     createdAt: '2024-04-06T09:41:44+00:00'
-                    status: paidout
+                    status: open
                     amount:
                       currency: EUR
                       value: '39.75'
@@ -3095,29 +3082,14 @@ paths:
                             amountGross:
                               currency: EUR
                               value: '0.6050'
-                          invoiceId: inv_FrvewDA3Pr
-                    settledAt: '2024-04-06T09:41:44+00:00'
+                          invoiceId: null
+                    settledAt: null
                     _links:
                       self:
-                        href: '...'
-                        type: application/hal+json
-                      payments:
-                        href: https://api.mollie.com/v2/settlements/stl_jDk30akdN/payments
-                        type: application/hal+json
-                      refunds:
-                        href: https://api.mollie.com/v2/settlements/stl_jDk30akdN/refunds
-                        type: application/hal+json
-                      chargebacks:
-                        href: https://api.mollie.com/v2/settlements/stl_jDk30akdN/chargebacks
-                        type: application/hal+json
-                      captures:
-                        href: https://api.mollie.com/v2/settlements/stl_jDk30akdN/captures
-                        type: application/hal+json
-                      invoice:
-                        href: https://api.mollie.com/v2/invoices/inv_FrvewDA3Pr
+                        href: https://api.mollie.com/v2/settlements/next
                         type: application/hal+json
                       documentation:
-                        href: '...'
+                        href: https://docs.mollie.com/reference/get-next-settlement
                         type: text/html
         '429':
           $ref: '#/components/responses/429-rate-limit'
@@ -11570,7 +11542,7 @@ paths:
                 method:
                   $ref: '#/components/schemas/method-request'
                 locale:
-                  $ref: '#/components/schemas/locale'
+                  $ref: '#/components/schemas/locale-2'
                 dueDate:
                   $ref: '#/components/schemas/dueDate'
                 restrictPaymentMethodsToCountry:
@@ -11582,7 +11554,7 @@ paths:
                 billingAddress:
                   $ref: '#/components/schemas/billingAddress'
                 shippingAddress:
-                  $ref: '#/components/schemas/payment-address'
+                  $ref: '#/components/schemas/shippingAddress'
                 billingEmail:
                   type: string
                   example: test@example.com
@@ -11908,7 +11880,7 @@ paths:
               type: object
               properties:
                 profileId:
-                  $ref: '#/components/schemas/profileToken'
+                  $ref: '#/components/schemas/profileId'
                 testmode:
                   $ref: '#/components/schemas/testmode-create'
       responses:
@@ -18205,6 +18177,22 @@ paths:
                   documentation:
                     href: https://docs.mollie.com/reference/terminals-request-pairing-code
                     type: text/html
+        '403':
+          description: Your organization is not eligible for terminal pairing codes.
+            Complete onboarding, then try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error-response'
+              example:
+                status: 403
+                title: Forbidden
+                detail: The organization is not eligible to request a terminal pairing
+                  code.
+                _links:
+                  documentation:
+                    href: https://docs.mollie.com/errors
+                    type: text/html
         '422':
           description: The request contains issues. For example, if the `profileId`
             field is missing or invalid.
@@ -18255,8 +18243,14 @@ paths:
         > This endpoint currently does not support test mode yet.
 
 
-        Returns all pairing codes: `active`, `expired`, and `revoked`. Results are
-        paginated.'
+        Returns your pairing codes: `active`, `expired`, and `revoked`. Results are
+        paginated.
+
+
+        We keep a pairing code for one month after it is revoked or expires, then
+        delete it. Deleted codes drop out of
+
+        this list. Active pairing codes are never deleted.'
       parameters:
       - $ref: '#/components/parameters/list-from'
         schema:
@@ -18413,7 +18407,13 @@ paths:
         and, optionally, a QR Code as a
 
         base64 encoded SVG data URI when you use the `include` query parameter with
-        value `details.qrCode`.'
+        value `details.qrCode`.
+
+
+        We keep a pairing code for one month after it is revoked or expires, then
+        delete it. Once deleted, this endpoint
+
+        returns a 404. Active pairing codes are never deleted.'
       parameters:
       - $ref: '#/components/parameters/parent-terminal-pairing-code-id'
       - $ref: '#/components/parameters/include'
@@ -18497,7 +18497,11 @@ paths:
         Revoke a pairing code, preventing the onboarding of new point-of-sale terminals.
 
 
-        Terminals that have already paired with this code are not affected.'
+        Terminals that have already paired with this code are not affected.
+
+
+        We keep a revoked pairing code for one month, then delete it. Once deleted,
+        this endpoint returns a 404.'
       parameters:
       - $ref: '#/components/parameters/parent-terminal-pairing-code-id'
       - $ref: '#/components/parameters/idempotency-key'
@@ -29296,7 +29300,7 @@ components:
         failed: The settlement could not be paid out
       example: paidout
       x-speakeasy-unknown-values: allow
-    entity-settlement:
+    entity-settlement-base:
       type: object
       required:
       - resource
@@ -29315,10 +29319,10 @@ components:
           readOnly: true
           example: settlement
         id:
-          allOf:
-          - $ref: '#/components/schemas/settlementToken'
+          type: string
           description: The identifier uniquely referring to this settlement.
           readOnly: true
+          example: stl_5B8cwPMGnU
         createdAt:
           $ref: '#/components/schemas/created-at'
         reference:
@@ -29489,33 +29493,94 @@ components:
           type: object
           description: An object with several relevant URLs. Every URL object will
             contain an `href` and a `type` field.
-          required:
-          - self
-          properties:
-            self:
-              $ref: '#/components/schemas/url'
-            payments:
-              $ref: '#/components/schemas/url'
-              description: The API resource URL of the [payments](list-payments) included
-                in this settlement.
-            captures:
-              $ref: '#/components/schemas/url'
-              description: The API resource URL of the [captures](list-captures) included
-                in this settlement.
-            refunds:
-              $ref: '#/components/schemas/url'
-              description: The API resource URL of the [refunds](list-refunds) deducted
-                from this settlement.
-            chargebacks:
-              $ref: '#/components/schemas/url'
-              description: The API resource URL of the [chargebacks](list-chargebacks)
-                deducted from this settlement.
-            invoice:
-              $ref: '#/components/schemas/url-nullable'
-              description: The API resource URL of the [invoice](list-invoices).
-            documentation:
-              $ref: '#/components/schemas/url'
           readOnly: true
+    settlement-id:
+      allOf:
+      - $ref: '#/components/schemas/settlementToken'
+      description: The identifier uniquely referring to this settlement.
+      readOnly: true
+    settlement-links:
+      type: object
+      description: An object with several relevant URLs. Every URL object will contain
+        an `href` and a `type` field.
+      required:
+      - self
+      properties:
+        self:
+          $ref: '#/components/schemas/url'
+        payments:
+          $ref: '#/components/schemas/url'
+          description: The API resource URL of the [payments](list-payments) included
+            in this settlement.
+        captures:
+          $ref: '#/components/schemas/url'
+          description: The API resource URL of the [captures](list-captures) included
+            in this settlement.
+        refunds:
+          $ref: '#/components/schemas/url'
+          description: The API resource URL of the [refunds](list-refunds) deducted
+            from this settlement.
+        chargebacks:
+          $ref: '#/components/schemas/url'
+          description: The API resource URL of the [chargebacks](list-chargebacks)
+            deducted from this settlement.
+        invoice:
+          $ref: '#/components/schemas/url-nullable'
+          description: The API resource URL of the [invoice](list-invoices).
+        documentation:
+          $ref: '#/components/schemas/url'
+      readOnly: true
+    entity-settlement:
+      allOf:
+      - $ref: '#/components/schemas/entity-settlement-base'
+      - properties:
+          id:
+            $ref: '#/components/schemas/settlement-id'
+          _links:
+            $ref: '#/components/schemas/settlement-links'
+    open-settlement-id:
+      type: string
+      enum:
+      - open
+      x-enumDescriptions:
+        open: 'This endpoint always returns your organization''s current open settlement,
+          so there''s no separate identifier to
+
+          look up.'
+      readOnly: true
+      example: open
+      x-speakeasy-unknown-values: allow
+    settlement-convenience-links:
+      type: object
+      description: 'An object with several relevant URLs. Every URL object will contain
+        an `href` and a `type` field.
+
+
+        This endpoint always points to your organization''s current open or next settlement
+        rather than one specific
+
+        settlement, so it doesn''t return links to that settlement''s payments, captures,
+        refunds, chargebacks, or invoice.'
+      required:
+      - self
+      properties:
+        self:
+          $ref: '#/components/schemas/url'
+        documentation:
+          $ref: '#/components/schemas/url'
+      readOnly: true
+    next-settlement-id:
+      type: string
+      enum:
+      - next
+      x-enumDescriptions:
+        next: 'This endpoint always returns your organization''s next settlement,
+          so there''s no separate identifier to look
+
+          up.'
+      readOnly: true
+      example: next
+      x-speakeasy-unknown-values: allow
     sorting:
       type: string
       enum:
@@ -29804,7 +29869,9 @@ components:
       - de_CH
       - de_DE
       - de_LU
+      - en_BE
       - en_GB
+      - en_NL
       - en_US
       - es_ES
       - fi_FI
@@ -29823,7 +29890,6 @@ components:
       - pt_PT
       - sk_SK
       - sv_SE
-      - 'null'
       example: en_US
       nullable: true
     metadata:
@@ -30422,9 +30488,11 @@ components:
       - american-express
       - amex-intra-eea
       - carte-bancaire
+      - domestic
+      - inter
       - intra-eu
       - intra-eu-corporate
-      - domestic
+      - intra_eea
       - maestro
       - mastercard-credit-business-domestic
       - mastercard-credit-consumer-domestic
@@ -30434,10 +30502,9 @@ components:
       - mastercard-debit-consumer-domestic
       - mastercard-debit-consumer-intra-eea
       - other
-      - inter
-      - intra_eea
       - visa-credit-business-domestic
       - visa-credit-consumer-domestic
+      - visa-credit-consumer-inter
       - visa-credit-consumer-intra-eea
       - visa-debit-business-domestic
       - visa-debit-business-intra-eea
@@ -31683,10 +31750,13 @@ components:
           nullable: true
         dueDate:
           type: string
-          description: The date by which the payment should be completed in `YYYY-MM-DD`
-            format
+          description: 'The date by which the payment should be completed in `YYYY-MM-DD`
+            format. Sending `null` has the same effect
+
+            as omitting the field.'
           example: '2025-01-01'
           writeOnly: true
+          nullable: true
         storeCredentials:
           type: boolean
           description: "Whether the card details should be stored for the customer\
@@ -31977,6 +32047,8 @@ components:
           nullable: true
         createdAt:
           $ref: '#/components/schemas/created-at'
+        testmode:
+          $ref: '#/components/schemas/testmode-create'
         _links:
           type: object
           description: An object with several relevant URLs. Every URL object will
@@ -34039,6 +34111,7 @@ components:
             this payout.
           maxLength: 255
           example: My payout description
+          nullable: true
         status:
           $ref: '#/components/schemas/payout-status'
         statusReason:
@@ -35158,17 +35231,19 @@ components:
           type: string
           description: "The date the bank transfer payment should expire, in `YYYY-MM-DD`\
             \ format. The minimum date is tomorrow, and the\nmaximum date is 100 days\
-            \ after tomorrow.\n\nAfter you created the payment, you can still update\
-            \ the `dueDate` via [Update payment](update-payment).\n\n<Callout icon=\"\
-            \U0001F4D8\" theme=\"info\">\n  If `dueDate` falls out of business days,\
-            \ it will be set to the **next business day** and the payment will\n \
-            \ expire at 00:00 (on the following business day).\n  Example: `dueDate`\
-            \ is `2025-12-06` (Saturday) -> `dueDate` will be set for `2025-12-08`,\
-            \ `expiresAt`\n  `2025-12-09 00:00`\n</Callout>"
+            \ after tomorrow. Sending `null` has the same effect as omitting the field.\n\
+            \nAfter you created the payment, you can still update the `dueDate` via\
+            \ [Update payment](update-payment).\n\n<Callout icon=\"\U0001F4D8\" theme=\"\
+            info\">\n  If `dueDate` falls out of business days, it will be set to\
+            \ the **next business day** and the payment will\n  expire at 00:00 (on\
+            \ the following business day).\n  Example: `dueDate` is `2025-12-06` (Saturday)\
+            \ -> `dueDate` will be set for `2025-12-08`, `expiresAt`\n  `2025-12-09\
+            \ 00:00`\n</Callout>"
           example: '2025-12-08'
           writeOnly: true
           x-methodSpecific: true
           x-method: bank-transfer
+          nullable: true
         company:
           type: object
           description: 'Billie is a business-to-business (B2B) payment method. It
@@ -35476,12 +35551,40 @@ components:
       - type: array
         items:
           $ref: '#/components/schemas/method'
+    locale-2:
+      type: string
+      $ref: '#/components/schemas/locale'
+      description: 'Allows you to preset the language to be used in the hosted payment
+        pages shown to the customer. Setting a locale
+
+        is highly recommended and will greatly improve your conversion rate. When
+        this parameter is omitted the browser
+
+        language will be used instead if supported by the payment method. You can
+        provide any `xx_XX` format ISO 15897
+
+        locale, but our hosted payment pages currently only support the specified
+        languages.
+
+
+        For bank transfer payments specifically, the locale will determine the target
+        bank account the customer has to
+
+        transfer the money to. We have dedicated bank accounts for Belgium, Germany,
+        and The Netherlands. Having the
+
+        customer use a local bank account greatly increases the conversion and speed
+        of payment.'
+      nullable: true
     dueDate:
       type: string
-      description: The date by which the payment should be completed in `YYYY-MM-DD`
-        format
+      description: 'The date by which the payment should be completed in `YYYY-MM-DD`
+        format. Sending `null` has the same effect
+
+        as omitting the field.'
       example: '2025-01-01'
       writeOnly: true
+      nullable: true
     restrictPaymentMethodsToCountry:
       type: string
       description: 'For digital goods in most jurisdictions, you must apply the VAT
@@ -35562,6 +35665,32 @@ components:
 
         Required for payment method `alma`, `in3`, `klarna`, `billie`, `billink` and
         `riverty`.'
+    shippingAddress:
+      $ref: '#/components/schemas/payment-address'
+      description: 'The customer''s shipping address details. We advise to provide
+        these details to improve fraud protection and
+
+        conversion.
+
+
+        Should include `email` or a valid postal address consisting of `streetAndNumber`,
+        `postalCode`, `city` and
+
+        `country`.'
+    profileId:
+      type: string
+      $ref: '#/components/schemas/profileToken'
+      description: 'The identifier referring to the [profile](get-profile) this entity
+        belongs to.
+
+
+        When using an API Key, the `profileId` must not be sent since it is linked
+        to the key. However, for OAuth and
+
+        Organization tokens, the `profileId` is required.
+
+
+        For more information, see [Authentication](authentication).'
     unmatchedCreditTransferToken:
       type: string
       pattern: ^uct_.+$
@@ -36450,11 +36579,6 @@ components:
               method selection screen will be skipped.'
             example: ideal
             readOnly: true
-    profile-path-id:
-      type: string
-      enum:
-      - me
-      example: me
     method-id-with-issuer:
       type: string
       enum:
@@ -38371,224 +38495,6 @@ components:
             self:
               $ref: '#/components/schemas/url'
           readOnly: true
-    list-entity-settlement:
-      type: object
-      required:
-      - resource
-      - id
-      - status
-      - amount
-      - balanceId
-      - _links
-      properties:
-        resource:
-          type: string
-          description: 'Indicates the response contains a settlement object. Will
-            always contain the string `settlement` for this
-
-            endpoint.'
-          readOnly: true
-          example: settlement
-        id:
-          allOf:
-          - $ref: '#/components/schemas/settlementToken'
-          description: The identifier uniquely referring to this settlement.
-          readOnly: true
-        createdAt:
-          $ref: '#/components/schemas/created-at'
-        reference:
-          type: string
-          description: The settlement's bank reference, as found in your Mollie account
-            and on your bank statement.
-          readOnly: true
-          example: 07049691.2406.01
-          nullable: true
-        settledAt:
-          type: string
-          description: 'The date on which the settlement was settled, in ISO 8601
-            format.
-
-
-            For an [open settlement](get-open-settlement) or for the [next settlement](get-next-settlement),
-            no settlement
-
-            date is available.'
-          readOnly: true
-          example: '2025-03-31T12:54:39+00:00'
-          nullable: true
-        status:
-          allOf:
-          - $ref: '#/components/schemas/settlement-status'
-          readOnly: true
-        amount:
-          allOf:
-          - $ref: '#/components/schemas/amount'
-          - description: The total amount of the settlement.
-          readOnly: true
-        balanceId:
-          allOf:
-          - $ref: '#/components/schemas/balanceToken'
-          description: The balance token that the settlement was settled to.
-          readOnly: true
-        invoiceId:
-          allOf:
-          - $ref: '#/components/schemas/invoiceToken'
-          type: string
-          description: The ID of the oldest invoice created for all the periods, if
-            the invoice has been created yet.
-          readOnly: true
-          nullable: true
-        periods:
-          type: object
-          description: 'For bookkeeping purposes, the settlement includes an overview
-            of transactions included in the settlement. These
-
-            transactions are grouped into ''period'' objects — one for each calendar
-            month.
-
-
-            For example, if a settlement includes funds from 15 April until 4 May,
-            it will include two period objects. One for
-
-            all transactions processed between 15 April and 30 April, and one for
-            all transactions between 1 May and 4 May.
-
-
-            Period objects are grouped by year, and then by month. So in the above
-            example, the full `periods` collection will
-
-            look as follows: `{"2024": {"04": {...}, "05": {...}}}`. The year and
-            month in this documentation are referred as `<year>` and `<month>`.
-
-
-            The example response should give a good idea of what this looks like in
-            practise.'
-          readOnly: true
-          additionalProperties:
-            type: object
-            additionalProperties:
-              type: object
-              properties:
-                costs:
-                  type: array
-                  description: An array of cost objects, describing the fees withheld
-                    for each payment method during this period.
-                  items:
-                    type: object
-                    required:
-                    - description
-                    - method
-                    - count
-                    - rate
-                    - amountNet
-                    - amountVat
-                    - amountGross
-                    properties:
-                      description:
-                        type: string
-                        description: A description of the cost subtotal
-                        example: Credit card - Visa debit consumer domestic
-                      method:
-                        $ref: '#/components/schemas/payment-method'
-                      count:
-                        type: integer
-                        description: The number of fees
-                        example: 10
-                      rate:
-                        type: object
-                        description: The service rates, further divided into `fixed`
-                          and `percentage` costs.
-                        properties:
-                          fixed:
-                            $ref: '#/components/schemas/amount'
-                          percentage:
-                            type: string
-                            example: '2.5'
-                      amountNet:
-                        $ref: '#/components/schemas/amount'
-                        description: The net total cost, i.e. excluding VAT
-                      amountVat:
-                        $ref: '#/components/schemas/amount-nullable'
-                        description: The applicable VAT
-                      amountGross:
-                        $ref: '#/components/schemas/amount'
-                        description: The gross total cost, i.e. including VAT
-                revenue:
-                  type: array
-                  description: An array of revenue objects containing the total revenue
-                    for each payment method during this period.
-                  items:
-                    type: object
-                    required:
-                    - description
-                    - method
-                    - count
-                    - amountNet
-                    - amountVat
-                    - amountGross
-                    properties:
-                      description:
-                        type: string
-                        description: A description of the revenue subtotal
-                        example: Credit card
-                      method:
-                        $ref: '#/components/schemas/payment-method'
-                      count:
-                        type: integer
-                        description: The number of payments
-                        example: 10
-                      amountNet:
-                        $ref: '#/components/schemas/amount'
-                        description: The net total of received funds, i.e. excluding
-                          VAT
-                      amountVat:
-                        $ref: '#/components/schemas/amount-nullable'
-                        description: The applicable VAT
-                      amountGross:
-                        $ref: '#/components/schemas/amount'
-                        description: The gross total of received funds, i.e. including
-                          VAT
-                invoiceId:
-                  $ref: '#/components/schemas/invoiceToken'
-                  type: string
-                  description: The ID of the invoice created for this period, if the
-                    invoice has been created already.
-                  nullable: true
-                invoiceReference:
-                  type: string
-                  description: The invoice reference, if the invoice has been created
-                    already.
-                  example: MOLR2021.0001399669
-                  nullable: true
-        _links:
-          type: object
-          description: An object with several relevant URLs. Every URL object will
-            contain an `href` and a `type` field.
-          required:
-          - self
-          properties:
-            self:
-              $ref: '#/components/schemas/url'
-            payments:
-              $ref: '#/components/schemas/url'
-              description: The API resource URL of the [payments](list-payments) included
-                in this settlement.
-            captures:
-              $ref: '#/components/schemas/url'
-              description: The API resource URL of the [captures](list-captures) included
-                in this settlement.
-            refunds:
-              $ref: '#/components/schemas/url'
-              description: The API resource URL of the [refunds](list-refunds) deducted
-                from this settlement.
-            chargebacks:
-              $ref: '#/components/schemas/url'
-              description: The API resource URL of the [chargebacks](list-chargebacks)
-                deducted from this settlement.
-            invoice:
-              $ref: '#/components/schemas/url-nullable'
-              description: The API resource URL of the [invoice](list-invoices).
-          readOnly: true
     list-entity-payment:
       type: object
       properties:
@@ -39180,10 +39086,13 @@ components:
           nullable: true
         dueDate:
           type: string
-          description: The date by which the payment should be completed in `YYYY-MM-DD`
-            format
+          description: 'The date by which the payment should be completed in `YYYY-MM-DD`
+            format. Sending `null` has the same effect
+
+            as omitting the field.'
           example: '2025-01-01'
           writeOnly: true
+          nullable: true
         storeCredentials:
           type: boolean
           description: "Whether the card details should be stored for the customer\
@@ -39402,6 +39311,8 @@ components:
           nullable: true
         createdAt:
           $ref: '#/components/schemas/created-at'
+        testmode:
+          $ref: '#/components/schemas/testmode-create'
         _links:
           type: object
           description: An object with several relevant URLs. Every URL object will
@@ -41484,6 +41395,7 @@ components:
             this payout.
           maxLength: 255
           example: My payout description
+          nullable: true
         status:
           $ref: '#/components/schemas/payout-status'
         statusReason:
@@ -42123,10 +42035,13 @@ components:
           nullable: true
         dueDate:
           type: string
-          description: The date by which the payment should be completed in `YYYY-MM-DD`
-            format
+          description: 'The date by which the payment should be completed in `YYYY-MM-DD`
+            format. Sending `null` has the same effect
+
+            as omitting the field.'
           example: '2025-01-01'
           writeOnly: true
+          nullable: true
         storeCredentials:
           type: boolean
           description: "Whether the card details should be stored for the customer\
@@ -42382,7 +42297,9 @@ components:
       - de_CH
       - de_DE
       - de_LU
+      - en_BE
       - en_GB
+      - en_NL
       - en_US
       - es_ES
       - fi_FI
@@ -42401,7 +42318,6 @@ components:
       - pt_PT
       - sk_SK
       - sv_SE
-      - 'null'
       example: en_US
       x-speakeasy-unknown-values: allow
       nullable: true
@@ -42922,9 +42838,11 @@ components:
       - american-express
       - amex-intra-eea
       - carte-bancaire
+      - domestic
+      - inter
       - intra-eu
       - intra-eu-corporate
-      - domestic
+      - intra_eea
       - maestro
       - mastercard-credit-business-domestic
       - mastercard-credit-consumer-domestic
@@ -42934,10 +42852,9 @@ components:
       - mastercard-debit-consumer-domestic
       - mastercard-debit-consumer-intra-eea
       - other
-      - inter
-      - intra_eea
       - visa-credit-business-domestic
       - visa-credit-consumer-domestic
+      - visa-credit-consumer-inter
       - visa-credit-consumer-intra-eea
       - visa-debit-business-domestic
       - visa-debit-business-intra-eea
@@ -43149,6 +43066,8 @@ components:
           nullable: true
         createdAt:
           $ref: '#/components/schemas/created-at'
+        testmode:
+          $ref: '#/components/schemas/testmode-create'
         _links:
           type: object
           description: An object with several relevant URLs. Every URL object will
@@ -43909,6 +43828,7 @@ components:
             this payout.
           maxLength: 255
           example: My payout description
+          nullable: true
         status:
           $ref: '#/components/schemas/payout-status'
         statusReason:
@@ -45567,7 +45487,6 @@ components:
       description: Response language
       in: query
       schema:
-        type: string
         $ref: '#/components/schemas/locale'
     parent-method-id:
       name: methodId
@@ -45582,9 +45501,7 @@ components:
       in: path
       required: true
       schema:
-        oneOf:
-        - $ref: '#/components/schemas/profileToken'
-        - $ref: '#/components/schemas/profile-path-id'
+        $ref: '#/components/schemas/profileToken'
     parent-method-with-issuer-id:
       name: methodId
       description: Provide the ID of the related payment method.
