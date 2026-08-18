@@ -51,6 +51,8 @@ method:CapturesApi.create_raw
 method:CapturesApi.get
 method:CapturesApi.list_all
 method:CapturesApi.list_page
+method:CapturesApi.stream_items
+method:CapturesApi.stream_pages
 method:ConnectBalanceTransfersApi.create
 method:ConnectBalanceTransfersApi.create_raw
 method:ConnectBalanceTransfersApi.get
@@ -64,6 +66,8 @@ method:MandatesApi.get
 method:MandatesApi.list_all
 method:MandatesApi.list_page
 method:MandatesApi.revoke
+method:MandatesApi.stream_items
+method:MandatesApi.stream_pages
 method:MollieClient.captures->CapturesApi
 method:MollieClient.connect_balance_transfers->ConnectBalanceTransfersApi
 method:MollieClient.mandates->MandatesApi
@@ -125,7 +129,10 @@ method:SubscriptionsApi.cancel
 method:SubscriptionsApi.create
 method:SubscriptionsApi.create_raw
 method:SubscriptionsApi.get
+method:SubscriptionsApi.list_all
 method:SubscriptionsApi.list_page
+method:SubscriptionsApi.stream_items
+method:SubscriptionsApi.stream_pages
 method:SubscriptionsApi.update
 method:TerminalsApi.get
 method:TerminalsApi.get_pairing_code
@@ -134,6 +141,8 @@ method:TerminalsApi.list_page
 method:TerminalsApi.list_pairing_codes
 method:TerminalsApi.request_pairing_code
 method:TerminalsApi.revoke_pairing_code
+method:TerminalsApi.stream_items
+method:TerminalsApi.stream_pages
 method:TransfersApi.create
 method:TransfersApi.create_raw
 method:TransfersApi.get

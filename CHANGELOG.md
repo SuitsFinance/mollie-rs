@@ -36,6 +36,12 @@
   `ContractDriftObserver` (client or global) with redacted
   `ContractDriftSignal`s for unknown open-enum values and off-origin
   pagination links; observer panics are isolated from the request path.
+- **Workflow example matrix (Phase 6 / EX-001):** Tier-S money-path workflows
+  mapped to compile-checked `examples/*.rs` via
+  `docs/registries/tier-s-workflow-examples.yaml` and CI gate
+  `scripts/check_workflow_examples.py` (see `docs/rc/workflow-example-matrix.md`).
+- **Tier-S snapshot:** refreshed for captures/mandates/subscriptions/terminals
+  stream + `SubscriptionsApi.list_all` surface from Phase 4.
 
 ### Docs
 
