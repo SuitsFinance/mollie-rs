@@ -23,7 +23,7 @@ Only residuals that block an honest `1.0.0-rc` or are on the critical path are l
 | SESS-PII | SUI-2350 | Sessions private-beta PII | Maturity-aware work partial | Tier-S does not over-promise; no PII in hooks |
 | TERM-403 | SUI-2351 | Terminal pairing 403 structured error | Needs structured propagation proof | Distinct from 429/5xx/timeout/auth/decode |
 | REQ-sep | SUI-2353 | High-risk request-model separation | **PARTIAL CLOSED:** Tier-S `to_write_json` allowlisted bodies for payment/payout/update; contracts registry includes `update_payment` + `dueDate` | Generated `PayoutRequest`/`PaymentRequest` types remain dual-shaped; prefer Tier-S builders |
-| PAG-001 | SUI-2328 | Pagination consistency | Streams on key facades; matrix incomplete | Per-domain list_page/stream_*/guard/origin-safe matrix + cycle tests |
+| PAG-001 | SUI-2328 | Pagination consistency | **CLOSED for HAL list facades:** captures/mandates/subscriptions/terminals gained `stream_pages`/`stream_items` (+ subscriptions `list_all`); matrix + intentional residuals in `docs/rc/pagination-matrix.md`; kernel origin/cycle/stream tests green | Keep matrix green; optional baseurl-threaded cursor parse |
 | EX-001 | SUI-2331 | Documented workflow compile-proof | Examples compile in CI; coverage script optional | Required workflows mapped to examples |
 | REL-001 | SUI-2330 | Live assurance harness | Env-gated live readonly + multi-gate sandbox write exist; **not credentialed run** | Evidence paste for readonly + sandbox write; fail-closed credential gates |
 | HOST-001 | SUI-2332 | Hostile RC soak | Static hostile review PASS; live soak NOT RUN | Transport/financial/credential adversarial evidence |

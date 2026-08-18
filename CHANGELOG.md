@@ -29,6 +29,9 @@
   `UpdatePaymentRequired` use `NullableField` with `to_write_json` omit/null/value
   bodies; `PaymentStatusValue` (`OpenEnum`) preserves unknown payment statuses;
   Billink covered as first-class `PaymentMethod`.
+- **Pagination consistency (Phase 4):** `stream_pages` / `stream_items` on
+  captures, mandates, subscriptions, and terminals; subscriptions `list_all`;
+  matrix in `docs/rc/pagination-matrix.md`.
 
 ### Docs
 

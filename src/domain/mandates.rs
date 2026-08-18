@@ -1,13 +1,21 @@
 //! Mandate-domain facade for customer-scoped mandates.
 #![warn(missing_docs)]
 
-use crate::domain::common::{client_with_key, next_cursor_from_links, validate_page_limit};
-use crate::pagination::{Page, PageCursor, PaginationGuard};
+use std::future::Future;
+use std::pin::Pin;
+
+use crate::domain::common::{
+    client_with_key, next_cursor_from_links, stream_items, stream_pages, validate_page_limit,
+};
+use crate::pagination::{AsyncPaginator, ItemStream, Page, PageCursor, PaginationGuard};
 use crate::types::{self, ListMandatesResponse, MandateResponse};
 use crate::{
     CreateSepaMandateRequired, CustomerId, EmptyResponse, IdempotencyKey, IntoMollieFuture,
     MandateId, MollieClient, MollieResponse, MollieResult, ResponseEnvelope,
 };
+
+type MandatePageFut =
+    Pin<Box<dyn Future<Output = MollieResult<Page<types::ListMandateResponse>>> + Send>>;
 
 /// Mandate operations scoped to a [`MollieClient`].
 #[derive(Debug)]
@@ -124,6 +132,50 @@ impl MandatesApi<'_> {
             }
         }
         Ok(items)
+    }
+
+    /// Streams mandate pages for a customer within [`PaginationGuard`] budgets.
+    pub fn stream_pages(
+        &self,
+        customer_id: &CustomerId,
+        limit: Option<u32>,
+        guard: PaginationGuard,
+    ) -> AsyncPaginator<impl FnMut(Option<PageCursor>) -> MandatePageFut, types::ListMandateResponse>
+    {
+        let client = self.client.clone();
+        let customer = customer_id.clone();
+        stream_pages(guard, move |cursor| -> MandatePageFut {
+            let client = client.clone();
+            let customer = customer.clone();
+            Box::pin(async move {
+                let _ = validate_page_limit(limit)?;
+                MandatesApi { client: &client }
+                    .list_page(&customer, cursor.as_ref(), limit)
+                    .await
+            })
+        })
+    }
+
+    /// Streams mandate items for a customer within [`PaginationGuard`] budgets.
+    pub fn stream_items(
+        &self,
+        customer_id: &CustomerId,
+        limit: Option<u32>,
+        guard: PaginationGuard,
+    ) -> ItemStream<impl FnMut(Option<PageCursor>) -> MandatePageFut, types::ListMandateResponse>
+    {
+        let client = self.client.clone();
+        let customer = customer_id.clone();
+        stream_items(guard, move |cursor| -> MandatePageFut {
+            let client = client.clone();
+            let customer = customer.clone();
+            Box::pin(async move {
+                let _ = validate_page_limit(limit)?;
+                MandatesApi { client: &client }
+                    .list_page(&customer, cursor.as_ref(), limit)
+                    .await
+            })
+        })
     }
 }
 

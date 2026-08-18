@@ -1,13 +1,21 @@
 //! Capture-domain facade for payment-scoped captures.
 #![warn(missing_docs)]
 
-use crate::domain::common::{client_with_key, next_cursor_from_links, validate_page_limit};
-use crate::pagination::{Page, PageCursor, PaginationGuard};
+use std::future::Future;
+use std::pin::Pin;
+
+use crate::domain::common::{
+    client_with_key, next_cursor_from_links, stream_items, stream_pages, validate_page_limit,
+};
+use crate::pagination::{AsyncPaginator, ItemStream, Page, PageCursor, PaginationGuard};
 use crate::types::{self, CaptureResponse, ListCapturesResponse};
 use crate::{
     CaptureId, CreateCaptureRequired, IdempotencyKey, IntoMollieFuture, MollieClient,
     MollieResponse, MollieResult, PaymentId, ResponseEnvelope,
 };
+
+type CapturePageFut =
+    Pin<Box<dyn Future<Output = MollieResult<Page<types::ListCaptureResponse>>> + Send>>;
 
 /// Capture operations scoped to a [`MollieClient`].
 #[derive(Debug)]
@@ -103,6 +111,50 @@ impl CapturesApi<'_> {
             }
         }
         Ok(items)
+    }
+
+    /// Streams capture pages for a payment within [`PaginationGuard`] budgets.
+    pub fn stream_pages(
+        &self,
+        payment_id: &PaymentId,
+        limit: Option<u32>,
+        guard: PaginationGuard,
+    ) -> AsyncPaginator<impl FnMut(Option<PageCursor>) -> CapturePageFut, types::ListCaptureResponse>
+    {
+        let client = self.client.clone();
+        let payment = payment_id.clone();
+        stream_pages(guard, move |cursor| -> CapturePageFut {
+            let client = client.clone();
+            let payment = payment.clone();
+            Box::pin(async move {
+                let _ = validate_page_limit(limit)?;
+                CapturesApi { client: &client }
+                    .list_page(&payment, cursor.as_ref(), limit)
+                    .await
+            })
+        })
+    }
+
+    /// Streams capture items for a payment within [`PaginationGuard`] budgets.
+    pub fn stream_items(
+        &self,
+        payment_id: &PaymentId,
+        limit: Option<u32>,
+        guard: PaginationGuard,
+    ) -> ItemStream<impl FnMut(Option<PageCursor>) -> CapturePageFut, types::ListCaptureResponse>
+    {
+        let client = self.client.clone();
+        let payment = payment_id.clone();
+        stream_items(guard, move |cursor| -> CapturePageFut {
+            let client = client.clone();
+            let payment = payment.clone();
+            Box::pin(async move {
+                let _ = validate_page_limit(limit)?;
+                CapturesApi { client: &client }
+                    .list_page(&payment, cursor.as_ref(), limit)
+                    .await
+            })
+        })
     }
 }
 
