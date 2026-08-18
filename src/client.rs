@@ -365,6 +365,7 @@ impl MollieClient {
     /// - sticky idempotency key
     /// - retry policy
     /// - request hook
+    /// - response body limits
     ///
     /// Custom default headers from the original builder are **not** replayed
     /// (reqwest does not expose them). Re-apply headers via
@@ -385,7 +386,8 @@ impl MollieClient {
             .credential(credential)
             .timeout(self.inner.timeout())
             .connect_timeout(self.inner.connect_timeout())
-            .retry_policy(self.inner.retry_policy().clone());
+            .retry_policy(self.inner.retry_policy().clone())
+            .response_limits(self.inner.response_limits());
 
         if let Some(ua) = self.inner.user_agent() {
             builder = builder.user_agent(ua);
@@ -430,11 +432,11 @@ pub struct MollieClientBuilder {
     testmode: Option<bool>,
     profile_id: Option<String>,
     retry_policy: crate::RetryPolicy,
-    http_client: Option<ReqwestClient>,
     /// Optional caller customization applied before mandatory SDK security settings.
     http_configure:
         Option<std::sync::Arc<dyn Fn(ReqwestClientBuilder) -> ReqwestClientBuilder + Send + Sync>>,
     request_hook: Option<SharedRequestHook>,
+    response_limits: crate::ResponseLimits,
 }
 
 impl std::fmt::Debug for MollieClientBuilder {
@@ -453,10 +455,6 @@ impl std::fmt::Debug for MollieClientBuilder {
             .field("profile_id", &self.profile_id)
             .field("retry_policy", &self.retry_policy)
             .field(
-                "http_client",
-                &self.http_client.as_ref().map(|_| "<reqwest::Client>"),
-            )
-            .field(
                 "http_configure",
                 &self.http_configure.as_ref().map(|_| "<configure_http>"),
             )
@@ -464,6 +462,7 @@ impl std::fmt::Debug for MollieClientBuilder {
                 "request_hook",
                 &self.request_hook.as_ref().map(|_| "<hook>"),
             )
+            .field("response_limits", &self.response_limits)
             .finish_non_exhaustive()
     }
 }
@@ -482,9 +481,9 @@ impl Default for MollieClientBuilder {
             testmode: None,
             profile_id: None,
             retry_policy: crate::RetryPolicy::disabled(),
-            http_client: None,
             http_configure: None,
             request_hook: None,
+            response_limits: crate::ResponseLimits::default(),
         }
     }
 }
@@ -617,31 +616,27 @@ impl MollieClientBuilder {
         self
     }
 
-    /// Injects a pre-built `reqwest` client (proxy, custom TLS, etc.).
-    ///
-    /// **Deprecated:** this bypasses mandatory SDK security last-apply
-    /// (redirect policy, min TLS, timeouts, auth default headers). Prefer
-    /// [`Self::configure_http`] so SDK invariants are applied after your
-    /// customization, or [`MollieClient::from_generated`] for unrestricted
-    /// transport control.
-    #[deprecated(
-        note = "Use configure_http so SDK security settings apply last, or MollieClient::from_generated for unrestricted transport control"
-    )]
-    pub fn http_client(mut self, client: ReqwestClient) -> Self {
-        self.http_client = Some(client);
-        self
-    }
-
     /// Customizes the `reqwest` client builder before mandatory SDK security
     /// settings are applied (INV-HTTP-01).
     ///
     /// The closure runs first; the SDK then forces redirect-none, TLS 1.2+,
-    /// default Authorization/User-Agent headers, and builder timeouts.
+    /// default Authorization/User-Agent headers, and builder timeouts so
+    /// callers cannot silently re-enable redirects or drop auth headers via
+    /// the safe builder path.
+    ///
+    /// For fully unrestricted transport control (tests / advanced adapters),
+    /// use [`MollieClient::from_generated`] with a hand-built [`Client`].
     pub fn configure_http<F>(mut self, configure: F) -> Self
     where
         F: Fn(ReqwestClientBuilder) -> ReqwestClientBuilder + Send + Sync + 'static,
     {
         self.http_configure = Some(std::sync::Arc::new(configure));
+        self
+    }
+
+    /// Sets response body buffering limits for JSON and error decoding.
+    pub fn response_limits(mut self, limits: crate::ResponseLimits) -> Self {
+        self.response_limits = limits;
         self
     }
 
@@ -763,34 +758,27 @@ impl MollieClientBuilder {
         }
         headers.insert(USER_AGENT, HeaderValue::from_str(&user_agent)?);
 
-        // Deprecated escape hatch: pre-built client skips SDK last-apply.
-        // Prefer configure_http (customization then mandatory security) or
-        // MollieClient::from_generated for full control.
-        let http_client: ReqwestClient = if let Some(existing) = self.http_client {
-            let _ = headers;
-            existing
-        } else {
-            // INV-HOST-01 / INV-HTTP-01: caller configure runs first; SDK
-            // security settings always apply last so they cannot be silently
-            // disabled via safe builder customization.
-            let mut builder = ReqwestClient::builder();
-            if let Some(configure) = &self.http_configure {
-                builder = configure(builder);
-            }
-            builder
-                .default_headers(headers)
-                .redirect(reqwest::redirect::Policy::none())
-                .min_tls_version(reqwest::tls::Version::TLS_1_2)
-                .connect_timeout(self.connect_timeout)
-                .timeout(self.timeout)
-                .build()?
-        };
+        // INV-HOST-01 / INV-HTTP-01: caller configure runs first; SDK
+        // security settings always apply last so they cannot be silently
+        // disabled via safe builder customization.
+        let mut builder = ReqwestClient::builder();
+        if let Some(configure) = &self.http_configure {
+            builder = configure(builder);
+        }
+        let http_client: ReqwestClient = builder
+            .default_headers(headers)
+            .redirect(reqwest::redirect::Policy::none())
+            .min_tls_version(reqwest::tls::Version::TLS_1_2)
+            .connect_timeout(self.connect_timeout)
+            .timeout(self.timeout)
+            .build()?;
 
         tracing::debug!(base_url = %self.base_url, "built Mollie client");
 
         let mut inner = Client::new_with_client(&self.base_url, http_client)
             .with_transport_timeouts(self.timeout, self.connect_timeout)
-            .with_user_agent_string(user_agent);
+            .with_user_agent_string(user_agent)
+            .with_response_limits(self.response_limits);
         if let Some(testmode) = self.testmode {
             inner = inner.with_testmode(testmode);
         }
@@ -946,6 +934,78 @@ mod tests {
                 .build()
                 .expect("configure_http should build");
             assert_eq!(client.raw().baseurl(), DEFAULT_BASE_URL);
+        }
+
+        #[test]
+        fn response_limits_are_applied_to_inner_client() {
+            let limits = crate::ResponseLimits::default().with_max_json_bytes(1024);
+            let client = MollieClient::builder()
+                .credential(
+                    Credential::api_key("test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+                        .expect("api key should be valid"),
+                )
+                .response_limits(limits)
+                .build()
+                .expect("client should build");
+            assert_eq!(client.raw().response_limits().max_json_bytes, 1024);
+        }
+
+        #[test]
+        fn with_credential_preserves_response_limits() {
+            let limits = crate::ResponseLimits::default().with_max_error_body_bytes(512);
+            let client = MollieClient::builder()
+                .credential(
+                    Credential::api_key("test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+                        .expect("api key should be valid"),
+                )
+                .response_limits(limits)
+                .build()
+                .expect("client should build");
+            let scoped = client
+                .with_credential(Credential::oauth_access_token("access-token").expect("token"))
+                .expect("scope credential");
+            assert_eq!(scoped.raw().response_limits().max_error_body_bytes, 512);
+        }
+
+        #[tokio::test]
+        async fn configure_http_cannot_reenable_redirects() {
+            use wiremock::matchers::{method, path};
+            use wiremock::{Mock, MockServer, ResponseTemplate};
+
+            let server = MockServer::start().await;
+            Mock::given(method("GET"))
+                .and(path("/from"))
+                .respond_with(ResponseTemplate::new(302).insert_header("Location", "/to"))
+                .mount(&server)
+                .await;
+            Mock::given(method("GET"))
+                .and(path("/to"))
+                .respond_with(ResponseTemplate::new(200).set_body_string(r#"{"ok":true}"#))
+                .mount(&server)
+                .await;
+
+            let client = MollieClient::builder()
+                .base_url(server.uri())
+                .credential(
+                    Credential::api_key("test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+                        .expect("api key should be valid"),
+                )
+                // Attempt to re-enable redirects; SDK must force Policy::none last.
+                .configure_http(|b| b.redirect(reqwest::redirect::Policy::limited(10)))
+                .build()
+                .expect("client should build");
+
+            let result = client
+                .http_client()
+                .get(format!("{}/from", server.uri()))
+                .send()
+                .await
+                .expect("request should complete without following redirect");
+            assert_eq!(
+                result.status(),
+                reqwest::StatusCode::FOUND,
+                "safe builder must not follow redirects"
+            );
         }
     }
 }

@@ -64,6 +64,7 @@ impl Client {
             &[200u16],
             &[400u16, 429u16],
             &resolved_idempotency_key,
+            self.response_limits(),
         )
         .await
     }
@@ -106,6 +107,7 @@ impl Client {
             &[201u16],
             &[422u16, 429u16, 503u16],
             &resolved_idempotency_key,
+            self.response_limits(),
         )
         .await
     }
@@ -150,6 +152,7 @@ impl Client {
             &[200u16],
             &[404u16, 429u16],
             &resolved_idempotency_key,
+            self.response_limits(),
         )
         .await
     }
@@ -186,6 +189,7 @@ impl Client {
             &[200u16],
             &[404u16, 422u16, 429u16],
             &resolved_idempotency_key,
+            self.response_limits(),
         )
         .await
     }
@@ -219,6 +223,7 @@ impl Client {
             &[200u16],
             &[404u16, 422u16, 429u16],
             &resolved_idempotency_key,
+            self.response_limits(),
         )
         .await
     }
@@ -259,6 +264,7 @@ impl Client {
             &[202u16],
             &[404u16, 422u16, 429u16],
             &resolved_idempotency_key,
+            self.response_limits(),
         )
         .await
     }
@@ -298,6 +304,7 @@ impl Client {
             &[200u16],
             &[404u16, 429u16],
             &resolved_idempotency_key,
+            self.response_limits(),
         )
         .await
     }
@@ -332,6 +339,7 @@ impl Client {
             &[201u16],
             &[404u16, 429u16],
             &resolved_idempotency_key,
+            self.response_limits(),
         )
         .await
     }
@@ -367,6 +375,7 @@ impl Client {
             &[200u16],
             &[404u16, 429u16],
             &resolved_idempotency_key,
+            self.response_limits(),
         )
         .await
     }

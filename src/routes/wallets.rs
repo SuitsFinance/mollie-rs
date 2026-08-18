@@ -54,6 +54,7 @@ impl Client {
             &[201u16],
             &[422u16, 429u16],
             &resolved_idempotency_key,
+            self.response_limits(),
         )
         .await
     }

@@ -39,6 +39,7 @@ impl Client {
             &[201u16],
             &[422u16, 429u16],
             &resolved_idempotency_key,
+            self.response_limits(),
         )
         .await
     }
@@ -68,6 +69,13 @@ impl Client {
         #[allow(unused_mut)]
         let mut request = request.build()?;
         let response = self.send(request, routes::Operation::GetSession).await?;
-        routes::response::json(response, &[200u16], &[429u16], &resolved_idempotency_key).await
+        routes::response::json(
+            response,
+            &[200u16],
+            &[429u16],
+            &resolved_idempotency_key,
+            self.response_limits(),
+        )
+        .await
     }
 }

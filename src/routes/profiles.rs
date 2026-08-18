@@ -44,6 +44,7 @@ impl Client {
             &[200u16],
             &[400u16, 429u16],
             &resolved_idempotency_key,
+            self.response_limits(),
         )
         .await
     }
@@ -73,6 +74,7 @@ impl Client {
             &[201u16],
             &[403u16, 422u16, 429u16],
             &resolved_idempotency_key,
+            self.response_limits(),
         )
         .await
     }
@@ -110,6 +112,7 @@ impl Client {
             &[200u16],
             &[404u16, 410u16, 429u16],
             &resolved_idempotency_key,
+            self.response_limits(),
         )
         .await
     }
@@ -140,6 +143,7 @@ impl Client {
             &[204u16],
             &[404u16, 410u16, 429u16],
             &resolved_idempotency_key,
+            self.response_limits(),
         )
         .await
     }
@@ -174,6 +178,7 @@ impl Client {
             &[200u16],
             &[403u16, 404u16, 410u16, 422u16, 429u16],
             &resolved_idempotency_key,
+            self.response_limits(),
         )
         .await
     }
@@ -200,6 +205,13 @@ impl Client {
         let response = self
             .send(request, routes::Operation::GetCurrentProfile)
             .await?;
-        routes::response::json(response, &[200u16], &[429u16], &resolved_idempotency_key).await
+        routes::response::json(
+            response,
+            &[200u16],
+            &[429u16],
+            &resolved_idempotency_key,
+            self.response_limits(),
+        )
+        .await
     }
 }

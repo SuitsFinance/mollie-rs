@@ -87,6 +87,7 @@ pub mod payment_method;
 pub mod phone_number;
 #[cfg(test)]
 mod postman_error_fixtures;
+pub mod response_limits;
 pub mod route_capabilities;
 /// Application tracing-subscriber helpers (`app-helpers` feature, default on).
 #[cfg(feature = "app-helpers")]
@@ -161,6 +162,7 @@ pub use pagination::{
 };
 pub use payment_method::PaymentMethod;
 pub use phone_number::PhoneNumber;
+pub use response_limits::{ResponseLimits, DEFAULT_MAX_ERROR_BODY_BYTES, DEFAULT_MAX_JSON_BYTES};
 pub use route_capabilities::{
     retry_class_for_operation, route_capability, RouteAccess, RouteCapability, ROUTE_CAPABILITIES,
 };
@@ -253,6 +255,8 @@ pub struct Client {
     pub(crate) connect_timeout: std::time::Duration,
     /// User-Agent string retained for credential rebuilds (no secrets).
     pub(crate) user_agent: Option<String>,
+    /// Maximum buffered response body sizes for JSON and error decoding.
+    pub(crate) response_limits: ResponseLimits,
 }
 
 impl std::fmt::Debug for Client {
@@ -273,6 +277,7 @@ impl std::fmt::Debug for Client {
             .field("timeout", &self.timeout)
             .field("connect_timeout", &self.connect_timeout)
             .field("user_agent", &self.user_agent)
+            .field("response_limits", &self.response_limits)
             .finish_non_exhaustive()
     }
 }
@@ -344,6 +349,7 @@ impl Client {
             timeout: std::time::Duration::from_secs(15),
             connect_timeout: std::time::Duration::from_secs(15),
             user_agent: None,
+            response_limits: ResponseLimits::default(),
         }
     }
 
@@ -377,6 +383,17 @@ impl Client {
     /// Returns the configured User-Agent, if known.
     pub fn user_agent(&self) -> Option<&str> {
         self.user_agent.as_deref()
+    }
+
+    /// Returns the configured response body limits.
+    pub fn response_limits(&self) -> ResponseLimits {
+        self.response_limits
+    }
+
+    /// Returns a client with custom response body buffering limits.
+    pub fn with_response_limits(mut self, limits: ResponseLimits) -> Self {
+        self.response_limits = limits;
+        self
     }
 
     /// Returns a client with the given retry policy (clones transport settings).
