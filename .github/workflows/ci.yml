@@ -139,11 +139,12 @@ jobs:
       - name: cargo package (verify)
         run: cargo package --allow-dirty
 
+  # Full-crate cargo-semver-checks vs crates.io (0.x: minor bumps may break).
+  # Tier-S facade surface is *also* fail-closed via the contract job snapshot
+  # (scripts/check_tier_s_public_api.py) — that is the application-facing SSOT.
   semver:
     name: cargo-semver-checks
     runs-on: ubuntu-latest
-    # Advisory until the crate is published; fails closed once crates.io has a baseline.
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v7
       - uses: dtolnay/rust-toolchain@master
@@ -154,7 +155,7 @@ jobs:
         # Pinned: newer releases require a rustc above this job's MSRV toolchain.
         # Bump in step with the MSRV.
         run: cargo install cargo-semver-checks --version 0.44.0 --locked
-      - name: Check public API vs crates.io
-        run: cargo semver-checks check-release || echo "No crates.io baseline yet or intentional 0.x break -- see CHANGELOG.md"
+      - name: Check public API vs crates.io (fail-closed)
+        run: cargo semver-checks check-release
 
 

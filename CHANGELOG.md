@@ -2,13 +2,35 @@
 
 ## [Unreleased]
 
+## [0.8.0] (unreleased)
+
+### Breaking
+
+- **Removed `MollieClientBuilder::http_client`.** Callers can no longer inject a
+  prebuilt `reqwest::Client` on the safe builder path (it bypassed redirect-none
+  / TLS floor last-apply). Use `configure_http` for limited customization, or
+  `MollieClient::from_generated` / `Client::new_with_client` for full transport
+  ownership.
+
+### Security / hardening
+
+- **`ResponseLimits`:** configurable ceilings for success JSON (default 8 MiB)
+  and provider error bodies (default 64 KiB) on all generated route decode paths.
+- Builder always last-applies redirect-none, TLS 1.2+, auth/UA headers, and
+  timeouts after `configure_http`.
+- `with_credential` preserves response body limits.
+- CI `cargo-semver-checks` job is **fail-closed** (no `continue-on-error` / no
+  swallowed exit). Tier-S snapshot remains blocking in the contract job.
+
 ### Docs
 
+- RC baseline pack under `docs/rc/` (baseline, residuals, acceptance matrix,
+  transport security policy).
+- `docs/API-STABILITY.md`: explicit Tier-S vs Tier-G vs Kernel policy and gate map.
 - **Sales Invoices provider maturity (SUI-2369):** record `sales_invoices_api` as
   GA in `docs/registries/provider-maturity.yaml`; project `provider_maturity`
-  onto `docs/registries/operation-registry.yaml`; document provider maturity in
-  `docs/API-STABILITY.md`. Tier coverage stays Generated only (no API shape
-  change).
+  onto `docs/registries/operation-registry.yaml`. Tier coverage stays Generated
+  only (no API shape change).
 
 ## [0.7.1] (2026-08-12)
 

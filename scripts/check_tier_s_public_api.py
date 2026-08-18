@@ -114,6 +114,9 @@ def safety_exports() -> list[str]:
         "export:CreateConnectBalanceTransferRequired",
         "export:IdempotencyKey",
         "export:Money",
+        "export:ResponseLimits",
+        "export:DeliveryOutcome",
+        "export:RetryPolicy",
     ]
     for item in required:
         name = item.split(":", 1)[1]

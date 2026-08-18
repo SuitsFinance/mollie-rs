@@ -1,7 +1,7 @@
 # RC current baseline freeze
 
 **Status:** Phase 0 freeze (hardening program entry)  
-**Crate version:** `0.7.1` (`Cargo.toml`)  
+**Crate version:** `0.8.0` (`Cargo.toml`; freeze entry was `0.7.1`)  
 **HEAD:** `c4e909131a3797c69309c017661628b3a92700d5`  
 **Branch:** `floris-xlx-hardening`  
 **MSRV:** `1.88`  
@@ -84,7 +84,7 @@ Source: `.github/workflows/ci.yml`
 | `deny` | `cargo deny check --all-features` | **Yes** |
 | `msrv` | check + lib tests on 1.88.0 | **Yes** |
 | `package` | `cargo package` dry-run + verify | **Yes** |
-| `semver` | `cargo-semver-checks` vs crates.io | **Advisory** (`continue-on-error: true` + `\|\| echo`) |
+| `semver` | `cargo-semver-checks` vs crates.io | **Yes** (fail-closed as of 0.8.0) |
 
 ---
 
@@ -109,7 +109,7 @@ Source: `.github/workflows/ci.yml`
 | `cargo deny check` | **PASS** (advisories/bans/licenses/sources ok) |
 | `cargo audit` | **SKIP** (tool not installed locally; covered by `cargo deny` advisories) |
 | `cargo tree` TLS stack | **PASS** (`reqwest` features `rustls-tls`/`json`/`stream`; no `openssl`/`native-tls` package) |
-| `cargo-semver-checks` | **ADVISORY** (CI job swallows failure — Phase 2) |
+| `cargo-semver-checks` | **FAIL-CLOSED** in CI (local tool optional; job structurally blocking) |
 
 Phase 1 landed response body limits + removed builder `http_client` inject path. See `docs/rc/transport-security-policy.md`.
 

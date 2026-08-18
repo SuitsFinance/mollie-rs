@@ -18,6 +18,7 @@ export:CreatePaymentRequired
 export:CreatePayoutRequired
 export:CreateRefundRequired
 export:CreateTransferRequired
+export:DeliveryOutcome
 export:HIGH_RISK_WRITE_OPERATION_IDS
 export:IdempotencyKey
 export:Money
@@ -27,6 +28,8 @@ export:OperationExposure
 export:OperationRisk
 export:OperationSafetyProfile
 export:PAYMENT_CAPABILITY_MUTATION_OPERATION_IDS
+export:ResponseLimits
+export:RetryPolicy
 export:VerifiedWebhook
 facade:CapturesApi
 facade:ConnectBalanceTransfersApi

@@ -1,6 +1,6 @@
 # Open residuals (hardening program)
 
-Freeze HEAD: `c4e909131a3797c69309c017661628b3a92700d5` · crate `0.7.1` · 2026-08-18
+Freeze HEAD: `c4e909131a3797c69309c017661628b3a92700d5` · crate now `0.8.0` (freeze entry `0.7.1`) · 2026-08-18
 
 Only residuals that block an honest `1.0.0-rc` or are on the critical path are listed. Closed FINDINGS stay in `docs/sdd/1.0-readiness/FINDINGS.md`.
 
@@ -11,7 +11,7 @@ Only residuals that block an honest `1.0.0-rc` or are on the critical path are l
 | HTTP-001 | SUI-2329 | Unrestricted HTTP client escape hatch | **CLOSED on safe path:** builder `http_client` removed; `configure_http` runs before forced redirect-none / TLS 1.2+ / headers / timeouts; test `configure_http_cannot_reenable_redirects`. Unrestricted transport remains only via `MollieClient::from_generated` / `Client::new_with_client` (documented low-level). | Keep low-level path intentional; no reintroduction of builder inject |
 | HTTP-002 | SUI-2329 | Response body / resource limits | **CLOSED:** `ResponseLimits` on `Client` + builder; `routes::response::json` / `read_body_limited` enforce success vs error ceilings; tests at-limit, +1, Content-Length oversize, error-body ceiling. Webhook default remains `DEFAULT_MAX_WEBHOOK_BODY_BYTES` (1 MiB). | Optional: pure chunked (no CL) overflow integration if wiremock allows |
 | HTTP-003 | SUI-2329 | Compression / TLS / proxy / base-url policy completeness | **PARTIAL:** base URL HTTPS/loopback policy + TLS 1.2+ + rustls-only tree + `cargo deny` PASS; policy doc `docs/rc/transport-security-policy.md`; proxy credential isolation tests still thin | Proxy isolation / env-proxy tests; examples compile gate re-run |
-| TIER-002 | SUI-2361 | Tier-S API stability enforcement incomplete | Tier-S snapshot **blocking**; `cargo-semver-checks` job is `continue-on-error` and swallows failure with `\|\| echo` | Explicit Tier-S vs Tier-G policy in `API-STABILITY.md`; Tier-S path structurally fail-closed |
+| TIER-002 | SUI-2361 | Tier-S API stability enforcement incomplete | **CLOSED:** Tier-S snapshot blocking; `API-STABILITY.md` Tier-S vs Tier-G vs Kernel policy; CI `semver` job fail-closed (`cargo semver-checks check-release`, no swallow). Crate version **0.8.0** for intentional builder break vs crates.io `0.7.1`. | Keep snapshot + semver green on every PR |
 
 ## P1 — required for honest RC evidence
 
