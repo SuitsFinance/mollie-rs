@@ -23,6 +23,7 @@ use std::{ops::Deref, sync::Arc, time::Duration};
 use reqwest::header::{HeaderMap, HeaderName, HeaderValue, AUTHORIZATION, USER_AGENT};
 use reqwest::{Client as ReqwestClient, ClientBuilder as ReqwestClientBuilder, Url};
 
+use crate::contract_drift::{ContractDriftObserver, SharedContractDriftObserver};
 use crate::hooks::{RequestHook, SharedRequestHook};
 use crate::ids::ProfileId;
 use crate::{auth::Credential, error::MollieResult, Client, MollieError};
@@ -353,6 +354,25 @@ impl MollieClient {
         }
     }
 
+    /// Attaches a contract-drift observer (unknown enums, off-origin next links).
+    pub fn with_contract_drift_observer(self, observer: impl ContractDriftObserver + 'static) -> Self {
+        Self {
+            inner: self
+                .inner
+                .with_contract_drift_observer(Arc::new(observer)),
+        }
+    }
+
+    /// Attaches a shared contract-drift observer.
+    pub fn with_shared_contract_drift_observer(
+        self,
+        observer: SharedContractDriftObserver,
+    ) -> Self {
+        Self {
+            inner: self.inner.with_contract_drift_observer(observer),
+        }
+    }
+
     /// Returns a client that uses a different credential for subsequent calls.
     ///
     /// Rebuilds the underlying HTTP client with a new `Authorization` header
@@ -365,6 +385,7 @@ impl MollieClient {
     /// - sticky idempotency key
     /// - retry policy
     /// - request hook
+    /// - contract-drift observer
     /// - response body limits
     ///
     /// Custom default headers from the original builder are **not** replayed
@@ -401,6 +422,9 @@ impl MollieClient {
         if let Some(hook) = self.inner.request_hook() {
             builder = builder.shared_request_hook(hook.clone());
         }
+        if let Some(observer) = self.inner.contract_drift_observer() {
+            builder = builder.shared_contract_drift_observer(observer.clone());
+        }
 
         let mut rebuilt = builder.build()?;
         if let Some(key) = self.inner.idempotency_key() {
@@ -436,6 +460,7 @@ pub struct MollieClientBuilder {
     http_configure:
         Option<std::sync::Arc<dyn Fn(ReqwestClientBuilder) -> ReqwestClientBuilder + Send + Sync>>,
     request_hook: Option<SharedRequestHook>,
+    contract_drift_observer: Option<SharedContractDriftObserver>,
     response_limits: crate::ResponseLimits,
 }
 
@@ -462,6 +487,13 @@ impl std::fmt::Debug for MollieClientBuilder {
                 "request_hook",
                 &self.request_hook.as_ref().map(|_| "<hook>"),
             )
+            .field(
+                "contract_drift_observer",
+                &self
+                    .contract_drift_observer
+                    .as_ref()
+                    .map(|_| "<contract_drift_observer>"),
+            )
             .field("response_limits", &self.response_limits)
             .finish_non_exhaustive()
     }
@@ -483,6 +515,7 @@ impl Default for MollieClientBuilder {
             retry_policy: crate::RetryPolicy::disabled(),
             http_configure: None,
             request_hook: None,
+            contract_drift_observer: None,
             response_limits: crate::ResponseLimits::default(),
         }
     }
@@ -652,6 +685,21 @@ impl MollieClientBuilder {
         self
     }
 
+    /// Attaches a contract-drift observer (TEL-001).
+    pub fn contract_drift_observer(mut self, observer: impl ContractDriftObserver + 'static) -> Self {
+        self.contract_drift_observer = Some(Arc::new(observer));
+        self
+    }
+
+    /// Attaches a shared contract-drift observer.
+    pub fn shared_contract_drift_observer(
+        mut self,
+        observer: SharedContractDriftObserver,
+    ) -> Self {
+        self.contract_drift_observer = Some(observer);
+        self
+    }
+
     /// Adds a default HTTP header to every request.
     ///
     /// # Errors
@@ -787,6 +835,9 @@ impl MollieClientBuilder {
         }
         if let Some(hook) = self.request_hook {
             inner = inner.with_request_hook(hook);
+        }
+        if let Some(observer) = self.contract_drift_observer {
+            inner = inner.with_contract_drift_observer(observer);
         }
         inner = inner.with_retry_policy(self.retry_policy);
 

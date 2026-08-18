@@ -32,7 +32,7 @@ Only residuals that block an honest `1.0.0-rc` or are on the critical path are l
 
 | ID | Plan / Linear | Title | Notes |
 | --- | --- | --- | --- |
-| TEL-001 | SUI-2366 | Runtime drift telemetry | Opt-in, redacted, non-panicking callbacks |
+| TEL-001 | SUI-2366 | Runtime drift telemetry | **CLOSED:** `ContractDriftObserver` + client/global attach; emit on unknown `OpenEnum` + off-origin pagination; panic isolation + redaction tests (`docs/rc/contract-drift-telemetry.md`) |
 | PERF-001 | Phase 9 | Pool reuse / pagination memory / hook overhead | Record measurements; no nanosecond gates |
 | REL-ladder | Phase 11 | `0.8.x` → `1.0.0-rc.1` ladder | Only after acceptance matrix green |
 

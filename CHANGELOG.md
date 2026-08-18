@@ -32,6 +32,10 @@
 - **Pagination consistency (Phase 4):** `stream_pages` / `stream_items` on
   captures, mandates, subscriptions, and terminals; subscriptions `list_all`;
   matrix in `docs/rc/pagination-matrix.md`.
+- **Contract drift telemetry (Phase 5 / TEL-001):** opt-in
+  `ContractDriftObserver` (client or global) with redacted
+  `ContractDriftSignal`s for unknown open-enum values and off-origin
+  pagination links; observer panics are isolated from the request path.
 
 ### Docs
 
