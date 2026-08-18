@@ -46,6 +46,11 @@
   `docs/rc/live-assurance-evidence.md`; hostile review residuals refreshed for
   builder `http_client` removal and fail-closed semver. Credentialed live tiers
   remain operator-run (not default CI).
+- **Terminal pairing 403 (TERM-403):** catalog key
+  `TERMINAL_PAIRING_FORBIDDEN` (40304) and `MollieError::terminal_pairing_forbidden`,
+  classified from pairing-denied provider bodies (fixture-backed).
+- **Transport proxy policy (HTTP-003):** builder Debug does not leak
+  `configure_http` proxy userinfo; `no_proxy` configure path covered by tests.
 
 ### Docs
 

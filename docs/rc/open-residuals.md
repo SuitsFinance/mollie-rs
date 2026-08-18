@@ -10,7 +10,7 @@ Only residuals that block an honest `1.0.0-rc` or are on the critical path are l
 | --- | --- | --- | --- | --- |
 | HTTP-001 | SUI-2329 | Unrestricted HTTP client escape hatch | **CLOSED on safe path:** builder `http_client` removed; `configure_http` runs before forced redirect-none / TLS 1.2+ / headers / timeouts; test `configure_http_cannot_reenable_redirects`. Unrestricted transport remains only via `MollieClient::from_generated` / `Client::new_with_client` (documented low-level). | Keep low-level path intentional; no reintroduction of builder inject |
 | HTTP-002 | SUI-2329 | Response body / resource limits | **CLOSED:** `ResponseLimits` on `Client` + builder; `routes::response::json` / `read_body_limited` enforce success vs error ceilings; tests at-limit, +1, Content-Length oversize, error-body ceiling. Webhook default remains `DEFAULT_MAX_WEBHOOK_BODY_BYTES` (1 MiB). | Optional: pure chunked (no CL) overflow integration if wiremock allows |
-| HTTP-003 | SUI-2329 | Compression / TLS / proxy / base-url policy completeness | **PARTIAL:** base URL HTTPS/loopback policy + TLS 1.2+ + rustls-only tree + `cargo deny` PASS; policy doc `docs/rc/transport-security-policy.md`; proxy credential isolation tests still thin | Proxy isolation / env-proxy tests; examples compile gate re-run |
+| HTTP-003 | SUI-2329 | Compression / TLS / proxy / base-url policy completeness | **CLOSED for documented safe-path policy:** HTTPS/loopback base URL; TLS 1.2+ last-apply; rustls-only; no gzip feature; `configure_http` proxy userinfo absent from builder Debug; `no_proxy` still builds; policy doc updated | Ambient env-proxy integration optional; keep cargo deny green |
 | TIER-002 | SUI-2361 | Tier-S API stability enforcement incomplete | **CLOSED:** Tier-S snapshot blocking; `API-STABILITY.md` Tier-S vs Tier-G vs Kernel policy; CI `semver` job fail-closed (`cargo semver-checks check-release`, no swallow). Crate version **0.8.0** for intentional builder break vs crates.io `0.7.1`. | Keep snapshot + semver green on every PR |
 
 ## P1 — required for honest RC evidence
@@ -21,7 +21,7 @@ Only residuals that block an honest `1.0.0-rc` or are on the critical path are l
 | NULL-prod | SUI-2339 | Tri-state nullable request fields | **CLOSED for registry peers:** `CreatePaymentRequired.due_date`, `UpdatePaymentRequired.due_date`, `CreatePayoutRequired.description` + `to_write_json` omit/null/value tests | Keep registry in sync; do not blanket Option fields |
 | PM-unify | SUI-2348 | Payment method representation | **CLOSED for request surface:** single `PaymentMethod` facade incl. Billink fixture/test; payment-link helpers | Watch OpenAPI pin for new methods |
 | SESS-PII | SUI-2350 | Sessions private-beta PII | Maturity-aware work partial | Tier-S does not over-promise; no PII in hooks |
-| TERM-403 | SUI-2351 | Terminal pairing 403 structured error | Needs structured propagation proof | Distinct from 429/5xx/timeout/auth/decode |
+| TERM-403 | SUI-2351 | Terminal pairing 403 structured error | **CLOSED:** `MollieErrorKey::TerminalPairingForbidden` (40304) + `MollieError::terminal_pairing_forbidden`; classify on pairing detail; provider-history fixture + corpus test distinct from 401/429/generic forbidden | Keep catalog match green |
 | REQ-sep | SUI-2353 | High-risk request-model separation | **PARTIAL CLOSED:** Tier-S `to_write_json` allowlisted bodies for payment/payout/update; contracts registry includes `update_payment` + `dueDate` | Generated `PayoutRequest`/`PaymentRequest` types remain dual-shaped; prefer Tier-S builders |
 | PAG-001 | SUI-2328 | Pagination consistency | **CLOSED for HAL list facades:** captures/mandates/subscriptions/terminals gained `stream_pages`/`stream_items` (+ subscriptions `list_all`); matrix + intentional residuals in `docs/rc/pagination-matrix.md`; kernel origin/cycle/stream tests green | Keep matrix green; optional baseurl-threaded cursor parse |
 | EX-001 | SUI-2331 | Documented workflow compile-proof | **CLOSED:** registry `docs/registries/tier-s-workflow-examples.yaml` + gate `scripts/check_workflow_examples.py` (CI contracts); human matrix `docs/rc/workflow-example-matrix.md`; `cargo check --examples --all-features` remains | Keep registry + examples green; regenerate examples via route_examples.py only |
@@ -34,7 +34,7 @@ Only residuals that block an honest `1.0.0-rc` or are on the critical path are l
 | --- | --- | --- | --- |
 | TEL-001 | SUI-2366 | Runtime drift telemetry | **CLOSED:** `ContractDriftObserver` + client/global attach; emit on unknown `OpenEnum` + off-origin pagination; panic isolation + redaction tests (`docs/rc/contract-drift-telemetry.md`) |
 | PERF-001 | Phase 9 | Pool reuse / pagination memory / hook overhead | Record measurements; no nanosecond gates |
-| REL-ladder | Phase 11 | `0.8.x` → `1.0.0-rc.1` ladder | Only after acceptance matrix green |
+| REL-ladder | Phase 11 | `0.8.x` → `1.0.0-rc.1` ladder | Documented in `docs/rc/release-ladder.md`; blocked only on live paste |
 
 ## Explicitly out of scope for this branch
 

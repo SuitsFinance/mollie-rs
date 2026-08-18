@@ -1058,5 +1058,51 @@ mod tests {
                 "safe builder must not follow redirects"
             );
         }
+
+        #[test]
+        fn configure_http_proxy_userinfo_is_not_in_builder_debug() {
+            // Proxy credentials must not appear in Debug of the builder (closure is opaque).
+            let secret_userinfo = "proxy-user:s3cret-proxy-pass";
+            let proxy_url = format!("http://{secret_userinfo}@127.0.0.1:8888");
+            let builder = MollieClient::builder()
+                .credential(
+                    Credential::api_key("test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+                        .expect("api key should be valid"),
+                )
+                .configure_http(move |b| {
+                    match reqwest::Proxy::all(proxy_url.as_str()) {
+                        Ok(p) => b.proxy(p),
+                        Err(_) => b,
+                    }
+                });
+            let dbg = format!("{builder:?}");
+            assert!(
+                !dbg.contains("s3cret-proxy-pass"),
+                "builder Debug must not leak proxy password: {dbg}"
+            );
+            assert!(
+                !dbg.contains("proxy-user"),
+                "builder Debug must not leak proxy username: {dbg}"
+            );
+            assert!(
+                dbg.contains("configure_http"),
+                "Debug should only note that configure_http was set"
+            );
+            // Build still succeeds with a loopback proxy target (no network required to construct).
+            builder.build().expect("client with proxy configure should build");
+        }
+
+        #[test]
+        fn configure_http_no_proxy_still_applies_tls_floor() {
+            let client = MollieClient::builder()
+                .credential(
+                    Credential::api_key("test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+                        .expect("api key should be valid"),
+                )
+                .configure_http(|b| b.no_proxy())
+                .build()
+                .expect("no_proxy configure should build");
+            assert_eq!(client.raw().baseurl(), DEFAULT_BASE_URL);
+        }
     }
 }

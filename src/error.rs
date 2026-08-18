@@ -293,6 +293,43 @@ impl MollieError {
         )
     }
 
+    /// Creates the known Mollie 403 when terminal pairing is not allowed.
+    ///
+    /// Distinct from rate-limit (429), auth failure (401), and profile-restricted
+    /// OAuth tokens so POS callers can branch without string-matching transport noise.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// use mollie_rs::{MollieError, MollieErrorKey};
+    /// use reqwest::StatusCode;
+    ///
+    /// let error = MollieError::terminal_pairing_forbidden();
+    /// assert_eq!(error.status(), Some(StatusCode::FORBIDDEN));
+    /// assert_eq!(
+    ///     error.catalog_entry().key(),
+    ///     MollieErrorKey::TerminalPairingForbidden
+    /// );
+    /// ```
+    pub fn terminal_pairing_forbidden() -> Self {
+        Self::api(
+            StatusCode::FORBIDDEN,
+            HeaderMap::new(),
+            ErrorResponse {
+                detail: "Pairing not allowed".to_string(),
+                field: None,
+                links: ErrorResponseLinks {
+                    documentation: ErrorResponseLinksDocumentation {
+                        href: "https://docs.mollie.com/reference/handling-errors".to_string(),
+                        type_: "text/html".to_string(),
+                    },
+                },
+                status: 403,
+                title: "Forbidden".to_string(),
+            },
+        )
+    }
+
     /// Creates the known **global** Mollie 429 rate-limit error.
     ///
     /// Applies to every route (including `list_capabilities`) when Mollie

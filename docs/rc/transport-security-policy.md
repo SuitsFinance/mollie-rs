@@ -23,14 +23,20 @@ Low-level escape: [`Client::new_with_client`](../../src/lib.rs) and [`MollieClie
 
 ## Proxy guidance
 
-- Prefer explicit `configure_http(|b| b.proxy(...))` over ambient env proxies when credentials are involved.
+- Prefer explicit `configure_http(|b| b.proxy(...))` or `configure_http(|b| b.no_proxy())` over ambient `HTTP(S)_PROXY` when credentials or isolation matter.
 - Do not put Mollie API keys into proxy URLs; use proxy-specific credentials only.
+- `MollieClientBuilder` `Debug` records only that `configure_http` was set — not the closure body or proxy userinfo (tested).
 - SDK does not log `Authorization` or proxy passwords (see secret-leak tests).
+- Safe path still last-applies redirect-none + TLS 1.2+ after proxy configuration.
 
 ## Evidence commands
 
 ```text
 cargo test --lib --all-features configure_http_cannot_reenable
+cargo test --lib --all-features configure_http_proxy_userinfo
+cargo test --lib --all-features configure_http_no_proxy
+cargo test --lib --all-features build_rejects_remote_http
+cargo test --lib --all-features build_allows_loopback_http
 cargo test --lib --all-features accepts_body_exactly
 cargo test --lib --all-features rejects_body_one_byte
 cargo test --lib --all-features rejects_declared_content
