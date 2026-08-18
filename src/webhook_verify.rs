@@ -170,11 +170,19 @@ impl WebhookVerifier {
         raw_body: &[u8],
         signature: &str,
     ) -> MollieResult<T> {
+        self.verify_only(raw_body, signature)?.decode()
+    }
+
+    /// Verifies HMAC and retains the raw body for recoverable typed decode (INV-WHK-02).
+    ///
+    /// Cryptographically valid webhooks must not be dropped solely because the
+    /// crate is behind on provider schema drift — callers can still refetch
+    /// using [`VerifiedWebhook::raw`].
+    pub fn verify_only(&self, raw_body: &[u8], signature: &str) -> MollieResult<VerifiedWebhook> {
         self.verify(raw_body, signature)?;
-        serde_json::from_slice(raw_body).map_err(|error| {
-            MollieError::webhook_verification(WebhookVerifyFailure::InvalidJson {
-                message: error.to_string(),
-            })
+        Ok(VerifiedWebhook {
+            raw: raw_body.to_vec(),
+            signature_len: signature.len(),
         })
     }
 
@@ -197,6 +205,41 @@ impl WebhookVerifier {
             ));
         }
         Ok(())
+    }
+}
+
+/// A webhook body that passed HMAC verification.
+///
+/// The raw bytes are retained so typed decode failures remain recoverable.
+/// [`Debug`] never prints the body (may contain PII).
+#[derive(Clone, Eq, PartialEq)]
+pub struct VerifiedWebhook {
+    raw: Vec<u8>,
+    signature_len: usize,
+}
+
+impl fmt::Debug for VerifiedWebhook {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("VerifiedWebhook")
+            .field("raw_len", &self.raw.len())
+            .field("signature_len", &self.signature_len)
+            .finish()
+    }
+}
+
+impl VerifiedWebhook {
+    /// Raw provider body bytes (bounded at verify time).
+    pub fn raw(&self) -> &[u8] {
+        &self.raw
+    }
+
+    /// Typed JSON decode of the verified body.
+    pub fn decode<T: serde::de::DeserializeOwned>(&self) -> MollieResult<T> {
+        serde_json::from_slice(&self.raw).map_err(|error| {
+            MollieError::webhook_verification(WebhookVerifyFailure::InvalidJson {
+                message: error.to_string(),
+            })
+        })
     }
 }
 
@@ -411,5 +454,30 @@ mod tests {
         let sig = compute_mollie_signature_hex(secret.as_bytes(), body).unwrap();
         let v = WebhookVerifier::new(secret).unwrap();
         assert!(v.verify(br#"{"id":"e"} "#, &sig).is_err());
+    }
+
+    #[test]
+    fn verified_webhook_retains_raw_when_decode_fails() {
+        let secret = "s";
+        let body = br#"{"not":"the expected shape","id":1}"#;
+        let sig = compute_mollie_signature_hex(secret.as_bytes(), body).unwrap();
+        let verified = WebhookVerifier::new(secret)
+            .unwrap()
+            .verify_only(body, &sig)
+            .unwrap();
+        assert_eq!(verified.raw(), body);
+        #[derive(serde::Deserialize, Debug)]
+        #[allow(dead_code)]
+        struct Ev {
+            id: String,
+        }
+        let err = verified.decode::<Ev>().unwrap_err();
+        assert!(matches!(
+            err,
+            MollieError::WebhookVerification {
+                failure: WebhookVerifyFailure::InvalidJson { .. }
+            }
+        ));
+        assert!(!format!("{verified:?}").contains("expected shape"));
     }
 }

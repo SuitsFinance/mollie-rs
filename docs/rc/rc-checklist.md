@@ -1,4 +1,4 @@
-# RC checklist (exceptional 1.0 residual)
+﻿# RC checklist (exceptional 1.0 residual)
 
 Library release-candidate gates for the **safety-invariant** band. This is not Mollie product certification.
 
@@ -13,6 +13,11 @@ Library release-candidate gates for the **safety-invariant** band. This is not M
 | Docs build | `cargo doc --no-deps --all-features` | CI |
 | Live smoke | `MOLLIE_LIVE_READONLY=1` ignored tests | Env-gated |
 | Sandbox writes | multi-gate ignored tests | Env-gated |
+| OpenAPI drift fixtures | `python scripts/run_openapi_drift_fixtures.py` | PASS (17) |
+| Mutation discovery | `python scripts/detect_high_risk_operations.py` | PASS |
+| Tier-S request allowlists | `python scripts/check_tier_s_request_contracts.py` | PASS |
+| Tier-S public API snapshot | `python scripts/check_tier_s_public_api.py` | PASS |
+| Hostile static review | `docs/rc/hostile-security-review.md` | PASS (static); live NOT RUN |
 | Package dry-run | `cargo package` | CI |
 
 ## Band
@@ -25,3 +30,4 @@ Library release-candidate gates for the **safety-invariant** band. This is not M
 - [`sbom-notes.md`](sbom-notes.md)
 - [`live-test-matrix.md`](live-test-matrix.md)
 - [`../registries/high-risk-coverage.md`](../registries/high-risk-coverage.md)
+

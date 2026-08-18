@@ -79,6 +79,8 @@ pub mod integration;
 pub mod locale;
 pub mod metadata;
 pub mod money;
+pub mod nullable_field;
+pub mod open_enum;
 pub mod operation_safety;
 pub mod pagination;
 pub mod payment_method;
@@ -145,10 +147,13 @@ pub use money::{
     AmountValue, ApplicationFee, ApplicationFeeDescription, Currency, Money,
     APPLICATION_FEE_DESCRIPTION_MAX_LEN,
 };
+pub use nullable_field::{is_omitted as nullable_field_is_omitted, NullableField};
+pub use open_enum::{OpenEnum, OpenEnumError, OPEN_ENUM_MAX_RAW_LEN};
 pub use operation_safety::{
     all_operation_safety_profiles, high_risk_coverage, operation_safety_profile, AuthClass,
-    IdempotencyClass, MutationClass, OperationSafetyProfile, PaginationPolicy, ProfileScope,
-    TestmodePolicy, HIGH_RISK_WRITE_OPERATION_IDS,
+    IdempotencyClass, MutationClass, OperationExposure, OperationRisk, OperationSafetyProfile,
+    PaginationPolicy, ProfileScope, TestmodePolicy, HIGH_RISK_WRITE_OPERATION_IDS,
+    PAYMENT_CAPABILITY_MUTATION_OPERATION_IDS,
 };
 pub use pagination::{
     AsyncPaginator, ItemStream, Page, PageCursor, PaginationGuard, DEFAULT_PAGE_LIMIT,
@@ -166,8 +171,8 @@ pub use tracing_config::{
 pub use transport::{compute_backoff, DeliveryOutcome, RetryClass, RetryPolicy};
 pub use webhook::{WebhookNotification, WebhookUrl};
 pub use webhook_verify::{
-    compute_mollie_signature_hex, WebhookSigningSecret, WebhookVerifier, WebhookVerifyFailure,
-    DEFAULT_MAX_WEBHOOK_BODY_BYTES, MOLLIE_SIGNATURE_HEADER,
+    compute_mollie_signature_hex, VerifiedWebhook, WebhookSigningSecret, WebhookVerifier,
+    WebhookVerifyFailure, DEFAULT_MAX_WEBHOOK_BODY_BYTES, MOLLIE_SIGNATURE_HEADER,
 };
 pub use write_requests::{
     ConnectBalanceTransferParty, CreateCaptureRequired, CreateConnectBalanceTransferRequired,

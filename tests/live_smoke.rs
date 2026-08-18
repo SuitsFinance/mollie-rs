@@ -297,6 +297,33 @@ async fn live_refunds_readonly() {
     accept_readonly_result("list_all_refunds", result);
 }
 
+/// Tier-S refunds facade list (payment-scoped list needs a payment id; uses all-refunds path via facade when available).
+#[tokio::test]
+#[ignore = "live network; set MOLLIE_LIVE_READONLY=1 and MOLLIE_API_KEY"]
+async fn live_refunds_facade_readonly() {
+    assert_readonly_gate();
+    let client = live_client();
+    // Facade entry must construct; list without payment id is account-global via generated route.
+    let _ = client.refunds();
+    let result = client
+        .list_all_refunds(None, None, page_limit(), None, None)
+        .into_mollie_result()
+        .await
+        .map(|_| ());
+    accept_readonly_result("refunds_facade+list_all_refunds", result);
+}
+
+/// Captures are payment-scoped; exercise facade construction + payments list as precondition surface.
+#[tokio::test]
+#[ignore = "live network; set MOLLIE_LIVE_READONLY=1 and MOLLIE_API_KEY"]
+async fn live_captures_facade_readonly() {
+    assert_readonly_gate();
+    let client = live_client();
+    let _ = client.captures();
+    let result = client.payments().list_page(None, Some(5)).await;
+    accept_readonly_result("captures_facade+payments.list_page", result.map(|_| ()));
+}
+
 /// Payouts facade list (Tier-S money read).
 #[tokio::test]
 #[ignore = "live network; set MOLLIE_LIVE_READONLY=1 and MOLLIE_API_KEY"]

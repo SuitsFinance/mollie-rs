@@ -1,4 +1,4 @@
-# API stability (mollie-rs 0.7.x → 1.0)
+﻿# API stability (mollie-rs 0.7.x â†’ 1.0)
 
 This document is the public contract posture for the crate. It is **not** a
 semver promise of 1.0 readiness.
@@ -7,7 +7,7 @@ semver promise of 1.0 readiness.
 
 | Tier | Surface | Stability intent |
 | ---- | ------- | ---------------- |
-| **S** | `MollieClient::{payments,refunds,…}()` facades, validated builders, webhooks | Prefer for application code. Additive growth is normal pre-1.0; removals require changelog. |
+| **S** | `MollieClient::{payments,refunds,â€¦}()` facades, validated builders, webhooks | Prefer for application code. Additive growth is normal pre-1.0; removals require changelog. |
 | **G** | Generated `Client` route methods + `types::*` | Tracks the pinned OpenAPI (`specs-3.0.yaml`). Field/enum churn follows provider pin. |
 | **Kernel** | Transport retry, delivery outcomes, redirects, pagination host policy, `OperationSafetyProfile` | Behavioral safety contracts. Tightening is allowed; loosening financial fail-closed rules is **not**. |
 
@@ -26,7 +26,7 @@ in the pinned OpenAPI descriptions. `mollie-rs` tracks that lifecycle in
 
 Generated route rustdocs mirror OpenAPI descriptions. When Mollie removes a beta
 banner (as with **Sales Invoices**, now `ga` in official SDKs), the local pin
-and docs must reflect GA — not leave stale 🚧 warnings or beta-only registry
+and docs must reflect GA â€” not leave stale ðŸš§ warnings or beta-only registry
 labels.
 
 **Sales Invoices (`sales_invoices_api`):** provider maturity is **`ga`**. Tier
@@ -70,13 +70,13 @@ CI runs `cargo-semver-checks` against the last crates.io release. On **0.x**:
 
 - Additive public APIs are expected
 - Breaking changes require explicit review and changelog notes
-- Do not “fix” failures by weakening MSRV or hiding types without product intent
+- Do not â€œfixâ€ failures by weakening MSRV or hiding types without product intent
 
 ## Idempotency and cancellation
 
-- Financial writes without a caller-owned sticky key: **≤ 1** HTTP attempt
+- Financial writes without a caller-owned sticky key: **â‰¤ 1** HTTP attempt
 - Ambiguous delivery (`Unknown`) is fail-closed without a sticky key
-- Dropping an in-flight write future after transmit is **Unknown** — document sticky keys for any write the app may cancel/retry
+- Dropping an in-flight write future after transmit is **Unknown** â€” document sticky keys for any write the app may cancel/retry
 
 ## Release bands (honest)
 
@@ -88,3 +88,21 @@ CI runs `cargo-semver-checks` against the last crates.io release. On **0.x**:
 | 1.0 READY | Only if release checklist + hostile review pass |
 
 See `docs/sdd/1.0-readiness/` for the program plan.
+
+## Tier-S request allowlists (drift program)
+
+Machine-readable allowlists live in docs/registries/tier-s-request-contracts.yaml and are validated by scripts/check_tier_s_request_contracts.py.
+
+## cargo-semver-checks posture
+
+The CI semver job remains **advisory** on 0.x until a crates.io baseline + Tier-G noise strategy is finalized (continue-on-error: true). Blocking Tier-S snapshot via cargo public-api is a follow-up before 1.0 RC.
+
+## Tier-S public API snapshot (blocking)
+
+Machine-checked facade surface:
+
+- Registry: `docs/registries/tier-s-public-api.snapshot`
+- Gate: `python scripts/check_tier_s_public_api.py` (CI `contract` job)
+- Refresh (intentional changes only): `python scripts/check_tier_s_public_api.py --write`
+
+This gate catches renames/removals of Tier-S facades, builder types, and critical safety exports. It does **not** replace `cargo-semver-checks` against crates.io (still advisory on 0.x until a baseline strategy is fixed).

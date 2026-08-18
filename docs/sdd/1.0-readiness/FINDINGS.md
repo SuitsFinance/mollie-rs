@@ -1,23 +1,31 @@
-# Finding register (1.0-readiness)
+﻿# Finding register (1.0-readiness)
 
 | ID | Sev | Title | Status | Evidence | Target phase |
 | --- | --- | --- | --- | --- | --- |
-| KER-001 | P0 | Delivery outcome Unknown missing | **Closed** | `transport/delivery.rs`, `MollieError::delivery_outcome` | Phase 2 |
-| KER-002 | P0 | Redirect may forward Authorization | **Closed** | `Policy::none()` + http_contract | Phase 2 |
-| KER-003 | P0 | Pagination next URL no origin allowlist | **Closed** | `PageCursor::from_list_link*` | Phase 2 |
-| KER-004 | P0 | Incomplete OperationSafetyProfile SSOT | **Closed v1** | `operation_safety.rs` | Phase 2 |
-| KER-005 | P0 | Retry state-machine proofs incomplete | **Closed** | `simulate_retry_loop` + property_tests | Phase 2 |
-| KER-006 | P1 | Cancel-after-transmit docs | **Closed** | guide + error docs | Phase 2 |
-| KER-007 | P0 | Connect concurrency stress | **Closed** | `concurrent_scoped_credentials_do_not_cross_wire` | Phase 2/3 |
-| FAC-001 | P1 | High-risk Tier-G only (payouts/transfers/oauth/…) | **Closed** | `domain/payouts.rs`, `transfers.rs`, `oauth.rs`, … | Phase 4–5 |
-| DOC-001 | P0 | Stale 100-op docs | Closed | route-coverage + drift regen + parity STALE | Phase 0 |
-| CI-001 | P1 | Dangerous semantic drift hard-fail | **Closed** | `.github/workflows/ci.yml` + `check_dangerous_profile_drift.py` | Phase 7 |
-| HR-001 | P1 | High-risk denominator incomplete vs mission set | **Closed** | CI `HIGH_RISK_WRITES`=23; `high_risk_coverage` 23/23; `docs/registries/high-risk-coverage.*` | Prog P2 |
-| HR-002 | P1 | Connect balance transfer Tier-G only | **Closed** | `domain/connect_balance_transfers.rs` + ValidatedFacade | Prog P3 |
-| KER-RA-01 | P2 | Retry-After HTTP-date ignored | **Closed** | `metadata.rs` RFC2822 via chrono | Prog P4 |
-| PAG-001 | P2 | No stream_pages/stream_items | **Closed** | payments/payouts/refunds/payment_links/connect/UCT + `domain/common` | Prog P5 |
-| DOC-GUIDE-01 | P1 | Production guides 3/12 mission | **Closed** | `docs/guides/*` (12 guides) | Prog P6 |
-| REL-001 | P1 | RC checklist open (hostile/package/live) | **Closed (local gates)** | cargo test/clippy + drift/coverage; live smoke still env-gated | Prog P7 |
-| REL-002 | P2 | SBOM/provenance absent | **Closed (notes)** | `docs/rc/sbom-notes.md` cargo-based SBOM path | Prog P7 |
+| KER-001 | P0 | Delivery outcome Unknown missing | **Closed** | `transport/delivery.rs` | — |
+| KER-002 | P0 | Redirect may forward Authorization | **Closed** | `Policy::none()` | — |
+| KER-003 | P0 | Pagination next URL no origin allowlist | **Closed** | `PageCursor` | — |
+| KER-004 | P0 | Incomplete OperationSafetyProfile SSOT | **Closed v1** | `operation_safety.rs` + risk/exposure methods | — |
+| FAC-001 | P1 | High-risk Tier-G only | **Closed** | `domain/*` 23/23 | — |
+| HR-001 | P1 | High-risk denominator incomplete | **Closed** | 23/23 + `detect_high_risk_operations.py` | — |
+| DRIFT-001 | P0 | Semantic OpenAPI classifier missing | **Closed** | `scripts/contract_diff` + fixtures | drift-1 |
+| DRIFT-002 | P0 | Miniature drift fixtures missing | **Closed** | `tests/fixtures/openapi-drift/*` | drift-2 |
+| DRIFT-003 | P1 | Contract graph / replacement | **Closed** | `build_contract_graph.py`, SchemaReplacement | drift-3 |
+| DRIFT-004 | P1 | Approved deltas registry | **Closed** | `docs/registries/approved-contract-deltas.yaml` | drift-2 |
+| ENUM-001 | P0 | OpenEnum missing | **Closed** | `src/open_enum.rs` | drift-4 |
+| NULL-001 | P1 | Tri-state field helper | **Closed** | `src/nullable_field.rs` + field-semantics.yaml | drift-4 |
+| PROF-001 | P0 | OperationRisk/Exposure | **Closed** | derived methods on `RouteCapability` | drift-5 |
+| PROF-002 | P0 | Independent mutation discovery | **Closed** | `detect_high_risk_operations.py` | drift-5 |
+| PROF-003 | P1 | Method/issuer capability risk | **Closed** | `PaymentCapabilityMutation` | drift-5 |
+| WHK-001 | P1 | VerifiedWebhook recover path | **Closed** | `webhook_verify::VerifiedWebhook` | drift-7 |
+| HTTP-001 | P0 | Safe builder http_client footgun | **Partial** | `configure_http` + deprecated `http_client` | drift-7 |
+| TIER-001 | P0 | Tier-S request allowlists | **Closed (registry+CI)** | `tier-s-request-contracts.yaml` + `check_tier_s_request_contracts.py` | drift-6 |
+| TIER-002 | P0 | Blocking semver + API snapshot | **Partial** | Tier-S snapshot **blocking** (`check_tier_s_public_api.py`); crates.io `cargo-semver-checks` still advisory on 0.x | drift-6/9 |
+| HOST-001 | P1 | Hostile security review | **Partial** | Static PASS `docs/rc/hostile-security-review.md`; live soak NOT RUN | drift-9 |
+| PROV-001 | P1 | Provenance / repin | **Closed** | `upstream-baseline.yaml` + `repin_upstream_openapi.py` | drift-8 |
+| CANARY-001 | P3 | Official SDK canary | **Closed (informational)** | `.github/workflows/upstream-canary.yml` | drift-8 |
+| CORPUS-001 | P1 | provider_history | **Closed (seed)** | `tests/fixtures/provider_history` + corpus test | drift-8 |
+| REL-001 | P1 | Live/sandbox/hostile/RC | **Open** | residual | drift-9 |
+| SDD-001 | P1 | Baseline honesty @ 98025b9 | **Closed** | `docs/audits/2026-08-mollie-contract-delta.md` | drift-0 |
 
-See `00-current-baseline.md` (freeze SHA `e3358d2`) and `16-exceptional-1.0-program.md`. Residual exceptional-1.0 program phases 2–7 implemented on branch.
+**STALE:** Earlier “residual exceptional 1.0 phases 2–7 closed ⇒ drift-ready” claims. HR facades landed; drift stack landed starting 2026-08-18 program.

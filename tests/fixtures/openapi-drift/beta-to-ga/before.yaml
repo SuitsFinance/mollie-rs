@@ -1,0 +1,9 @@
+openapi: 3.0.3
+info: {title: t, version: '1'}
+paths:
+  /sessions:
+    post:
+      operationId: create_session
+      tags: [Sessions, private-beta]
+      x-mollie-maturity: private-beta
+      responses: {'201': {description: created}}

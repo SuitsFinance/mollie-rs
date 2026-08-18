@@ -38,3 +38,7 @@ Thumbs.db
 *.profdata
 /coverage/
 /lcov.info
+
+# Ephemeral canary/CI snapshots (committed baseline lives under docs/registries/)
+docs/generated/
+

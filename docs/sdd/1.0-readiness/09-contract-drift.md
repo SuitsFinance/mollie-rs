@@ -1,4 +1,4 @@
-# SDD 09 — Contract drift
+﻿# SDD 09 â€” Contract drift
 
 ## Existing
 
@@ -12,12 +12,12 @@ Manifest from OperationSafetyProfile + OpenAPI; fail CI on dangerous semantic dr
 
 ```text
 src/route_capabilities.rs  (= OperationSafetyProfile table)
-        │
-        ├─► scripts/export_operation_registry.py
-        │         → docs/registries/operation-registry.yaml
-        ├─► scripts/check_dangerous_profile_drift.py   (blocking)
-        ├─► scripts/check_generation_reproducibility.py (blocking)
-        └─► scripts/report_api_drift.py                 (inventory artifact)
+        â”‚
+        â”œâ”€â–º scripts/export_operation_registry.py
+        â”‚         â†’ docs/registries/operation-registry.yaml
+        â”œâ”€â–º scripts/check_dangerous_profile_drift.py   (blocking)
+        â”œâ”€â–º scripts/check_generation_reproducibility.py (blocking)
+        â””â”€â–º scripts/report_api_drift.py                 (inventory artifact)
 ```
 
 Upstream pin: `specs/upstream-pin.toml` + `fetch_upstream_openapi.py` / `compare_upstream_openapi.py`.
@@ -26,7 +26,7 @@ Upstream pin: `specs/upstream-pin.toml` + `fetch_upstream_openapi.py` / `compare
 
 | Gate | Script / job | Blocking? | Failure meaning |
 | ---- | ------------ | --------- | --------------- |
-| Capability ↔ OpenAPI pin | `check_generation_reproducibility.py` | **Yes** | Op missing/extra vs `specs-3.0.yaml` |
+| Capability â†” OpenAPI pin | `check_generation_reproducibility.py` | **Yes** | Op missing/extra vs `specs-3.0.yaml` |
 | High-risk profile invariants | `check_dangerous_profile_drift.py` | **Yes** | Financial write misclassified / lost facade / SafeRead on write |
 | Registry committed | `export_operation_registry.py` + `git diff` | **Yes** | Stale `operation-registry.yaml` |
 | Local drift report | `report_api_drift.py --write` | Report artifact | Inventory snapshot |
@@ -37,17 +37,25 @@ Upstream pin: `specs/upstream-pin.toml` + `fetch_upstream_openapi.py` / `compare
 
 ## Dangerous invariants (profile)
 
-1. High-risk writes ∈ {IdempotentWrite, NonRetryableWrite, FinancialWrite}
+1. High-risk writes âˆˆ {IdempotentWrite, NonRetryableWrite, FinancialWrite}
 2. High-risk writes `access = ValidatedFacade`
-3. IdempotentWrite ⇒ `supports_idempotency`
-4. Write classes ⇏ `safe_to_retry`
-5. GET ⇒ SafeRead
+3. IdempotentWrite â‡’ `supports_idempotency`
+4. Write classes â‡ `safe_to_retry`
+5. GET â‡’ SafeRead
 
 High-risk set is listed in `scripts/check_dangerous_profile_drift.py` (keep in sync with SDD high-risk inventory).
 
 ## Acceptance
 
-- [x] Single export path (capabilities → registry)
+- [x] Single export path (capabilities â†’ registry)
 - [x] Documented gate matrix in CI + this file
 - [x] Dangerous profile drift blocking in generation job
 - [x] `docs/API-STABILITY.md` published
+
+## Drift program additions (2026-08-18)
+
+- scripts/contract_diff semantic classifier + 	ests/fixtures/openapi-drift (17 suites)
+- scripts/detect_high_risk_operations.py independent mutation discovery
+- scripts/build_contract_graph.py → docs/registries/contract-graph.json\r
+- Registries: enum-contracts, field-semantics, error-contracts, approved-contract-deltas, tier-s-request-contracts, upstream-baseline
+

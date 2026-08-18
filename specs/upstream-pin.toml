@@ -10,10 +10,10 @@ repository = "https://github.com/mollie/openapi"
 ref = "main"
 path = "specs.yaml"
 # Snapshot verified 2026-08-14 (fetch script re-checks on each CI run).
-sha256 = "d2a3bd80c1fa029268521066e1082aa781b2ddeee911c6172be0321f0ba8014e"
+sha256 = "0cbba39eed3c1b5ddd6cb815170a106a0877d45d22403364dfb4d8c18d99e993"
 operation_count = 124
-pinned_date = "2026-08-14"
-notes = "Re-pin after CI digest mismatch: still 124 ops; additive entity-capture testmode body field; locale en_BE/en_NL; no DraftTransfers; no ShippingAddress rename; pairing still without 403 in OpenAPI"
+pinned_date = "2026-08-18"
+notes = "Re-pin 2026-08-18: upstream main digest 0cbba39e…; still 124 operationIds; compare_upstream inventory 0 missing/0 extra vs local pin. Local specs-3.0.yaml not regenerated in this bump (content drift remains advisory until deliberate adapt/codegen)."
 
 [local]
 spec = "specs-3.0.yaml"

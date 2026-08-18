@@ -1,0 +1,1 @@
+{"resource":"payment","id":"tr_open","method":"billink","status":"open","amount":{"currency":"EUR","value":"10.00"},"description":"billink"}

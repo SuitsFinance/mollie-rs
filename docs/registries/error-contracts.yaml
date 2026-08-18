@@ -1,0 +1,15 @@
+﻿# Per-operation HTTP error contract seed (expand via OpenAPI export).
+_schema_version: 1
+
+terminals_request_pairing_code:
+  success: ['201']
+  error: ['400', '401', '404']
+  notes: "403 not yet in pinned OpenAPI; fixture tracks additive 403"
+
+create_payment:
+  success: ['201']
+  error: ['400', '401', '422']
+
+oauth_generate_tokens:
+  success: ['200']
+  error: ['400', '401']

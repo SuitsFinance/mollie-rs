@@ -21,7 +21,7 @@
 use std::{ops::Deref, sync::Arc, time::Duration};
 
 use reqwest::header::{HeaderMap, HeaderName, HeaderValue, AUTHORIZATION, USER_AGENT};
-use reqwest::{Client as ReqwestClient, Url};
+use reqwest::{Client as ReqwestClient, ClientBuilder as ReqwestClientBuilder, Url};
 
 use crate::hooks::{RequestHook, SharedRequestHook};
 use crate::ids::ProfileId;
@@ -431,6 +431,9 @@ pub struct MollieClientBuilder {
     profile_id: Option<String>,
     retry_policy: crate::RetryPolicy,
     http_client: Option<ReqwestClient>,
+    /// Optional caller customization applied before mandatory SDK security settings.
+    http_configure:
+        Option<std::sync::Arc<dyn Fn(ReqwestClientBuilder) -> ReqwestClientBuilder + Send + Sync>>,
     request_hook: Option<SharedRequestHook>,
 }
 
@@ -452,6 +455,10 @@ impl std::fmt::Debug for MollieClientBuilder {
             .field(
                 "http_client",
                 &self.http_client.as_ref().map(|_| "<reqwest::Client>"),
+            )
+            .field(
+                "http_configure",
+                &self.http_configure.as_ref().map(|_| "<configure_http>"),
             )
             .field(
                 "request_hook",
@@ -476,6 +483,7 @@ impl Default for MollieClientBuilder {
             profile_id: None,
             retry_policy: crate::RetryPolicy::disabled(),
             http_client: None,
+            http_configure: None,
             request_hook: None,
         }
     }
@@ -611,13 +619,29 @@ impl MollieClientBuilder {
 
     /// Injects a pre-built `reqwest` client (proxy, custom TLS, etc.).
     ///
-    /// When set, builder timeout/connect_timeout are not applied to this client
-    /// (configure them on the injected client). Authorization and user-agent
-    /// headers from this builder are still applied as default headers on a
-    /// **new** client unless you need full control via
-    /// [`MollieClient::from_generated`].
+    /// **Deprecated:** this bypasses mandatory SDK security last-apply
+    /// (redirect policy, min TLS, timeouts, auth default headers). Prefer
+    /// [`Self::configure_http`] so SDK invariants are applied after your
+    /// customization, or [`MollieClient::from_generated`] for unrestricted
+    /// transport control.
+    #[deprecated(
+        note = "Use configure_http so SDK security settings apply last, or MollieClient::from_generated for unrestricted transport control"
+    )]
     pub fn http_client(mut self, client: ReqwestClient) -> Self {
         self.http_client = Some(client);
+        self
+    }
+
+    /// Customizes the `reqwest` client builder before mandatory SDK security
+    /// settings are applied (INV-HTTP-01).
+    ///
+    /// The closure runs first; the SDK then forces redirect-none, TLS 1.2+,
+    /// default Authorization/User-Agent headers, and builder timeouts.
+    pub fn configure_http<F>(mut self, configure: F) -> Self
+    where
+        F: Fn(ReqwestClientBuilder) -> ReqwestClientBuilder + Send + Sync + 'static,
+    {
+        self.http_configure = Some(std::sync::Arc::new(configure));
         self
     }
 
@@ -739,18 +763,21 @@ impl MollieClientBuilder {
         }
         headers.insert(USER_AGENT, HeaderValue::from_str(&user_agent)?);
 
-        // Prefer a pre-built client for proxy/TLS control. That client must
-        // already carry Authorization (or the caller uses `from_generated`).
-        // The default path builds a client with validated credentials.
+        // Deprecated escape hatch: pre-built client skips SDK last-apply.
+        // Prefer configure_http (customization then mandatory security) or
+        // MollieClient::from_generated for full control.
         let http_client: ReqwestClient = if let Some(existing) = self.http_client {
             let _ = headers;
             existing
         } else {
-            // INV-HOST-01: do not follow redirects with default Authorization
-            // headers. API clients should hit the configured origin only;
-            // cross-origin 302 must not forward credentials (reqwest would
-            // otherwise keep default_headers on the next hop).
-            ReqwestClient::builder()
+            // INV-HOST-01 / INV-HTTP-01: caller configure runs first; SDK
+            // security settings always apply last so they cannot be silently
+            // disabled via safe builder customization.
+            let mut builder = ReqwestClient::builder();
+            if let Some(configure) = &self.http_configure {
+                builder = configure(builder);
+            }
+            builder
                 .default_headers(headers)
                 .redirect(reqwest::redirect::Policy::none())
                 .min_tls_version(reqwest::tls::Version::TLS_1_2)
@@ -906,6 +933,19 @@ mod tests {
                 .expect("loopback mock endpoint should be allowed");
 
             assert_eq!(client.raw().baseurl(), "http://127.0.0.1:12345/v2");
+        }
+
+        #[test]
+        fn configure_http_still_builds_client() {
+            let client = MollieClient::builder()
+                .credential(
+                    Credential::api_key("test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+                        .expect("api key should be valid"),
+                )
+                .configure_http(|b| b.user_agent("custom-prefix"))
+                .build()
+                .expect("configure_http should build");
+            assert_eq!(client.raw().baseurl(), DEFAULT_BASE_URL);
         }
     }
 }

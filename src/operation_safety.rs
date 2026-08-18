@@ -81,6 +81,40 @@ pub enum ProfileScope {
     Unsupported,
 }
 
+/// Financial / security risk class for an operation (derived; not a second SSOT table).
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
+pub enum OperationRisk {
+    /// Safe read (GET/HEAD-class).
+    ReadOnly,
+    /// Money-moving or payment-creating write.
+    FinancialWrite,
+    /// Cancellation of a financial resource.
+    FinancialCancellation,
+    /// OAuth or credential material mutation.
+    CredentialMutation,
+    /// Enable/disable payment methods or issuers.
+    PaymentCapabilityMutation,
+    /// Profile/organization configuration mutation.
+    AccountConfigurationMutation,
+    /// Terminal pairing / security surface.
+    TerminalSecurityMutation,
+    /// Session or other PII collection mutation.
+    PiiCollectionMutation,
+    /// Mutation not yet reviewed into a tighter class.
+    Unknown,
+}
+
+/// How far the SDK exposes an operation on the stable facade.
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
+pub enum OperationExposure {
+    /// Generated client only (reviewed existing surface).
+    Generated,
+    /// Generated but must not gain retries / Tier-S without review.
+    GeneratedQuarantined,
+    /// Validated Tier-S facade path.
+    ValidatedFacade,
+}
+
 impl RouteCapability {
     /// Returns this row as the operation safety profile SSOT view.
     pub const fn safety_profile(&self) -> &OperationSafetyProfile {
@@ -164,7 +198,74 @@ impl RouteCapability {
             && matches!(self.access, RouteAccess::ValidatedFacade)
             && !matches!(self.retry_class, RetryClass::Unknown | RetryClass::SafeRead)
     }
+
+    /// Derived operation risk class (INV-DRIFT-03 metadata; single SSOT table).
+    pub fn operation_risk(&self) -> OperationRisk {
+        let method = self.http_method;
+        let is_write = matches!(method, "POST" | "PUT" | "PATCH" | "DELETE");
+        if !is_write {
+            return OperationRisk::ReadOnly;
+        }
+        let id = self.operation_id;
+        if PAYMENT_CAPABILITY_MUTATION_OPERATION_IDS.contains(&id) {
+            return OperationRisk::PaymentCapabilityMutation;
+        }
+        if id.starts_with("terminals_") || id.contains("pairing") {
+            return OperationRisk::TerminalSecurityMutation;
+        }
+        if id.starts_with("oauth_") {
+            return OperationRisk::CredentialMutation;
+        }
+        if id.contains("session") {
+            return OperationRisk::PiiCollectionMutation;
+        }
+        if id.starts_with("cancel_") {
+            return OperationRisk::FinancialCancellation;
+        }
+        if HIGH_RISK_WRITE_OPERATION_IDS.contains(&id)
+            || id.starts_with("create_")
+            || id.contains("payment")
+            || id.contains("refund")
+            || id.contains("payout")
+            || id.contains("transfer")
+            || id.contains("capture")
+            || id.contains("mandate")
+            || id.contains("subscription")
+        {
+            return OperationRisk::FinancialWrite;
+        }
+        if id.contains("profile") || id.contains("organization") || id.contains("permission") {
+            return OperationRisk::AccountConfigurationMutation;
+        }
+        if matches!(self.retry_class, RetryClass::Unknown) {
+            return OperationRisk::Unknown;
+        }
+        OperationRisk::AccountConfigurationMutation
+    }
+
+    /// Derived exposure class for Tier-G vs Tier-S promotion.
+    pub fn operation_exposure(&self) -> OperationExposure {
+        match self.access {
+            RouteAccess::ValidatedFacade => OperationExposure::ValidatedFacade,
+            RouteAccess::GeneratedClient => {
+                let is_write = matches!(self.http_method, "POST" | "PUT" | "PATCH" | "DELETE");
+                if is_write && matches!(self.retry_class, RetryClass::Unknown) {
+                    OperationExposure::GeneratedQuarantined
+                } else {
+                    OperationExposure::Generated
+                }
+            }
+        }
+    }
 }
+
+/// Payment method / issuer capability mutations (not always in HR denominator).
+pub const PAYMENT_CAPABILITY_MUTATION_OPERATION_IDS: &[&str] = &[
+    "enable_method",
+    "disable_method",
+    "enable_method_issuer",
+    "disable_method_issuer",
+];
 
 /// Frozen high-risk write operation ids (CI denominator).
 pub const HIGH_RISK_WRITE_OPERATION_IDS: &[&str] = &[
@@ -257,5 +358,26 @@ mod tests {
             let p = operation_safety_profile(id).expect(id);
             assert!(p.is_fully_protected_high_risk(), "{id}");
         }
+    }
+
+    #[test]
+    fn payment_capability_mutations_are_classified() {
+        for id in PAYMENT_CAPABILITY_MUTATION_OPERATION_IDS {
+            let p = operation_safety_profile(id).expect(id);
+            assert_eq!(
+                p.operation_risk(),
+                OperationRisk::PaymentCapabilityMutation,
+                "{id}"
+            );
+            assert_ne!(p.mutation_class(), MutationClass::Read);
+            assert_eq!(p.operation_exposure(), OperationExposure::Generated);
+        }
+    }
+
+    #[test]
+    fn create_payment_risk_and_exposure() {
+        let p = operation_safety_profile("create_payment").unwrap();
+        assert_eq!(p.operation_risk(), OperationRisk::FinancialWrite);
+        assert_eq!(p.operation_exposure(), OperationExposure::ValidatedFacade);
     }
 }

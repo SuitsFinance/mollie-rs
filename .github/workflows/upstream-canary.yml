@@ -1,0 +1,48 @@
+# Informational canary for official Mollie SDK release tags.
+# Not a codegen source. Does not block releases or auto-bump the committed baseline.
+name: Upstream SDK canary
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: upstream-sdk-canary
+  cancel-in-progress: true
+
+jobs:
+  canary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Probe SDKs, diff baseline, open issues
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          python scripts/upstream_sdk_canary.py \
+            --create-issues \
+            --snapshot docs/generated/upstream-canary.json \
+            --repo "${GITHUB_REPOSITORY}"
+
+      - name: Upload canary snapshot
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: upstream-sdk-canary
+          path: docs/generated/upstream-canary.json
+          retention-days: 30
+          if-no-files-found: warn
