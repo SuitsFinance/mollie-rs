@@ -19,11 +19,11 @@
 | PROF-003 | P1 | Method/issuer capability risk | **Closed** | `PaymentCapabilityMutation` | drift-5 |
 | WHK-001 | P1 | VerifiedWebhook recover path | **Closed** | `webhook_verify::VerifiedWebhook` | drift-7 |
 | HTTP-001 | P0 | Safe builder http_client footgun | **Partial** | `configure_http` + deprecated `http_client` | drift-7 |
-| TIER-001 | P0 | Tier-S request allowlists | **Partial** | `tier-s-request-contracts.yaml` seed | drift-6 |
-| TIER-002 | P0 | Blocking semver + API snapshot | **Open** | CI still advisory semver | drift-6 |
-| PROV-001 | P1 | Provenance / repin | **Partial** | `upstream-baseline.yaml` + `repin_upstream_openapi.py` | drift-8 |
-| CANARY-001 | P3 | Official SDK canary | **Open** | — | drift-8 |
-| CORPUS-001 | P1 | provider_history | **Partial** | `tests/fixtures/provider_history` + corpus test | drift-8 |
+| TIER-001 | P0 | Tier-S request allowlists | **Closed (registry+CI)** | `tier-s-request-contracts.yaml` + `check_tier_s_request_contracts.py` | drift-6 |
+| TIER-002 | P0 | Blocking semver + API snapshot | **Open** | CI still advisory semver; public-api snapshot follow-up | drift-6/9 |
+| PROV-001 | P1 | Provenance / repin | **Closed** | `upstream-baseline.yaml` + `repin_upstream_openapi.py` | drift-8 |
+| CANARY-001 | P3 | Official SDK canary | **Closed (informational)** | `.github/workflows/upstream-canary.yml` | drift-8 |
+| CORPUS-001 | P1 | provider_history | **Closed (seed)** | `tests/fixtures/provider_history` + corpus test | drift-8 |
 | REL-001 | P1 | Live/sandbox/hostile/RC | **Open** | residual | drift-9 |
 | SDD-001 | P1 | Baseline honesty @ 98025b9 | **Closed** | `docs/audits/2026-08-mollie-contract-delta.md` | drift-0 |
 
