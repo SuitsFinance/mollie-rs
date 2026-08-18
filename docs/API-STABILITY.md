@@ -97,3 +97,12 @@ Machine-readable allowlists live in docs/registries/tier-s-request-contracts.yam
 
 The CI semver job remains **advisory** on 0.x until a crates.io baseline + Tier-G noise strategy is finalized (continue-on-error: true). Blocking Tier-S snapshot via cargo public-api is a follow-up before 1.0 RC.
 
+## Tier-S public API snapshot (blocking)
+
+Machine-checked facade surface:
+
+- Registry: `docs/registries/tier-s-public-api.snapshot`
+- Gate: `python scripts/check_tier_s_public_api.py` (CI `contract` job)
+- Refresh (intentional changes only): `python scripts/check_tier_s_public_api.py --write`
+
+This gate catches renames/removals of Tier-S facades, builder types, and critical safety exports. It does **not** replace `cargo-semver-checks` against crates.io (still advisory on 0.x until a baseline strategy is fixed).

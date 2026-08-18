@@ -26,6 +26,8 @@
 | `live_organizations_readonly` | `get_current_organization` | Org “me” |
 | `live_permissions_readonly` | `list_permissions` | OAuth permissions |
 | `live_refunds_readonly` | `list_all_refunds` | Global refunds list |
+| `live_refunds_facade_readonly` | `refunds()` + `list_all_refunds` | Tier-S facade construct + global list |
+| `live_captures_facade_readonly` | `captures()` + `payments().list_page` | Capture facade + payments precondition |
 | `live_payouts_readonly` | `payouts().list_page` | Tier-S payouts read |
 | `live_business_accounts_readonly` | `list_business_accounts` | BA entitlement |
 | `live_terminals_readonly` | `terminals().list_page` | Terminals |

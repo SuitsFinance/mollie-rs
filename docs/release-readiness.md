@@ -1,7 +1,7 @@
-# Release readiness — mollie-rs 0.7.x → 1.0
+﻿# Release readiness â€” mollie-rs 0.7.x â†’ 1.0
 
 **As of:** residual exceptional-1.0 program (public cleanup).
-**Crate:** `mollie-rs` **0.7.1** · MSRV **1.88** · Tier-G **124/124** ops.
+**Crate:** `mollie-rs` **0.7.1** Â· MSRV **1.88** Â· Tier-G **124/124** ops.
 
 ## 1.0 band (honest)
 
@@ -62,6 +62,23 @@ Workflow: [`.github/workflows/ci.yml`](../.github/workflows/ci.yml)
 6. Upstream pin digest (`fetch_upstream_openapi.py`); inventory drift is advisory (exit 2)
 7. `cargo deny` + `cargo package` dry-run
 
+## Provider-drift resistance (2026-08 program)
+
+Landed on `feat/provider-drift-resistance` (blocking in `contract` CI job unless noted):
+
+| Gate | Script / artifact |
+| --- | --- |
+| Semantic OpenAPI classifier + fixtures | `scripts/contract_diff` + `run_openapi_drift_fixtures.py` (17) |
+| Mutation discovery | `detect_high_risk_operations.py` |
+| Contract graph freshness | `build_contract_graph.py` + `contract-graph.json` |
+| Tier-S request allowlists | `check_tier_s_request_contracts.py` |
+| Tier-S public API snapshot | `check_tier_s_public_api.py` + `tier-s-public-api.snapshot` |
+| OpenEnum / NullableField foundation | `src/open_enum.rs`, `src/nullable_field.rs` |
+| VerifiedWebhook recover path | `src/webhook_verify.rs` |
+| `configure_http` last-apply | `src/client.rs` |
+| Upstream canary (informational) | `.github/workflows/upstream-canary.yml` |
+| Hostile static review | `docs/rc/hostile-security-review.md` |
+
 ## Residual before RC / 1.0
 
 | Item | Priority | Notes |
@@ -85,3 +102,5 @@ See `docs/sdd/1.0-readiness/14-release-plan.md` and `docs/rc/rc-checklist.md`.
 - [`registries/high-risk-coverage.md`](registries/high-risk-coverage.md)
 - [`guides/README.md`](guides/README.md)
 - [`rc/1.0-scorecard.md`](rc/1.0-scorecard.md)
+
+
