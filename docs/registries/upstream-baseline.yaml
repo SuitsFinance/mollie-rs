@@ -6,8 +6,8 @@ mollie_openapi:
   ref: main
   path: specs.yaml
   # commit unknown for raw main pin; digest is authoritative
-  sha256: d2a3bd80c1fa029268521066e1082aa781b2ddeee911c6172be0321f0ba8014e
-  pinned_date: "2026-08-14"
+  sha256: 0cbba39eed3c1b5ddd6cb815170a106a0877d45d22403364dfb4d8c18d99e993
+  pinned_date: "2026-08-18"
   operation_count: 124
 
 generator:
