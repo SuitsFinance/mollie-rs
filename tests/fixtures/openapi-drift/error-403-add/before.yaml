@@ -1,0 +1,9 @@
+openapi: 3.0.3
+info: {title: t, version: '1'}
+paths:
+  /terminals/{id}/pairing-codes:
+    post:
+      operationId: terminals_request_pairing_code
+      responses:
+        '201': {description: created}
+        '401': {description: unauthorized}

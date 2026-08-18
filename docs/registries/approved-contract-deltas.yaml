@@ -1,0 +1,15 @@
+﻿# Approved dangerous contract deltas (INV-DRIFT-04).
+# Keys are upstream OpenAPI sha256 digests (or fixture ids for tests).
+# Each entry must name a change key `Kind:path`, rationale, and tests.
+#
+# Never use a global CI bypass. Only list specific reviewed changes.
+
+_schema_version: 1
+
+# Example (inactive):
+# d2a3bd80c1fa029268521066e1082aa781b2ddeee911c6172be0321f0ba8014e:
+#   - change: "TestmodeChange:Capture.testmode"
+#     approved_by: maintainer
+#     reason: "Additive capture testmode body field promoted intentionally"
+#     tests:
+#       - tests/http_contract.rs

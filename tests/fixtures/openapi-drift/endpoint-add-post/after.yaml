@@ -1,0 +1,10 @@
+openapi: 3.0.3
+info: {title: t, version: '1'}
+paths:
+  /widgets:
+    get:
+      operationId: listWidgets
+      responses: {'200': {description: ok}}
+    post:
+      operationId: createWidget
+      responses: {'201': {description: created}}

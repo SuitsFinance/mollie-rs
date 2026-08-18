@@ -1,0 +1,11 @@
+openapi: 3.0.3
+info: {title: t, version: '1'}
+paths:
+  /payments:
+    post:
+      operationId: create_payment
+      parameters:
+        - name: Idempotency-Key
+          in: header
+          schema: {type: string}
+      responses: {'201': {description: created}}

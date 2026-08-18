@@ -1,0 +1,11 @@
+openapi: 3.0.3
+info: {title: t, version: '1'}
+paths: {}
+components:
+  schemas:
+    PaymentAddress:
+      type: object
+      properties:
+        streetAndNumber: {type: string}
+        city: {type: string}
+        country: {type: string}

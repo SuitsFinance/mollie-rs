@@ -1,0 +1,28 @@
+﻿# Exact OpenAPI / generator provenance (INV-PROV-01).
+# Keep sha256 in lockstep with specs/upstream-pin.toml.
+
+mollie_openapi:
+  repository: mollie/openapi
+  ref: main
+  path: specs.yaml
+  # commit unknown for raw main pin; digest is authoritative
+  sha256: d2a3bd80c1fa029268521066e1082aa781b2ddeee911c6172be0321f0ba8014e
+  pinned_date: "2026-08-14"
+  operation_count: 124
+
+generator:
+  name: progenitor
+  notes: "See scripts/generate_openapi_client.py / openapi_generator.rs"
+
+local:
+  spec: specs-3.0.yaml
+  capabilities: src/route_capabilities.rs
+
+observed_sdks:
+  # informational canary only — not codegen sources
+  typescript: pending-canary
+  go: pending-canary
+  python: pending-canary
+  java: pending-canary
+  csharp: pending-canary
+  php: pending-canary

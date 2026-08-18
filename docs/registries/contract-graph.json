@@ -1,0 +1,2517 @@
+{
+  "domain_modules": [
+    "captures",
+    "connect_balance_transfers",
+    "mandates",
+    "oauth",
+    "payment_links",
+    "payments",
+    "payouts",
+    "refunds",
+    "sessions",
+    "subscriptions",
+    "terminals",
+    "transfers",
+    "unmatched_credit_transfers",
+    "verify_payee",
+    "webhooks"
+  ],
+  "edges": [
+    {
+      "from": "op:oauth_generate_tokens",
+      "kind": "operation-profiled-by",
+      "to": "profile:oauth_generate_tokens"
+    },
+    {
+      "from": "op:oauth_generate_tokens",
+      "kind": "operation-exposed-by-facade",
+      "to": "tier_s:facade"
+    },
+    {
+      "from": "op:oauth_revoke_tokens",
+      "kind": "operation-profiled-by",
+      "to": "profile:oauth_revoke_tokens"
+    },
+    {
+      "from": "op:oauth_revoke_tokens",
+      "kind": "operation-exposed-by-facade",
+      "to": "tier_s:facade"
+    },
+    {
+      "from": "op:list_balances",
+      "kind": "operation-profiled-by",
+      "to": "profile:list_balances"
+    },
+    {
+      "from": "op:get_balance",
+      "kind": "operation-profiled-by",
+      "to": "profile:get_balance"
+    },
+    {
+      "from": "op:get_primary_balance",
+      "kind": "operation-profiled-by",
+      "to": "profile:get_primary_balance"
+    },
+    {
+      "from": "op:get_balance_report",
+      "kind": "operation-profiled-by",
+      "to": "profile:get_balance_report"
+    },
+    {
+      "from": "op:list_balance_transactions",
+      "kind": "operation-profiled-by",
+      "to": "profile:list_balance_transactions"
+    },
+    {
+      "from": "op:list_settlements",
+      "kind": "operation-profiled-by",
+      "to": "profile:list_settlements"
+    },
+    {
+      "from": "op:get_settlement",
+      "kind": "operation-profiled-by",
+      "to": "profile:get_settlement"
+    },
+    {
+      "from": "op:get_open_settlement",
+      "kind": "operation-profiled-by",
+      "to": "profile:get_open_settlement"
+    },
+    {
+      "from": "op:get_next_settlement",
+      "kind": "operation-profiled-by",
+      "to": "profile:get_next_settlement"
+    },
+    {
+      "from": "op:list_settlement_payments",
+      "kind": "operation-profiled-by",
+      "to": "profile:list_settlement_payments"
+    },
+    {
+      "from": "op:list_settlement_captures",
+      "kind": "operation-profiled-by",
+      "to": "profile:list_settlement_captures"
+    },
+    {
+      "from": "op:list_settlement_refunds",
+      "kind": "operation-profiled-by",
+      "to": "profile:list_settlement_refunds"
+    },
+    {
+      "from": "op:list_settlement_chargebacks",
+      "kind": "operation-profiled-by",
+      "to": "profile:list_settlement_chargebacks"
+    },
+    {
+      "from": "op:list_invoices",
+      "kind": "operation-profiled-by",
+      "to": "profile:list_invoices"
+    },
+    {
+      "from": "op:get_invoice",
+      "kind": "operation-profiled-by",
+      "to": "profile:get_invoice"
+    },
+    {
+      "from": "op:list_permissions",
+      "kind": "operation-profiled-by",
+      "to": "profile:list_permissions"
+    },
+    {
+      "from": "op:get_permission",
+      "kind": "operation-profiled-by",
+      "to": "profile:get_permission"
+    },
+    {
+      "from": "op:get_organization",
+      "kind": "operation-profiled-by",
+      "to": "profile:get_organization"
+    },
+    {
+      "from": "op:get_current_organization",
+      "kind": "operation-profiled-by",
+      "to": "profile:get_current_organization"
+    },
+    {
+      "from": "op:get_partner_status",
+      "kind": "operation-profiled-by",
+      "to": "profile:get_partner_status"
+    },
+    {
+      "from": "op:create_profile",
+      "kind": "operation-profiled-by",
+      "to": "profile:create_profile"
+    },
+    {
+      "from": "op:list_profiles",
+      "kind": "operation-profiled-by",
+      "to": "profile:list_profiles"
+    },
+    {
+      "from": "op:get_profile",
+      "kind": "operation-profiled-by",
+      "to": "profile:get_profile"
+    },
+    {
+      "from": "op:update_profile",
+      "kind": "operation-profiled-by",
+      "to": "profile:update_profile"
+    },
+    {
+      "from": "op:delete_profile",
+      "kind": "operation-profiled-by",
+      "to": "profile:delete_profile"
+    },
+    {
+      "from": "op:get_current_profile",
+      "kind": "operation-profiled-by",
+      "to": "profile:get_current_profile"
+    },
+    {
+      "from": "op:get_onboarding_status",
+      "kind": "operation-profiled-by",
+      "to": "profile:get_onboarding_status"
+    },
+    {
+      "from": "op:submit_onboarding_data",
+      "kind": "operation-profiled-by",
+      "to": "profile:submit_onboarding_data"
+    },
+    {
+      "from": "op:list_capabilities",
+      "kind": "operation-profiled-by",
+      "to": "profile:list_capabilities"
+    },
+    {
+      "from": "op:list_clients",
+      "kind": "operation-profiled-by",
+      "to": "profile:list_clients"
+    },
+    {
+      "from": "op:get_client",
+      "kind": "operation-profiled-by",
+      "to": "profile:get_client"
+    },
+    {
+      "from": "op:create_client_link",
+      "kind": "operation-profiled-by",
+      "to": "profile:create_client_link"
+    },
+    {
+      "from": "op:create_webhook",
+      "kind": "operation-profiled-by",
+      "to": "profile:create_webhook"
+    },
+    {
+      "from": "op:list_webhooks",
+      "kind": "operation-profiled-by",
+      "to": "profile:list_webhooks"
+    },
+    {
+      "from": "op:update_webhook",
+      "kind": "operation-profiled-by",
+      "to": "profile:update_webhook"
+    },
+    {
+      "from": "op:get_webhook",
+      "kind": "operation-profiled-by",
+      "to": "profile:get_webhook"
+    },
+    {
+      "from": "op:delete_webhook",
+      "kind": "operation-profiled-by",
+      "to": "profile:delete_webhook"
+    },
+    {
+      "from": "op:test_webhook",
+      "kind": "operation-profiled-by",
+      "to": "profile:test_webhook"
+    },
+    {
+      "from": "op:get_webhook_event",
+      "kind": "operation-profiled-by",
+      "to": "profile:get_webhook_event"
+    },
+    {
+      "from": "op:create_connect_balance_transfer",
+      "kind": "operation-profiled-by",
+      "to": "profile:create_connect_balance_transfer"
+    },
+    {
+      "from": "op:create_connect_balance_transfer",
+      "kind": "operation-exposed-by-facade",
+      "to": "tier_s:facade"
+    },
+    {
+      "from": "op:list_connect_balance_transfers",
+      "kind": "operation-profiled-by",
+      "to": "profile:list_connect_balance_transfers"
+    },
+    {
+      "from": "op:get_connect_balance_transfer",
+      "kind": "operation-profiled-by",
+      "to": "profile:get_connect_balance_transfer"
+    },
+    {
+      "from": "op:create_payment",
+      "kind": "operation-profiled-by",
+      "to": "profile:create_payment"
+    },
+    {
+      "from": "op:create_payment",
+      "kind": "operation-exposed-by-facade",
+      "to": "tier_s:facade"
+    },
+    {
+      "from": "op:list_payments",
+      "kind": "operation-profiled-by",
+      "to": "profile:list_payments"
+    },
+    {
+      "from": "op:get_payment",
+      "kind": "operation-profiled-by",
+      "to": "profile:get_payment"
+    },
+    {
+      "from": "op:update_payment",
+      "kind": "operation-profiled-by",
+      "to": "profile:update_payment"
+    },
+    {
+      "from": "op:cancel_payment",
+      "kind": "operation-profiled-by",
+      "to": "profile:cancel_payment"
+    },
+    {
+      "from": "op:cancel_payment",
+      "kind": "operation-exposed-by-facade",
+      "to": "tier_s:facade"
+    },
+    {
+      "from": "op:release_authorization",
+      "kind": "operation-profiled-by",
+      "to": "profile:release_authorization"
+    },
+    {
+      "from": "op:list_unmatched_credit_transfers",
+      "kind": "operation-profiled-by",
+      "to": "profile:list_unmatched_credit_transfers"
+    },
+    {
+      "from": "op:get_unmatched_credit_transfer",
+      "kind": "operation-profiled-by",
+      "to": "profile:get_unmatched_credit_transfer"
+    },
+    {
+      "from": "op:match_unmatched_credit_transfer",
+      "kind": "operation-profiled-by",
+      "to": "profile:match_unmatched_credit_transfer"
+    },
+    {
+      "from": "op:match_unmatched_credit_transfer",
+      "kind": "operation-exposed-by-facade",
+      "to": "tier_s:facade"
+    },
+    {
+      "from": "op:return_unmatched_credit_transfer",
+      "kind": "operation-profiled-by",
+      "to": "profile:return_unmatched_credit_transfer"
+    },
+    {
+      "from": "op:return_unmatched_credit_transfer",
+      "kind": "operation-exposed-by-facade",
+      "to": "tier_s:facade"
+    },
+    {
+      "from": "op:create_session",
+      "kind": "operation-profiled-by",
+      "to": "profile:create_session"
+    },
+    {
+      "from": "op:create_session",
+      "kind": "operation-exposed-by-facade",
+      "to": "tier_s:facade"
+    },
+    {
+      "from": "op:get_session",
+      "kind": "operation-profiled-by",
+      "to": "profile:get_session"
+    },
+    {
+      "from": "op:list_methods",
+      "kind": "operation-profiled-by",
+      "to": "profile:list_methods"
+    },
+    {
+      "from": "op:list_all_methods",
+      "kind": "operation-profiled-by",
+      "to": "profile:list_all_methods"
+    },
+    {
+      "from": "op:get_method",
+      "kind": "operation-profiled-by",
+      "to": "profile:get_method"
+    },
+    {
+      "from": "op:enable_method",
+      "kind": "operation-profiled-by",
+      "to": "profile:enable_method"
+    },
+    {
+      "from": "op:disable_method",
+      "kind": "operation-profiled-by",
+      "to": "profile:disable_method"
+    },
+    {
+      "from": "op:enable_method_issuer",
+      "kind": "operation-profiled-by",
+      "to": "profile:enable_method_issuer"
+    },
+    {
+      "from": "op:disable_method_issuer",
+      "kind": "operation-profiled-by",
+      "to": "profile:disable_method_issuer"
+    },
+    {
+      "from": "op:create_refund",
+      "kind": "operation-profiled-by",
+      "to": "profile:create_refund"
+    },
+    {
+      "from": "op:create_refund",
+      "kind": "operation-exposed-by-facade",
+      "to": "tier_s:facade"
+    },
+    {
+      "from": "op:list_refunds",
+      "kind": "operation-profiled-by",
+      "to": "profile:list_refunds"
+    },
+    {
+      "from": "op:get_refund",
+      "kind": "operation-profiled-by",
+      "to": "profile:get_refund"
+    },
+    {
+      "from": "op:cancel_refund",
+      "kind": "operation-profiled-by",
+      "to": "profile:cancel_refund"
+    },
+    {
+      "from": "op:cancel_refund",
+      "kind": "operation-exposed-by-facade",
+      "to": "tier_s:facade"
+    },
+    {
+      "from": "op:list_all_refunds",
+      "kind": "operation-profiled-by",
+      "to": "profile:list_all_refunds"
+    },
+    {
+      "from": "op:list_chargebacks",
+      "kind": "operation-profiled-by",
+      "to": "profile:list_chargebacks"
+    },
+    {
+      "from": "op:get_chargeback",
+      "kind": "operation-profiled-by",
+      "to": "profile:get_chargeback"
+    },
+    {
+      "from": "op:list_all_chargebacks",
+      "kind": "operation-profiled-by",
+      "to": "profile:list_all_chargebacks"
+    },
+    {
+      "from": "op:create_capture",
+      "kind": "operation-profiled-by",
+      "to": "profile:create_capture"
+    },
+    {
+      "from": "op:create_capture",
+      "kind": "operation-exposed-by-facade",
+      "to": "tier_s:facade"
+    },
+    {
+      "from": "op:list_captures",
+      "kind": "operation-profiled-by",
+      "to": "profile:list_captures"
+    },
+    {
+      "from": "op:get_capture",
+      "kind": "operation-profiled-by",
+      "to": "profile:get_capture"
+    },
+    {
+      "from": "op:request_apple_pay_payment_session",
+      "kind": "operation-profiled-by",
+      "to": "profile:request_apple_pay_payment_session"
+    },
+    {
+      "from": "op:create_payment_link",
+      "kind": "operation-profiled-by",
+      "to": "profile:create_payment_link"
+    },
+    {
+      "from": "op:create_payment_link",
+      "kind": "operation-exposed-by-facade",
+      "to": "tier_s:facade"
+    },
+    {
+      "from": "op:list_payment_links",
+      "kind": "operation-profiled-by",
+      "to": "profile:list_payment_links"
+    },
+    {
+      "from": "op:get_payment_link",
+      "kind": "operation-profiled-by",
+      "to": "profile:get_payment_link"
+    },
+    {
+      "from": "op:update_payment_link",
+      "kind": "operation-profiled-by",
+      "to": "profile:update_payment_link"
+    },
+    {
+      "from": "op:delete_payment_link",
+      "kind": "operation-profiled-by",
+      "to": "profile:delete_payment_link"
+    },
+    {
+      "from": "op:get_payment_link_payments",
+      "kind": "operation-profiled-by",
+      "to": "profile:get_payment_link_payments"
+    },
+    {
+      "from": "op:list_terminals",
+      "kind": "operation-profiled-by",
+      "to": "profile:list_terminals"
+    },
+    {
+      "from": "op:get_terminal",
+      "kind": "operation-profiled-by",
+      "to": "profile:get_terminal"
+    },
+    {
+      "from": "op:terminals_request_pairing_code",
+      "kind": "operation-profiled-by",
+      "to": "profile:terminals_request_pairing_code"
+    },
+    {
+      "from": "op:terminals_request_pairing_code",
+      "kind": "operation-exposed-by-facade",
+      "to": "tier_s:facade"
+    },
+    {
+      "from": "op:terminals_list_pairing_codes",
+      "kind": "operation-profiled-by",
+      "to": "profile:terminals_list_pairing_codes"
+    },
+    {
+      "from": "op:terminals_get_pairing_code",
+      "kind": "operation-profiled-by",
+      "to": "profile:terminals_get_pairing_code"
+    },
+    {
+      "from": "op:terminals_revoke_pairing_code",
+      "kind": "operation-profiled-by",
+      "to": "profile:terminals_revoke_pairing_code"
+    },
+    {
+      "from": "op:terminals_revoke_pairing_code",
+      "kind": "operation-exposed-by-facade",
+      "to": "tier_s:facade"
+    },
+    {
+      "from": "op:payment_create_route",
+      "kind": "operation-profiled-by",
+      "to": "profile:payment_create_route"
+    },
+    {
+      "from": "op:payment_create_route",
+      "kind": "operation-exposed-by-facade",
+      "to": "tier_s:facade"
+    },
+    {
+      "from": "op:payment_list_routes",
+      "kind": "operation-profiled-by",
+      "to": "profile:payment_list_routes"
+    },
+    {
+      "from": "op:payment_get_route",
+      "kind": "operation-profiled-by",
+      "to": "profile:payment_get_route"
+    },
+    {
+      "from": "op:create_customer",
+      "kind": "operation-profiled-by",
+      "to": "profile:create_customer"
+    },
+    {
+      "from": "op:list_customers",
+      "kind": "operation-profiled-by",
+      "to": "profile:list_customers"
+    },
+    {
+      "from": "op:get_customer",
+      "kind": "operation-profiled-by",
+      "to": "profile:get_customer"
+    },
+    {
+      "from": "op:update_customer",
+      "kind": "operation-profiled-by",
+      "to": "profile:update_customer"
+    },
+    {
+      "from": "op:delete_customer",
+      "kind": "operation-profiled-by",
+      "to": "profile:delete_customer"
+    },
+    {
+      "from": "op:create_customer_payment",
+      "kind": "operation-profiled-by",
+      "to": "profile:create_customer_payment"
+    },
+    {
+      "from": "op:create_customer_payment",
+      "kind": "operation-exposed-by-facade",
+      "to": "tier_s:facade"
+    },
+    {
+      "from": "op:list_customer_payments",
+      "kind": "operation-profiled-by",
+      "to": "profile:list_customer_payments"
+    },
+    {
+      "from": "op:create_mandate",
+      "kind": "operation-profiled-by",
+      "to": "profile:create_mandate"
+    },
+    {
+      "from": "op:create_mandate",
+      "kind": "operation-exposed-by-facade",
+      "to": "tier_s:facade"
+    },
+    {
+      "from": "op:list_mandates",
+      "kind": "operation-profiled-by",
+      "to": "profile:list_mandates"
+    },
+    {
+      "from": "op:get_mandate",
+      "kind": "operation-profiled-by",
+      "to": "profile:get_mandate"
+    },
+    {
+      "from": "op:revoke_mandate",
+      "kind": "operation-profiled-by",
+      "to": "profile:revoke_mandate"
+    },
+    {
+      "from": "op:create_subscription",
+      "kind": "operation-profiled-by",
+      "to": "profile:create_subscription"
+    },
+    {
+      "from": "op:create_subscription",
+      "kind": "operation-exposed-by-facade",
+      "to": "tier_s:facade"
+    },
+    {
+      "from": "op:list_subscriptions",
+      "kind": "operation-profiled-by",
+      "to": "profile:list_subscriptions"
+    },
+    {
+      "from": "op:get_subscription",
+      "kind": "operation-profiled-by",
+      "to": "profile:get_subscription"
+    },
+    {
+      "from": "op:update_subscription",
+      "kind": "operation-profiled-by",
+      "to": "profile:update_subscription"
+    },
+    {
+      "from": "op:cancel_subscription",
+      "kind": "operation-profiled-by",
+      "to": "profile:cancel_subscription"
+    },
+    {
+      "from": "op:cancel_subscription",
+      "kind": "operation-exposed-by-facade",
+      "to": "tier_s:facade"
+    },
+    {
+      "from": "op:list_all_subscriptions",
+      "kind": "operation-profiled-by",
+      "to": "profile:list_all_subscriptions"
+    },
+    {
+      "from": "op:list_subscription_payments",
+      "kind": "operation-profiled-by",
+      "to": "profile:list_subscription_payments"
+    },
+    {
+      "from": "op:create_sales_invoice",
+      "kind": "operation-profiled-by",
+      "to": "profile:create_sales_invoice"
+    },
+    {
+      "from": "op:list_sales_invoices",
+      "kind": "operation-profiled-by",
+      "to": "profile:list_sales_invoices"
+    },
+    {
+      "from": "op:get_sales_invoice",
+      "kind": "operation-profiled-by",
+      "to": "profile:get_sales_invoice"
+    },
+    {
+      "from": "op:update_sales_invoice",
+      "kind": "operation-profiled-by",
+      "to": "profile:update_sales_invoice"
+    },
+    {
+      "from": "op:delete_sales_invoice",
+      "kind": "operation-profiled-by",
+      "to": "profile:delete_sales_invoice"
+    },
+    {
+      "from": "op:list_business_accounts",
+      "kind": "operation-profiled-by",
+      "to": "profile:list_business_accounts"
+    },
+    {
+      "from": "op:get_business_account",
+      "kind": "operation-profiled-by",
+      "to": "profile:get_business_account"
+    },
+    {
+      "from": "op:list_business_account_transactions",
+      "kind": "operation-profiled-by",
+      "to": "profile:list_business_account_transactions"
+    },
+    {
+      "from": "op:get_business_account_transaction",
+      "kind": "operation-profiled-by",
+      "to": "profile:get_business_account_transaction"
+    },
+    {
+      "from": "op:create_transfer",
+      "kind": "operation-profiled-by",
+      "to": "profile:create_transfer"
+    },
+    {
+      "from": "op:create_transfer",
+      "kind": "operation-exposed-by-facade",
+      "to": "tier_s:facade"
+    },
+    {
+      "from": "op:get_transfer",
+      "kind": "operation-profiled-by",
+      "to": "profile:get_transfer"
+    },
+    {
+      "from": "op:verify_payee",
+      "kind": "operation-profiled-by",
+      "to": "profile:verify_payee"
+    },
+    {
+      "from": "op:verify_payee",
+      "kind": "operation-exposed-by-facade",
+      "to": "tier_s:facade"
+    },
+    {
+      "from": "op:create_payout",
+      "kind": "operation-profiled-by",
+      "to": "profile:create_payout"
+    },
+    {
+      "from": "op:create_payout",
+      "kind": "operation-exposed-by-facade",
+      "to": "tier_s:facade"
+    },
+    {
+      "from": "op:list_payouts",
+      "kind": "operation-profiled-by",
+      "to": "profile:list_payouts"
+    },
+    {
+      "from": "op:get_payout",
+      "kind": "operation-profiled-by",
+      "to": "profile:get_payout"
+    },
+    {
+      "from": "op:cancel_payout",
+      "kind": "operation-profiled-by",
+      "to": "profile:cancel_payout"
+    },
+    {
+      "from": "op:cancel_payout",
+      "kind": "operation-exposed-by-facade",
+      "to": "tier_s:facade"
+    }
+  ],
+  "nodes": [
+    {
+      "access": "ValidatedFacade",
+      "http_method": "POST",
+      "id": "op:oauth_generate_tokens",
+      "operation_id": "oauth_generate_tokens",
+      "path": "/oauth2/tokens",
+      "retry_class": "NonRetryableWrite",
+      "route_group": "oauth_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:oauth_generate_tokens",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "ValidatedFacade",
+      "http_method": "DELETE",
+      "id": "op:oauth_revoke_tokens",
+      "operation_id": "oauth_revoke_tokens",
+      "path": "/oauth2/tokens",
+      "retry_class": "NonRetryableWrite",
+      "route_group": "oauth_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:oauth_revoke_tokens",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:list_balances",
+      "operation_id": "list_balances",
+      "path": "/balances",
+      "retry_class": "SafeRead",
+      "route_group": "balances_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:list_balances",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:get_balance",
+      "operation_id": "get_balance",
+      "path": "/balances/{balanceId}",
+      "retry_class": "SafeRead",
+      "route_group": "balances_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:get_balance",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:get_primary_balance",
+      "operation_id": "get_primary_balance",
+      "path": "/balances/primary",
+      "retry_class": "SafeRead",
+      "route_group": "balances_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:get_primary_balance",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:get_balance_report",
+      "operation_id": "get_balance_report",
+      "path": "/balances/{balanceId}/report",
+      "retry_class": "SafeRead",
+      "route_group": "balances_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:get_balance_report",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:list_balance_transactions",
+      "operation_id": "list_balance_transactions",
+      "path": "/balances/{balanceId}/transactions",
+      "retry_class": "SafeRead",
+      "route_group": "balances_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:list_balance_transactions",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:list_settlements",
+      "operation_id": "list_settlements",
+      "path": "/settlements",
+      "retry_class": "SafeRead",
+      "route_group": "settlements_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:list_settlements",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:get_settlement",
+      "operation_id": "get_settlement",
+      "path": "/settlements/{settlementId}",
+      "retry_class": "SafeRead",
+      "route_group": "settlements_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:get_settlement",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:get_open_settlement",
+      "operation_id": "get_open_settlement",
+      "path": "/settlements/open",
+      "retry_class": "SafeRead",
+      "route_group": "settlements_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:get_open_settlement",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:get_next_settlement",
+      "operation_id": "get_next_settlement",
+      "path": "/settlements/next",
+      "retry_class": "SafeRead",
+      "route_group": "settlements_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:get_next_settlement",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:list_settlement_payments",
+      "operation_id": "list_settlement_payments",
+      "path": "/settlements/{settlementId}/payments",
+      "retry_class": "SafeRead",
+      "route_group": "settlements_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:list_settlement_payments",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:list_settlement_captures",
+      "operation_id": "list_settlement_captures",
+      "path": "/settlements/{settlementId}/captures",
+      "retry_class": "SafeRead",
+      "route_group": "settlements_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:list_settlement_captures",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:list_settlement_refunds",
+      "operation_id": "list_settlement_refunds",
+      "path": "/settlements/{settlementId}/refunds",
+      "retry_class": "SafeRead",
+      "route_group": "settlements_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:list_settlement_refunds",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:list_settlement_chargebacks",
+      "operation_id": "list_settlement_chargebacks",
+      "path": "/settlements/{settlementId}/chargebacks",
+      "retry_class": "SafeRead",
+      "route_group": "settlements_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:list_settlement_chargebacks",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:list_invoices",
+      "operation_id": "list_invoices",
+      "path": "/invoices",
+      "retry_class": "SafeRead",
+      "route_group": "invoices_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:list_invoices",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:get_invoice",
+      "operation_id": "get_invoice",
+      "path": "/invoices/{invoiceId}",
+      "retry_class": "SafeRead",
+      "route_group": "invoices_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:get_invoice",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:list_permissions",
+      "operation_id": "list_permissions",
+      "path": "/permissions",
+      "retry_class": "SafeRead",
+      "route_group": "permissions_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:list_permissions",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:get_permission",
+      "operation_id": "get_permission",
+      "path": "/permissions/{permissionId}",
+      "retry_class": "SafeRead",
+      "route_group": "permissions_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:get_permission",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:get_organization",
+      "operation_id": "get_organization",
+      "path": "/organizations/{organizationId}",
+      "retry_class": "SafeRead",
+      "route_group": "organizations_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:get_organization",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:get_current_organization",
+      "operation_id": "get_current_organization",
+      "path": "/organizations/me",
+      "retry_class": "SafeRead",
+      "route_group": "organizations_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:get_current_organization",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:get_partner_status",
+      "operation_id": "get_partner_status",
+      "path": "/organizations/me/partner",
+      "retry_class": "SafeRead",
+      "route_group": "organizations_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:get_partner_status",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "POST",
+      "id": "op:create_profile",
+      "operation_id": "create_profile",
+      "path": "/profiles",
+      "retry_class": "IdempotentWrite",
+      "route_group": "profiles_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:create_profile",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:list_profiles",
+      "operation_id": "list_profiles",
+      "path": "/profiles",
+      "retry_class": "SafeRead",
+      "route_group": "profiles_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:list_profiles",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:get_profile",
+      "operation_id": "get_profile",
+      "path": "/profiles/{profileId}",
+      "retry_class": "SafeRead",
+      "route_group": "profiles_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:get_profile",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "PATCH",
+      "id": "op:update_profile",
+      "operation_id": "update_profile",
+      "path": "/profiles/{profileId}",
+      "retry_class": "IdempotentWrite",
+      "route_group": "profiles_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:update_profile",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "DELETE",
+      "id": "op:delete_profile",
+      "operation_id": "delete_profile",
+      "path": "/profiles/{profileId}",
+      "retry_class": "IdempotentWrite",
+      "route_group": "profiles_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:delete_profile",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:get_current_profile",
+      "operation_id": "get_current_profile",
+      "path": "/profiles/me",
+      "retry_class": "SafeRead",
+      "route_group": "profiles_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:get_current_profile",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:get_onboarding_status",
+      "operation_id": "get_onboarding_status",
+      "path": "/onboarding/me",
+      "retry_class": "SafeRead",
+      "route_group": "onboarding_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:get_onboarding_status",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "POST",
+      "id": "op:submit_onboarding_data",
+      "operation_id": "submit_onboarding_data",
+      "path": "/onboarding/me",
+      "retry_class": "NonRetryableWrite",
+      "route_group": "onboarding_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:submit_onboarding_data",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:list_capabilities",
+      "operation_id": "list_capabilities",
+      "path": "/capabilities",
+      "retry_class": "SafeRead",
+      "route_group": "capabilities_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:list_capabilities",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:list_clients",
+      "operation_id": "list_clients",
+      "path": "/clients",
+      "retry_class": "SafeRead",
+      "route_group": "clients_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:list_clients",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:get_client",
+      "operation_id": "get_client",
+      "path": "/clients/{organizationId}",
+      "retry_class": "SafeRead",
+      "route_group": "clients_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:get_client",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "POST",
+      "id": "op:create_client_link",
+      "operation_id": "create_client_link",
+      "path": "/client-links",
+      "retry_class": "IdempotentWrite",
+      "route_group": "client_links_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:create_client_link",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "POST",
+      "id": "op:create_webhook",
+      "operation_id": "create_webhook",
+      "path": "/webhooks",
+      "retry_class": "IdempotentWrite",
+      "route_group": "webhooks_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:create_webhook",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:list_webhooks",
+      "operation_id": "list_webhooks",
+      "path": "/webhooks",
+      "retry_class": "SafeRead",
+      "route_group": "webhooks_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:list_webhooks",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "PATCH",
+      "id": "op:update_webhook",
+      "operation_id": "update_webhook",
+      "path": "/webhooks/{webhookId}",
+      "retry_class": "IdempotentWrite",
+      "route_group": "webhooks_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:update_webhook",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:get_webhook",
+      "operation_id": "get_webhook",
+      "path": "/webhooks/{webhookId}",
+      "retry_class": "SafeRead",
+      "route_group": "webhooks_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:get_webhook",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "DELETE",
+      "id": "op:delete_webhook",
+      "operation_id": "delete_webhook",
+      "path": "/webhooks/{webhookId}",
+      "retry_class": "IdempotentWrite",
+      "route_group": "webhooks_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:delete_webhook",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "POST",
+      "id": "op:test_webhook",
+      "operation_id": "test_webhook",
+      "path": "/webhooks/{webhookId}/ping",
+      "retry_class": "NonRetryableWrite",
+      "route_group": "webhooks_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:test_webhook",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:get_webhook_event",
+      "operation_id": "get_webhook_event",
+      "path": "/events/{webhookEventId}",
+      "retry_class": "SafeRead",
+      "route_group": "webhook_events_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:get_webhook_event",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "ValidatedFacade",
+      "http_method": "POST",
+      "id": "op:create_connect_balance_transfer",
+      "operation_id": "create_connect_balance_transfer",
+      "path": "/connect/balance-transfers",
+      "retry_class": "IdempotentWrite",
+      "route_group": "balance_transfers_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:create_connect_balance_transfer",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:list_connect_balance_transfers",
+      "operation_id": "list_connect_balance_transfers",
+      "path": "/connect/balance-transfers",
+      "retry_class": "SafeRead",
+      "route_group": "balance_transfers_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:list_connect_balance_transfers",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:get_connect_balance_transfer",
+      "operation_id": "get_connect_balance_transfer",
+      "path": "/connect/balance-transfers/{balanceTransferId}",
+      "retry_class": "SafeRead",
+      "route_group": "balance_transfers_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:get_connect_balance_transfer",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "ValidatedFacade",
+      "http_method": "POST",
+      "id": "op:create_payment",
+      "operation_id": "create_payment",
+      "path": "/payments",
+      "retry_class": "IdempotentWrite",
+      "route_group": "payments_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:create_payment",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:list_payments",
+      "operation_id": "list_payments",
+      "path": "/payments",
+      "retry_class": "SafeRead",
+      "route_group": "payments_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:list_payments",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:get_payment",
+      "operation_id": "get_payment",
+      "path": "/payments/{paymentId}",
+      "retry_class": "SafeRead",
+      "route_group": "payments_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:get_payment",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "PATCH",
+      "id": "op:update_payment",
+      "operation_id": "update_payment",
+      "path": "/payments/{paymentId}",
+      "retry_class": "IdempotentWrite",
+      "route_group": "payments_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:update_payment",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "ValidatedFacade",
+      "http_method": "DELETE",
+      "id": "op:cancel_payment",
+      "operation_id": "cancel_payment",
+      "path": "/payments/{paymentId}",
+      "retry_class": "IdempotentWrite",
+      "route_group": "payments_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:cancel_payment",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "POST",
+      "id": "op:release_authorization",
+      "operation_id": "release_authorization",
+      "path": "/payments/{paymentId}/release-authorization",
+      "retry_class": "IdempotentWrite",
+      "route_group": "payments_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:release_authorization",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:list_unmatched_credit_transfers",
+      "operation_id": "list_unmatched_credit_transfers",
+      "path": "/unmatched-credit-transfers",
+      "retry_class": "SafeRead",
+      "route_group": "unmatched_credit_transfers_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:list_unmatched_credit_transfers",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:get_unmatched_credit_transfer",
+      "operation_id": "get_unmatched_credit_transfer",
+      "path": "/unmatched-credit-transfers/{unmatchedCreditTransferId}",
+      "retry_class": "SafeRead",
+      "route_group": "unmatched_credit_transfers_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:get_unmatched_credit_transfer",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "ValidatedFacade",
+      "http_method": "POST",
+      "id": "op:match_unmatched_credit_transfer",
+      "operation_id": "match_unmatched_credit_transfer",
+      "path": "/unmatched-credit-transfers/{unmatchedCreditTransferId}/match",
+      "retry_class": "NonRetryableWrite",
+      "route_group": "unmatched_credit_transfers_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:match_unmatched_credit_transfer",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "ValidatedFacade",
+      "http_method": "POST",
+      "id": "op:return_unmatched_credit_transfer",
+      "operation_id": "return_unmatched_credit_transfer",
+      "path": "/unmatched-credit-transfers/{unmatchedCreditTransferId}/return",
+      "retry_class": "NonRetryableWrite",
+      "route_group": "unmatched_credit_transfers_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:return_unmatched_credit_transfer",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "ValidatedFacade",
+      "http_method": "POST",
+      "id": "op:create_session",
+      "operation_id": "create_session",
+      "path": "/sessions",
+      "retry_class": "IdempotentWrite",
+      "route_group": "sessions_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:create_session",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:get_session",
+      "operation_id": "get_session",
+      "path": "/sessions/{sessionId}",
+      "retry_class": "SafeRead",
+      "route_group": "sessions_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:get_session",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:list_methods",
+      "operation_id": "list_methods",
+      "path": "/methods",
+      "retry_class": "SafeRead",
+      "route_group": "methods_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:list_methods",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:list_all_methods",
+      "operation_id": "list_all_methods",
+      "path": "/methods/all",
+      "retry_class": "SafeRead",
+      "route_group": "methods_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:list_all_methods",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:get_method",
+      "operation_id": "get_method",
+      "path": "/methods/{methodId}",
+      "retry_class": "SafeRead",
+      "route_group": "methods_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:get_method",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "POST",
+      "id": "op:enable_method",
+      "operation_id": "enable_method",
+      "path": "/profiles/{profileId}/methods/{methodId}",
+      "retry_class": "NonRetryableWrite",
+      "route_group": "methods_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:enable_method",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "DELETE",
+      "id": "op:disable_method",
+      "operation_id": "disable_method",
+      "path": "/profiles/{profileId}/methods/{methodId}",
+      "retry_class": "NonRetryableWrite",
+      "route_group": "methods_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:disable_method",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "POST",
+      "id": "op:enable_method_issuer",
+      "operation_id": "enable_method_issuer",
+      "path": "/profiles/{profileId}/methods/{methodId}/issuers/{issuerId}",
+      "retry_class": "NonRetryableWrite",
+      "route_group": "methods_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:enable_method_issuer",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "DELETE",
+      "id": "op:disable_method_issuer",
+      "operation_id": "disable_method_issuer",
+      "path": "/profiles/{profileId}/methods/{methodId}/issuers/{issuerId}",
+      "retry_class": "NonRetryableWrite",
+      "route_group": "methods_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:disable_method_issuer",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "ValidatedFacade",
+      "http_method": "POST",
+      "id": "op:create_refund",
+      "operation_id": "create_refund",
+      "path": "/payments/{paymentId}/refunds",
+      "retry_class": "IdempotentWrite",
+      "route_group": "refunds_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:create_refund",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:list_refunds",
+      "operation_id": "list_refunds",
+      "path": "/payments/{paymentId}/refunds",
+      "retry_class": "SafeRead",
+      "route_group": "refunds_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:list_refunds",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:get_refund",
+      "operation_id": "get_refund",
+      "path": "/payments/{paymentId}/refunds/{refundId}",
+      "retry_class": "SafeRead",
+      "route_group": "refunds_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:get_refund",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "ValidatedFacade",
+      "http_method": "DELETE",
+      "id": "op:cancel_refund",
+      "operation_id": "cancel_refund",
+      "path": "/payments/{paymentId}/refunds/{refundId}",
+      "retry_class": "IdempotentWrite",
+      "route_group": "refunds_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:cancel_refund",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:list_all_refunds",
+      "operation_id": "list_all_refunds",
+      "path": "/refunds",
+      "retry_class": "SafeRead",
+      "route_group": "refunds_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:list_all_refunds",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:list_chargebacks",
+      "operation_id": "list_chargebacks",
+      "path": "/payments/{paymentId}/chargebacks",
+      "retry_class": "SafeRead",
+      "route_group": "chargebacks_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:list_chargebacks",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:get_chargeback",
+      "operation_id": "get_chargeback",
+      "path": "/payments/{paymentId}/chargebacks/{chargebackId}",
+      "retry_class": "SafeRead",
+      "route_group": "chargebacks_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:get_chargeback",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:list_all_chargebacks",
+      "operation_id": "list_all_chargebacks",
+      "path": "/chargebacks",
+      "retry_class": "SafeRead",
+      "route_group": "chargebacks_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:list_all_chargebacks",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "ValidatedFacade",
+      "http_method": "POST",
+      "id": "op:create_capture",
+      "operation_id": "create_capture",
+      "path": "/payments/{paymentId}/captures",
+      "retry_class": "IdempotentWrite",
+      "route_group": "captures_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:create_capture",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:list_captures",
+      "operation_id": "list_captures",
+      "path": "/payments/{paymentId}/captures",
+      "retry_class": "SafeRead",
+      "route_group": "captures_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:list_captures",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:get_capture",
+      "operation_id": "get_capture",
+      "path": "/payments/{paymentId}/captures/{captureId}",
+      "retry_class": "SafeRead",
+      "route_group": "captures_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:get_capture",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "POST",
+      "id": "op:request_apple_pay_payment_session",
+      "operation_id": "request_apple_pay_payment_session",
+      "path": "/wallets/applepay/sessions",
+      "retry_class": "NonRetryableWrite",
+      "route_group": "wallets_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:request_apple_pay_payment_session",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "ValidatedFacade",
+      "http_method": "POST",
+      "id": "op:create_payment_link",
+      "operation_id": "create_payment_link",
+      "path": "/payment-links",
+      "retry_class": "IdempotentWrite",
+      "route_group": "payment_links_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:create_payment_link",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:list_payment_links",
+      "operation_id": "list_payment_links",
+      "path": "/payment-links",
+      "retry_class": "SafeRead",
+      "route_group": "payment_links_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:list_payment_links",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:get_payment_link",
+      "operation_id": "get_payment_link",
+      "path": "/payment-links/{paymentLinkId}",
+      "retry_class": "SafeRead",
+      "route_group": "payment_links_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:get_payment_link",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "PATCH",
+      "id": "op:update_payment_link",
+      "operation_id": "update_payment_link",
+      "path": "/payment-links/{paymentLinkId}",
+      "retry_class": "IdempotentWrite",
+      "route_group": "payment_links_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:update_payment_link",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "DELETE",
+      "id": "op:delete_payment_link",
+      "operation_id": "delete_payment_link",
+      "path": "/payment-links/{paymentLinkId}",
+      "retry_class": "IdempotentWrite",
+      "route_group": "payment_links_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:delete_payment_link",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:get_payment_link_payments",
+      "operation_id": "get_payment_link_payments",
+      "path": "/payment-links/{paymentLinkId}/payments",
+      "retry_class": "SafeRead",
+      "route_group": "payment_links_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:get_payment_link_payments",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:list_terminals",
+      "operation_id": "list_terminals",
+      "path": "/terminals",
+      "retry_class": "SafeRead",
+      "route_group": "terminals_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:list_terminals",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:get_terminal",
+      "operation_id": "get_terminal",
+      "path": "/terminals/{terminalId}",
+      "retry_class": "SafeRead",
+      "route_group": "terminals_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:get_terminal",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "ValidatedFacade",
+      "http_method": "POST",
+      "id": "op:terminals_request_pairing_code",
+      "operation_id": "terminals_request_pairing_code",
+      "path": "/terminals/pairing-codes",
+      "retry_class": "NonRetryableWrite",
+      "route_group": "terminals_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:terminals_request_pairing_code",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:terminals_list_pairing_codes",
+      "operation_id": "terminals_list_pairing_codes",
+      "path": "/terminals/pairing-codes",
+      "retry_class": "SafeRead",
+      "route_group": "terminals_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:terminals_list_pairing_codes",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:terminals_get_pairing_code",
+      "operation_id": "terminals_get_pairing_code",
+      "path": "/terminals/pairing-codes/{pairingCodeId}",
+      "retry_class": "SafeRead",
+      "route_group": "terminals_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:terminals_get_pairing_code",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "ValidatedFacade",
+      "http_method": "DELETE",
+      "id": "op:terminals_revoke_pairing_code",
+      "operation_id": "terminals_revoke_pairing_code",
+      "path": "/terminals/pairing-codes/{pairingCodeId}",
+      "retry_class": "NonRetryableWrite",
+      "route_group": "terminals_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:terminals_revoke_pairing_code",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "ValidatedFacade",
+      "http_method": "POST",
+      "id": "op:payment_create_route",
+      "operation_id": "payment_create_route",
+      "path": "/payments/{paymentId}/routes",
+      "retry_class": "IdempotentWrite",
+      "route_group": "delayed_routing_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:payment_create_route",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:payment_list_routes",
+      "operation_id": "payment_list_routes",
+      "path": "/payments/{paymentId}/routes",
+      "retry_class": "SafeRead",
+      "route_group": "delayed_routing_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:payment_list_routes",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:payment_get_route",
+      "operation_id": "payment_get_route",
+      "path": "/payments/{paymentId}/routes/{routeId}",
+      "retry_class": "SafeRead",
+      "route_group": "delayed_routing_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:payment_get_route",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "POST",
+      "id": "op:create_customer",
+      "operation_id": "create_customer",
+      "path": "/customers",
+      "retry_class": "IdempotentWrite",
+      "route_group": "customers_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:create_customer",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:list_customers",
+      "operation_id": "list_customers",
+      "path": "/customers",
+      "retry_class": "SafeRead",
+      "route_group": "customers_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:list_customers",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:get_customer",
+      "operation_id": "get_customer",
+      "path": "/customers/{customerId}",
+      "retry_class": "SafeRead",
+      "route_group": "customers_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:get_customer",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "PATCH",
+      "id": "op:update_customer",
+      "operation_id": "update_customer",
+      "path": "/customers/{customerId}",
+      "retry_class": "IdempotentWrite",
+      "route_group": "customers_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:update_customer",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "DELETE",
+      "id": "op:delete_customer",
+      "operation_id": "delete_customer",
+      "path": "/customers/{customerId}",
+      "retry_class": "IdempotentWrite",
+      "route_group": "customers_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:delete_customer",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "ValidatedFacade",
+      "http_method": "POST",
+      "id": "op:create_customer_payment",
+      "operation_id": "create_customer_payment",
+      "path": "/customers/{customerId}/payments",
+      "retry_class": "IdempotentWrite",
+      "route_group": "customers_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:create_customer_payment",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:list_customer_payments",
+      "operation_id": "list_customer_payments",
+      "path": "/customers/{customerId}/payments",
+      "retry_class": "SafeRead",
+      "route_group": "customers_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:list_customer_payments",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "ValidatedFacade",
+      "http_method": "POST",
+      "id": "op:create_mandate",
+      "operation_id": "create_mandate",
+      "path": "/customers/{customerId}/mandates",
+      "retry_class": "IdempotentWrite",
+      "route_group": "mandates_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:create_mandate",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:list_mandates",
+      "operation_id": "list_mandates",
+      "path": "/customers/{customerId}/mandates",
+      "retry_class": "SafeRead",
+      "route_group": "mandates_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:list_mandates",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:get_mandate",
+      "operation_id": "get_mandate",
+      "path": "/customers/{customerId}/mandates/{mandateId}",
+      "retry_class": "SafeRead",
+      "route_group": "mandates_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:get_mandate",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "DELETE",
+      "id": "op:revoke_mandate",
+      "operation_id": "revoke_mandate",
+      "path": "/customers/{customerId}/mandates/{mandateId}",
+      "retry_class": "IdempotentWrite",
+      "route_group": "mandates_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:revoke_mandate",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "ValidatedFacade",
+      "http_method": "POST",
+      "id": "op:create_subscription",
+      "operation_id": "create_subscription",
+      "path": "/customers/{customerId}/subscriptions",
+      "retry_class": "IdempotentWrite",
+      "route_group": "subscriptions_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:create_subscription",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:list_subscriptions",
+      "operation_id": "list_subscriptions",
+      "path": "/customers/{customerId}/subscriptions",
+      "retry_class": "SafeRead",
+      "route_group": "subscriptions_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:list_subscriptions",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:get_subscription",
+      "operation_id": "get_subscription",
+      "path": "/customers/{customerId}/subscriptions/{subscriptionId}",
+      "retry_class": "SafeRead",
+      "route_group": "subscriptions_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:get_subscription",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "PATCH",
+      "id": "op:update_subscription",
+      "operation_id": "update_subscription",
+      "path": "/customers/{customerId}/subscriptions/{subscriptionId}",
+      "retry_class": "IdempotentWrite",
+      "route_group": "subscriptions_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:update_subscription",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "ValidatedFacade",
+      "http_method": "DELETE",
+      "id": "op:cancel_subscription",
+      "operation_id": "cancel_subscription",
+      "path": "/customers/{customerId}/subscriptions/{subscriptionId}",
+      "retry_class": "IdempotentWrite",
+      "route_group": "subscriptions_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:cancel_subscription",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:list_all_subscriptions",
+      "operation_id": "list_all_subscriptions",
+      "path": "/subscriptions",
+      "retry_class": "SafeRead",
+      "route_group": "subscriptions_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:list_all_subscriptions",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:list_subscription_payments",
+      "operation_id": "list_subscription_payments",
+      "path": "/customers/{customerId}/subscriptions/{subscriptionId}/payments",
+      "retry_class": "SafeRead",
+      "route_group": "subscriptions_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:list_subscription_payments",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "POST",
+      "id": "op:create_sales_invoice",
+      "operation_id": "create_sales_invoice",
+      "path": "/sales-invoices",
+      "retry_class": "IdempotentWrite",
+      "route_group": "sales_invoices_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:create_sales_invoice",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:list_sales_invoices",
+      "operation_id": "list_sales_invoices",
+      "path": "/sales-invoices",
+      "retry_class": "SafeRead",
+      "route_group": "sales_invoices_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:list_sales_invoices",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:get_sales_invoice",
+      "operation_id": "get_sales_invoice",
+      "path": "/sales-invoices/{salesInvoiceId}",
+      "retry_class": "SafeRead",
+      "route_group": "sales_invoices_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:get_sales_invoice",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "PATCH",
+      "id": "op:update_sales_invoice",
+      "operation_id": "update_sales_invoice",
+      "path": "/sales-invoices/{salesInvoiceId}",
+      "retry_class": "IdempotentWrite",
+      "route_group": "sales_invoices_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:update_sales_invoice",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "DELETE",
+      "id": "op:delete_sales_invoice",
+      "operation_id": "delete_sales_invoice",
+      "path": "/sales-invoices/{salesInvoiceId}",
+      "retry_class": "IdempotentWrite",
+      "route_group": "sales_invoices_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:delete_sales_invoice",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:list_business_accounts",
+      "operation_id": "list_business_accounts",
+      "path": "/business-accounts/accounts",
+      "retry_class": "SafeRead",
+      "route_group": "accounts_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:list_business_accounts",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:get_business_account",
+      "operation_id": "get_business_account",
+      "path": "/business-accounts/accounts/{businessAccountId}",
+      "retry_class": "SafeRead",
+      "route_group": "accounts_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:get_business_account",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:list_business_account_transactions",
+      "operation_id": "list_business_account_transactions",
+      "path": "/business-accounts/accounts/{businessAccountId}/transactions",
+      "retry_class": "SafeRead",
+      "route_group": "accounts_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:list_business_account_transactions",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:get_business_account_transaction",
+      "operation_id": "get_business_account_transaction",
+      "path": "/business-accounts/accounts/{businessAccountId}/transactions/{transactionId}",
+      "retry_class": "SafeRead",
+      "route_group": "accounts_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:get_business_account_transaction",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "ValidatedFacade",
+      "http_method": "POST",
+      "id": "op:create_transfer",
+      "operation_id": "create_transfer",
+      "path": "/business-accounts/transfers",
+      "retry_class": "IdempotentWrite",
+      "route_group": "transfers_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:create_transfer",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:get_transfer",
+      "operation_id": "get_transfer",
+      "path": "/business-accounts/transfers/{businessAccountsTransferId}",
+      "retry_class": "SafeRead",
+      "route_group": "transfers_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:get_transfer",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "ValidatedFacade",
+      "http_method": "POST",
+      "id": "op:verify_payee",
+      "operation_id": "verify_payee",
+      "path": "/business-accounts/payee-verifications",
+      "retry_class": "NonRetryableWrite",
+      "route_group": "verify_payee_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:verify_payee",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "ValidatedFacade",
+      "http_method": "POST",
+      "id": "op:create_payout",
+      "operation_id": "create_payout",
+      "path": "/payouts",
+      "retry_class": "IdempotentWrite",
+      "route_group": "payouts_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:create_payout",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:list_payouts",
+      "operation_id": "list_payouts",
+      "path": "/payouts",
+      "retry_class": "SafeRead",
+      "route_group": "payouts_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:list_payouts",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "GeneratedClient",
+      "http_method": "GET",
+      "id": "op:get_payout",
+      "operation_id": "get_payout",
+      "path": "/payouts/{payoutId}",
+      "retry_class": "SafeRead",
+      "route_group": "payouts_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:get_payout",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "access": "ValidatedFacade",
+      "http_method": "DELETE",
+      "id": "op:cancel_payout",
+      "operation_id": "cancel_payout",
+      "path": "/payouts/{payoutId}",
+      "retry_class": "IdempotentWrite",
+      "route_group": "payouts_api",
+      "type": "operation"
+    },
+    {
+      "id": "profile:cancel_payout",
+      "type": "OperationSafetyProfile"
+    },
+    {
+      "id": "tier_s:facade",
+      "modules": [
+        "captures",
+        "connect_balance_transfers",
+        "mandates",
+        "oauth",
+        "payment_links",
+        "payments",
+        "payouts",
+        "refunds",
+        "sessions",
+        "subscriptions",
+        "terminals",
+        "transfers",
+        "unmatched_credit_transfers",
+        "verify_payee",
+        "webhooks"
+      ],
+      "type": "TierS"
+    }
+  ],
+  "operation_count": 124,
+  "version": 1
+}

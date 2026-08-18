@@ -1,0 +1,32 @@
+﻿# Field semantic registry (INV-NULL-01) — only fields that need tri-state.
+_schema_version: 1
+
+PaymentRequest.dueDate:
+  required: false
+  nullable: true
+  null_equals_omitted: false
+  rust: NullableField
+
+UpdatePaymentRequestBody.dueDate:
+  required: false
+  nullable: true
+  null_equals_omitted: false
+  rust: NullableField
+
+PayoutRequest.description:
+  required: false
+  nullable: true
+  null_equals_omitted: false
+  rust: NullableField
+
+EntityOrganization.registrationNumber:
+  required: false
+  nullable: true
+  null_equals_omitted: true
+  rust: Option_or_NullableField
+
+Profile.businessCategory:
+  required: false
+  nullable: true
+  null_equals_omitted: true
+  rust: Option_or_NullableField

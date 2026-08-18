@@ -1,0 +1,8 @@
+openapi: 3.0.3
+info: {title: t, version: '1'}
+paths:
+  /payments:
+    post:
+      operationId: create_payment
+      parameters: []
+      responses: {'201': {description: created}}

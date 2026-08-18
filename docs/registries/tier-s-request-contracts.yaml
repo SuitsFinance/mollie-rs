@@ -1,0 +1,61 @@
+﻿# Tier-S request field allowlists (INV-TIER-02). Keys are logical operations.
+_schema_version: 1
+
+create_payment:
+  rust_type: CreatePaymentRequired
+  fields:
+    - amount
+    - description
+    - redirectUrl
+    - webhookUrl
+    - method
+    - metadata
+    - testmode
+    - locale
+    - customerId
+    - sequenceType
+    - billingAddress
+    - shippingAddress
+    - applicationFee
+
+create_refund:
+  rust_type: CreateRefundRequired
+  fields:
+    - amount
+    - description
+    - metadata
+    - reverseRouting
+    - routingReversals
+    - testmode
+
+create_capture:
+  rust_type: CreateCaptureRequired
+  fields:
+    - amount
+    - description
+    - metadata
+    - testmode
+
+create_payout:
+  rust_type: CreatePayoutRequired
+  fields:
+    - amount
+    - description
+    - testmode
+
+create_transfer:
+  rust_type: CreateTransferRequired
+  fields:
+    - amount
+    - description
+    - destination
+    - testmode
+
+create_connect_balance_transfer:
+  rust_type: CreateConnectBalanceTransferRequired
+  fields:
+    - amount
+    - description
+    - source
+    - destination
+    - testmode

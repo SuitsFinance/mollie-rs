@@ -1,4 +1,4 @@
-# Production CI for mollie-rs - blocking gates for public main.
+﻿# Production CI for mollie-rs - blocking gates for public main.
 name: CI
 
 on:
@@ -32,6 +32,17 @@ jobs:
         run: python scripts/check_dangerous_profile_drift.py
       - name: High-risk coverage report
         run: python scripts/report_high_risk_coverage.py --require-full
+      - name: Independent mutation discovery
+        run: python scripts/detect_high_risk_operations.py
+      - name: OpenAPI drift fixture classifier
+        run: python scripts/run_openapi_drift_fixtures.py
+      - name: Contract graph freshness
+        run: |
+          python scripts/build_contract_graph.py
+          git diff --exit-code -- docs/registries/contract-graph.json
+      - name: Semantic contract diff (local pin vs pin smoke)
+        run: |
+          python -m scripts.contract_diff --old specs-3.0.yaml --new specs-3.0.yaml --json target/contract-diff-smoke.json --fail-on-blocking
       - name: Operation registry is committed
         run: |
           python scripts/export_operation_registry.py
@@ -55,7 +66,7 @@ jobs:
           fi
 
   quality:
-    name: fmt · clippy · test · docs
+    name: fmt Â· clippy Â· test Â· docs
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -140,4 +151,5 @@ jobs:
         # Bump in step with the MSRV.
         run: cargo install cargo-semver-checks --version 0.44.0 --locked
       - name: Check public API vs crates.io
-        run: cargo semver-checks check-release || echo "No crates.io baseline yet or intentional 0.x break â€” see CHANGELOG.md"
+        run: cargo semver-checks check-release || echo "No crates.io baseline yet or intentional 0.x break Ã¢â‚¬â€ see CHANGELOG.md"
+

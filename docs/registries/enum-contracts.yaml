@@ -1,0 +1,32 @@
+﻿# Enum contract openness registry (INV-ENUM-01)
+_schema_version: 1
+
+BalanceTransactionType:
+  direction: response
+  openness: open
+  unknown: preserve
+  risk: reporting
+
+SecurityErrorCode:
+  direction: response
+  openness: open
+  unknown: preserve
+  risk: security
+
+PaymentStatus:
+  direction: response
+  openness: open
+  unknown: preserve
+  risk: financial_state
+
+PaymentMethod:
+  direction: both
+  openness: controlled_open
+  unknown: preserve
+  risk: payment_method
+
+Locale:
+  direction: both
+  openness: controlled_open
+  unknown: preserve
+  risk: localization
