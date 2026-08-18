@@ -17,6 +17,9 @@ create_payment:
     - billingAddress
     - shippingAddress
     - applicationFee
+    - dueDate
+    - cancelUrl
+    - applePayPaymentToken
 
 create_refund:
   rust_type: CreateRefundRequired
@@ -58,4 +61,15 @@ create_connect_balance_transfer:
     - description
     - source
     - destination
+    - testmode
+
+update_payment:
+  rust_type: UpdatePaymentRequired
+  fields:
+    - description
+    - dueDate
+    - redirectUrl
+    - webhookUrl
+    - method
+    - metadata
     - testmode

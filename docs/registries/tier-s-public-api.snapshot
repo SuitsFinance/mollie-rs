@@ -11,6 +11,7 @@ builder:CreateSubscriptionRequired
 builder:CreateTransferRequired
 builder:PaymentDescription
 builder:RedirectUrl
+builder:UpdatePaymentRequired
 builder:VerifyPayeeRequired
 export:CreateCaptureRequired
 export:CreateConnectBalanceTransferRequired

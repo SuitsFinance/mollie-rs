@@ -17,12 +17,12 @@ Only residuals that block an honest `1.0.0-rc` or are on the critical path are l
 
 | ID | Plan / Linear | Title | Current state | Exit criteria |
 | --- | --- | --- | --- | --- |
-| ENUM-prod | SUI-2337 | Open enums on provider-controlled response fields | `OpenEnum` foundation landed; production enum migration incomplete | Classification + migrations + round-trip tests for provider-controlled enums |
-| NULL-prod | SUI-2339 | Tri-state nullable request fields | `NullableField` foundation landed; priority fields not fully migrated | Exact-body tests omit vs null vs value for dueDate and peers |
-| PM-unify | SUI-2348 | Payment method representation | Multiple surfaces may still diverge | Unified semantics where appropriate; Billink fixtures |
+| ENUM-prod | SUI-2337 | Open enums on provider-controlled response fields | **PARTIAL CLOSED:** `PaymentStatusValue` (`OpenEnum<PaymentStatusKnown>`) + round-trip tests; generated route bodies still use closed `types::PaymentStatus` until generator open-enum support | Expand to other provider-controlled statuses; optional decode adapters on routes |
+| NULL-prod | SUI-2339 | Tri-state nullable request fields | **CLOSED for registry peers:** `CreatePaymentRequired.due_date`, `UpdatePaymentRequired.due_date`, `CreatePayoutRequired.description` + `to_write_json` omit/null/value tests | Keep registry in sync; do not blanket Option fields |
+| PM-unify | SUI-2348 | Payment method representation | **CLOSED for request surface:** single `PaymentMethod` facade incl. Billink fixture/test; payment-link helpers | Watch OpenAPI pin for new methods |
 | SESS-PII | SUI-2350 | Sessions private-beta PII | Maturity-aware work partial | Tier-S does not over-promise; no PII in hooks |
 | TERM-403 | SUI-2351 | Terminal pairing 403 structured error | Needs structured propagation proof | Distinct from 429/5xx/timeout/auth/decode |
-| REQ-sep | SUI-2353 | High-risk request-model separation | Tier-S request contracts CI (6 ops) | No high-risk write reuses broad response entity |
+| REQ-sep | SUI-2353 | High-risk request-model separation | **PARTIAL CLOSED:** Tier-S `to_write_json` allowlisted bodies for payment/payout/update; contracts registry includes `update_payment` + `dueDate` | Generated `PayoutRequest`/`PaymentRequest` types remain dual-shaped; prefer Tier-S builders |
 | PAG-001 | SUI-2328 | Pagination consistency | Streams on key facades; matrix incomplete | Per-domain list_page/stream_*/guard/origin-safe matrix + cycle tests |
 | EX-001 | SUI-2331 | Documented workflow compile-proof | Examples compile in CI; coverage script optional | Required workflows mapped to examples |
 | REL-001 | SUI-2330 | Live assurance harness | Env-gated live readonly + multi-gate sandbox write exist; **not credentialed run** | Evidence paste for readonly + sandbox write; fail-closed credential gates |

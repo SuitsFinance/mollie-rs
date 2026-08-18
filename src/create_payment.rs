@@ -16,7 +16,8 @@ use std::{fmt, str::FromStr};
 use serde_json::{json, Value};
 
 use crate::{
-    types, CustomerId, Locale, MollieError, MollieResult, Money, PaymentMethod, WebhookUrl,
+    types, CustomerId, Locale, MollieError, MollieResult, Money, NullableField, PaymentMethod,
+    WebhookUrl,
 };
 
 /// Absolute maximum length of a payment description (Mollie API).
@@ -293,6 +294,10 @@ pub struct CreatePaymentRequired {
     pub customer_id: Option<String>,
     /// Optional provider metadata.
     pub metadata: Option<Value>,
+    /// Bank-transfer `dueDate` (`YYYY-MM-DD`) with omit / null / value semantics.
+    ///
+    /// See `docs/registries/field-semantics.yaml` (`PaymentRequest.dueDate`).
+    pub due_date: NullableField<String>,
 }
 
 impl CreatePaymentRequired {
@@ -333,6 +338,7 @@ impl CreatePaymentRequired {
             sequence_type: None,
             customer_id: None,
             metadata: None,
+            due_date: NullableField::Omitted,
         })
     }
 
@@ -353,6 +359,7 @@ impl CreatePaymentRequired {
             sequence_type: Some("recurring".to_string()),
             customer_id: None,
             metadata: None,
+            due_date: NullableField::Omitted,
         })
     }
 
@@ -389,6 +396,7 @@ impl CreatePaymentRequired {
             sequence_type: None,
             customer_id: None,
             metadata: None,
+            due_date: NullableField::Omitted,
         })
     }
 
@@ -455,12 +463,43 @@ impl CreatePaymentRequired {
         self
     }
 
+    /// Sets bank-transfer `dueDate` (`YYYY-MM-DD`).
+    ///
+    /// # Errors
+    ///
+    /// Returns [`MollieError::InvalidRequest`] when the date is not `YYYY-MM-DD`.
+    pub fn with_due_date(mut self, value: impl Into<String>) -> MollieResult<Self> {
+        let value = value.into();
+        validate_due_date(&value)?;
+        self.due_date = NullableField::Value(value);
+        Ok(self)
+    }
+
+    /// Sends explicit JSON `null` for `dueDate` (clear on update-style semantics).
+    pub fn clear_due_date(mut self) -> Self {
+        self.due_date = NullableField::Null;
+        self
+    }
+
+    /// Omits `dueDate` from the write body (default).
+    pub fn omit_due_date(mut self) -> Self {
+        self.due_date = NullableField::Omitted;
+        self
+    }
+
     /// Writes the validated fields onto an existing writable create-payment request.
+    ///
+    /// Note: generated [`types::PaymentRequest`] models `dueDate` as
+    /// `Option<String>`, so explicit JSON `null` cannot be represented there.
+    /// Prefer [`Self::to_write_json`] when null must appear on the wire.
     pub fn apply(self, request: &mut types::CreatePaymentRequest) {
         request.description = self.description.into_generated();
         request.amount = self.amount.into_amount();
         request.redirect_url = self.redirect_url.map(RedirectUrl::into_string);
         request.apple_pay_payment_token = self.apple_pay_payment_token;
+        if let NullableField::Value(due_date) = self.due_date {
+            request.due_date = Some(due_date);
+        }
     }
 
     /// Builds a writable generated create-payment request with the required fields set.
@@ -471,10 +510,18 @@ impl CreatePaymentRequired {
             "redirectUrl": self.redirect_url.map(RedirectUrl::into_string),
             "applePayPaymentToken": self.apple_pay_payment_token,
         });
-        serde_json::from_value(value).expect("validated create-payment fields must deserialize")
+        let mut request: types::CreatePaymentRequest = serde_json::from_value(value)
+            .expect("validated create-payment fields must deserialize");
+        if let NullableField::Value(due_date) = self.due_date {
+            request.due_date = Some(due_date);
+        }
+        request
     }
 
     /// Builds the writable generated create-payment request with optional fields.
+    ///
+    /// Explicit `dueDate: null` cannot be represented on the generated type; use
+    /// [`Self::to_write_json`] for INV-NULL-01 exact-body encoding.
     pub fn into_create_payment_request(self) -> MollieResult<types::CreatePaymentRequest> {
         let optional = self.clone();
         let mut value = serde_json::to_value(self.into_payment_request())
@@ -506,6 +553,87 @@ impl CreatePaymentRequired {
         serde_json::from_value(value)
             .map_err(|error| MollieError::invalid_request(error.to_string()))
     }
+
+    /// Canonical write-only JSON body with allowlisted fields and INV-NULL-01
+    /// `dueDate` omit / null / value encoding (REQ-sep).
+    pub fn to_write_json(&self) -> MollieResult<Value> {
+        let mut object = serde_json::Map::new();
+        object.insert(
+            "amount".to_string(),
+            serde_json::to_value(self.amount.clone().into_amount())
+                .map_err(|error| MollieError::invalid_request(error.to_string()))?,
+        );
+        object.insert(
+            "description".to_string(),
+            Value::String(self.description.as_str().to_string()),
+        );
+        if let Some(redirect_url) = self.redirect_url.as_ref() {
+            object.insert(
+                "redirectUrl".to_string(),
+                Value::String(redirect_url.as_str().to_string()),
+            );
+        }
+        if let Some(token) = self.apple_pay_payment_token.as_ref() {
+            object.insert(
+                "applePayPaymentToken".to_string(),
+                Value::String(token.clone()),
+            );
+        }
+        if let Some(value) = self.cancel_url.as_ref() {
+            object.insert(
+                "cancelUrl".to_string(),
+                Value::String(value.as_str().to_string()),
+            );
+        }
+        if let Some(value) = self.customer_id.as_ref() {
+            object.insert("customerId".to_string(), Value::String(value.clone()));
+        }
+        if let Some(value) = self.locale.as_ref() {
+            object.insert("locale".to_string(), Value::String(value.clone()));
+        }
+        if let Some(value) = self.method.as_ref() {
+            object.insert("method".to_string(), Value::String(value.clone()));
+        }
+        if let Some(value) = self.metadata.as_ref() {
+            object.insert("metadata".to_string(), value.clone());
+        }
+        if let Some(value) = self.sequence_type.as_ref() {
+            object.insert("sequenceType".to_string(), Value::String(value.clone()));
+        }
+        if let Some(value) = self.webhook_url.as_ref() {
+            object.insert(
+                "webhookUrl".to_string(),
+                Value::String(value.as_str().to_string()),
+            );
+        }
+        match &self.due_date {
+            NullableField::Omitted => {}
+            NullableField::Null => {
+                object.insert("dueDate".to_string(), Value::Null);
+            }
+            NullableField::Value(value) => {
+                object.insert("dueDate".to_string(), Value::String(value.clone()));
+            }
+        }
+        Ok(Value::Object(object))
+    }
+}
+
+/// Validates Mollie bank-transfer `dueDate` as `YYYY-MM-DD`.
+fn validate_due_date(value: &str) -> MollieResult<()> {
+    let bytes = value.as_bytes();
+    let ok = bytes.len() == 10
+        && bytes[4] == b'-'
+        && bytes[7] == b'-'
+        && bytes[..4].iter().all(u8::is_ascii_digit)
+        && bytes[5..7].iter().all(u8::is_ascii_digit)
+        && bytes[8..].iter().all(u8::is_ascii_digit);
+    if !ok {
+        return Err(MollieError::invalid_request(format!(
+            "dueDate must be YYYY-MM-DD, got `{value}`"
+        )));
+    }
+    Ok(())
 }
 
 #[cfg(test)]
@@ -555,5 +683,42 @@ mod tests {
             CreatePaymentRequired::new_recurring("Sub", Money::new("EUR", "5.00").unwrap())
                 .unwrap();
         assert!(required.redirect_url.is_none());
+    }
+
+    #[test]
+    fn due_date_omit_null_value_write_json() {
+        let base = CreatePaymentRequired::new(
+            "Order #1",
+            Money::new("EUR", "10.00").unwrap(),
+            "https://example.com/return",
+        )
+        .unwrap();
+
+        let omitted = base.clone().to_write_json().unwrap();
+        assert!(omitted.get("dueDate").is_none());
+        assert!(omitted.get("id").is_none());
+        assert!(omitted.get("status").is_none());
+        assert!(omitted.get("amountCaptured").is_none());
+
+        let null_body = base.clone().clear_due_date().to_write_json().unwrap();
+        assert!(null_body.get("dueDate").unwrap().is_null());
+
+        let value_body = base
+            .with_due_date("2026-08-31")
+            .unwrap()
+            .to_write_json()
+            .unwrap();
+        assert_eq!(value_body["dueDate"], "2026-08-31");
+    }
+
+    #[test]
+    fn due_date_rejects_bad_format() {
+        let base = CreatePaymentRequired::new(
+            "Order #1",
+            Money::new("EUR", "10.00").unwrap(),
+            "https://example.com/return",
+        )
+        .unwrap();
+        assert!(base.with_due_date("31-08-2026").is_err());
     }
 }

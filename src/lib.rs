@@ -85,6 +85,7 @@ pub mod operation_safety;
 pub mod pagination;
 pub mod payment_method;
 pub mod phone_number;
+pub mod provider_enums;
 #[cfg(test)]
 mod postman_error_fixtures;
 pub mod response_limits;
@@ -162,6 +163,10 @@ pub use pagination::{
 };
 pub use payment_method::PaymentMethod;
 pub use phone_number::PhoneNumber;
+pub use provider_enums::{
+    parse_payment_status, payment_status_from_generated, payment_status_to_generated,
+    PaymentStatusKnown, PaymentStatusValue,
+};
 pub use response_limits::{ResponseLimits, DEFAULT_MAX_ERROR_BODY_BYTES, DEFAULT_MAX_JSON_BYTES};
 pub use route_capabilities::{
     retry_class_for_operation, route_capability, RouteAccess, RouteCapability, ROUTE_CAPABILITIES,
@@ -180,7 +185,7 @@ pub use write_requests::{
     ConnectBalanceTransferParty, CreateCaptureRequired, CreateConnectBalanceTransferRequired,
     CreatePaymentLinkRequired, CreatePayoutRequired, CreateRefundRequired,
     CreateSepaMandateRequired, CreateSubscriptionRequired, CreateTransferRequired,
-    VerifyPayeeRequired,
+    UpdatePaymentRequired, VerifyPayeeRequired,
 };
 
 /// Re-export of the `tracing` crate for application instrumentation.

@@ -11,6 +11,10 @@
   / TLS floor last-apply). Use `configure_http` for limited customization, or
   `MollieClient::from_generated` / `Client::new_with_client` for full transport
   ownership.
+- **`CreatePayoutRequired.description`** is now `NullableField<String>` (was
+  `Option<String>`) so omit / null / value match Mollie write semantics. Prefer
+  `with_description` / `clear_description` / `omit_description` and
+  `to_write_json` when exact null encoding is required.
 
 ### Security / hardening
 
@@ -21,6 +25,10 @@
 - `with_credential` preserves response body limits.
 - CI `cargo-semver-checks` job is **fail-closed** (no `continue-on-error` / no
   swallowed exit). Tier-S snapshot remains blocking in the contract job.
+- **Provider models (Phase 3):** `CreatePaymentRequired.due_date` and
+  `UpdatePaymentRequired` use `NullableField` with `to_write_json` omit/null/value
+  bodies; `PaymentStatusValue` (`OpenEnum`) preserves unknown payment statuses;
+  Billink covered as first-class `PaymentMethod`.
 
 ### Docs
 
