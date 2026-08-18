@@ -25,8 +25,8 @@ Only residuals that block an honest `1.0.0-rc` or are on the critical path are l
 | REQ-sep | SUI-2353 | High-risk request-model separation | **PARTIAL CLOSED:** Tier-S `to_write_json` allowlisted bodies for payment/payout/update; contracts registry includes `update_payment` + `dueDate` | Generated `PayoutRequest`/`PaymentRequest` types remain dual-shaped; prefer Tier-S builders |
 | PAG-001 | SUI-2328 | Pagination consistency | **CLOSED for HAL list facades:** captures/mandates/subscriptions/terminals gained `stream_pages`/`stream_items` (+ subscriptions `list_all`); matrix + intentional residuals in `docs/rc/pagination-matrix.md`; kernel origin/cycle/stream tests green | Keep matrix green; optional baseurl-threaded cursor parse |
 | EX-001 | SUI-2331 | Documented workflow compile-proof | **CLOSED:** registry `docs/registries/tier-s-workflow-examples.yaml` + gate `scripts/check_workflow_examples.py` (CI contracts); human matrix `docs/rc/workflow-example-matrix.md`; `cargo check --examples --all-features` remains | Keep registry + examples green; regenerate examples via route_examples.py only |
-| REL-001 | SUI-2330 | Live assurance harness | Env-gated live readonly + multi-gate sandbox write exist; **not credentialed run** | Evidence paste for readonly + sandbox write; fail-closed credential gates |
-| HOST-001 | SUI-2332 | Hostile RC soak | Static hostile review PASS; live soak NOT RUN | Transport/financial/credential adversarial evidence |
+| REL-001 | SUI-2330 | Live assurance harness | **PARTIAL CLOSED:** harness + multi-gate + matrix + paste pad `docs/rc/live-assurance-evidence.md`; always-on gate unit tests; **credentialed Tier 1/2 NOT RUN** (no secrets in agent) | Human operator pastes Tier 1 + Tier 2 results into evidence doc before honest RC |
+| HOST-001 | SUI-2332 | Hostile RC soak | **PARTIAL CLOSED:** static review refreshed PASS; transport evidence table; live soak **NOT RUN** | Optional live adversarial soak; residual chaos server still out of scope |
 
 ## P2 — valuable before 1.0
 

@@ -42,6 +42,10 @@
   `scripts/check_workflow_examples.py` (see `docs/rc/workflow-example-matrix.md`).
 - **Tier-S snapshot:** refreshed for captures/mandates/subscriptions/terminals
   stream + `SubscriptionsApi.list_all` surface from Phase 4.
+- **Live assurance docs (Phase 7 / REL-001):** runbook + evidence paste pad in
+  `docs/rc/live-assurance-evidence.md`; hostile review residuals refreshed for
+  builder `http_client` removal and fail-closed semver. Credentialed live tiers
+  remain operator-run (not default CI).
 
 ### Docs
 

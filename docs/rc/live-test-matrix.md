@@ -1,7 +1,8 @@
 # RC live test matrix
 
 **Baseline HEAD:** see [`baseline.md`](baseline.md)  
-**Harness:** `tests/live_smoke.rs`
+**Harness:** `tests/live_smoke.rs`  
+**Evidence paste pad:** [`live-assurance-evidence.md`](live-assurance-evidence.md)
 
 ## Tiers
 
@@ -81,3 +82,14 @@ MOLLIE_API_KEY=test_... \
 
 - `write_gate_rejects_live_api_keys`
 - `classify_auth_and_permission_errors`
+
+## Evidence status
+
+| Tier | Status on hardening branch (no secrets in agent env) |
+| --- | --- |
+| Always-on gates | Required green in CI / local default test |
+| Tier 1 readonly | **NOT RUN** — operator paste required |
+| Tier 2 write | **NOT RUN** — operator paste required |
+| Tier 3 destructive | **NOT RUN** — manual only |
+
+When pasting results, use the templates in [`live-assurance-evidence.md`](live-assurance-evidence.md). Never commit secrets.
