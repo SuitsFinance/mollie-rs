@@ -8,7 +8,9 @@ from typing import Any
 
 
 def to_json(report: dict[str, Any], path: str | Path) -> None:
-    Path(path).write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    out = Path(path)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
 def to_markdown(report: dict[str, Any], path: str | Path) -> None:
@@ -27,4 +29,6 @@ def to_markdown(report: dict[str, Any], path: str | Path) -> None:
             f"| `{c.get('kind')}` | `{c.get('path')}` | {c.get('risk')} | {c.get('blocking')} |"
         )
     lines.append("")
-    Path(path).write_text("\n".join(lines), encoding="utf-8")
+    out = Path(path)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text("\n".join(lines), encoding="utf-8")

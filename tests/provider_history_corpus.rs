@@ -33,8 +33,12 @@ fn balance_transaction_history_fixture_unknown_type_round_trips() {
 }
 
 #[test]
-fn open_enum_max_bound_documented() {
-    assert!(OPEN_ENUM_MAX_RAW_LEN >= 1024);
+fn open_enum_max_bound_enforced_on_parse() {
+    // Behavioral bound (const compare alone is clippy::assertions_on_constants).
+    let ok = "x".repeat(OPEN_ENUM_MAX_RAW_LEN.min(64));
+    assert!(OpenEnum::<DemoTx>::parse_str(&ok).is_ok());
+    let too_long = "x".repeat(OPEN_ENUM_MAX_RAW_LEN.saturating_add(1));
+    assert!(OpenEnum::<DemoTx>::parse_str(&too_long).is_err());
 }
 
 #[test]
