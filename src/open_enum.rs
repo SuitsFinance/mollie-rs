@@ -101,6 +101,9 @@ impl<K: FromStr> OpenEnum<K> {
         let raw = raw.into();
         validate_raw(&raw)?;
         let known = K::from_str(&raw).ok();
+        if known.is_none() {
+            crate::contract_drift::emit_unknown_enum(None, &raw);
+        }
         Ok(Self { raw, known })
     }
 }

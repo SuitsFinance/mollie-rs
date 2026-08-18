@@ -1,4 +1,4 @@
-﻿//! Provider-history corpus smoke tests (INV-CORPUS / Phase 8 seed).
+//! Provider-history corpus smoke tests (INV-CORPUS / Phase 8 seed).
 
 use mollie_rs::{OpenEnum, OPEN_ENUM_MAX_RAW_LEN};
 use std::str::FromStr;
@@ -47,4 +47,43 @@ fn draft_transfer_symbols_absent_from_public_prelude_surface() {
     // Runtime guard: types module path string search is CI-side; here ensure
     // OpenEnum path works as stand-in for corpus wiring.
     let _ = OpenEnum::<DemoTx>::parse_str("payment").unwrap();
+}
+
+#[test]
+fn terminal_pairing_403_fixture_is_structured_forbidden_not_retry_or_auth() {
+    use mollie_rs::{
+        types::{ErrorResponse, ErrorResponseLinks, ErrorResponseLinksDocumentation},
+        MollieError, MollieErrorKey,
+    };
+    use reqwest::StatusCode;
+
+    let raw = include_str!("fixtures/provider_history/terminal_pairing_403.json");
+    let v: serde_json::Value = serde_json::from_str(raw).unwrap();
+    let body = ErrorResponse {
+        detail: v["detail"].as_str().unwrap().to_string(),
+        field: None,
+        links: ErrorResponseLinks {
+            documentation: ErrorResponseLinksDocumentation {
+                href: "https://docs.mollie.com/errors".into(),
+                type_: "text/html".into(),
+            },
+        },
+        status: v["status"].as_u64().unwrap() as i64,
+        title: v["title"].as_str().unwrap().to_string(),
+    };
+    let err = MollieError::api(StatusCode::FORBIDDEN, Default::default(), body);
+    assert_eq!(err.status(), Some(StatusCode::FORBIDDEN));
+    assert_eq!(
+        err.catalog_entry().key(),
+        MollieErrorKey::TerminalPairingForbidden
+    );
+    assert_ne!(err.catalog_entry().key(), MollieErrorKey::RateLimitExceeded);
+    assert_ne!(err.status(), Some(StatusCode::UNAUTHORIZED));
+    assert_ne!(err.status(), Some(StatusCode::TOO_MANY_REQUESTS));
+    // Constructor parity with catalog
+    let known = MollieError::terminal_pairing_forbidden();
+    assert_eq!(
+        known.catalog_entry().key(),
+        MollieErrorKey::TerminalPairingForbidden
+    );
 }

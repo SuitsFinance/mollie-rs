@@ -1,0 +1,326 @@
+# Tier-S workflow → compile-checked example mapping (EX-001 / SUI-2331).
+# Do not hand-edit generated examples/*.rs; regenerate via scripts/route_examples.py.
+# Gate: python scripts/check_workflow_examples.py
+version: 1
+examples_dir: examples
+required_workflows:
+  - id: payments.create
+    title: Create payment
+    tier_s:
+      - facade:PaymentsApi
+      - method:PaymentsApi.create
+      - builder:CreatePaymentRequired
+    examples:
+      - create_payment.rs
+    guides:
+      - docs/guides/payments.md
+
+  - id: payments.get
+    title: Get payment
+    tier_s:
+      - method:PaymentsApi.get
+    examples:
+      - get_payment.rs
+    guides:
+      - docs/guides/payments.md
+
+  - id: payments.list
+    title: List payments (pagination entry)
+    tier_s:
+      - method:PaymentsApi.list_page
+      - method:PaymentsApi.stream_pages
+    examples:
+      - list_payments.rs
+    guides:
+      - docs/guides/pagination.md
+
+  - id: payments.update
+    title: Update payment
+    tier_s:
+      - method:PaymentsApi.update
+      - builder:UpdatePaymentRequired
+    examples:
+      - update_payment.rs
+
+  - id: payments.cancel
+    title: Cancel payment
+    tier_s:
+      - method:PaymentsApi.cancel
+    examples:
+      - cancel_payment.rs
+
+  - id: refunds.create
+    title: Create refund
+    tier_s:
+      - facade:RefundsApi
+      - method:RefundsApi.create
+      - builder:CreateRefundRequired
+    examples:
+      - create_refund.rs
+    guides:
+      - docs/guides/refunds.md
+
+  - id: refunds.get
+    title: Get refund
+    tier_s:
+      - method:RefundsApi.get
+    examples:
+      - get_refund.rs
+
+  - id: refunds.list
+    title: List refunds
+    tier_s:
+      - method:RefundsApi.list_page
+      - method:RefundsApi.stream_items
+    examples:
+      - list_refunds.rs
+      - list_all_refunds.rs
+
+  - id: payouts.create
+    title: Create payout
+    tier_s:
+      - facade:PayoutsApi
+      - method:PayoutsApi.create
+      - builder:CreatePayoutRequired
+    examples:
+      - create_payout.rs
+    guides:
+      - docs/guides/payouts-and-transfers.md
+
+  - id: payouts.get
+    title: Get payout
+    tier_s:
+      - method:PayoutsApi.get
+    examples:
+      - get_payout.rs
+
+  - id: payouts.list
+    title: List payouts
+    tier_s:
+      - method:PayoutsApi.list_page
+      - method:PayoutsApi.stream_pages
+    examples:
+      - list_payouts.rs
+
+  - id: payouts.cancel
+    title: Cancel payout
+    tier_s:
+      - method:PayoutsApi.cancel
+    examples:
+      - cancel_payout.rs
+
+  - id: transfers.create
+    title: Create transfer
+    tier_s:
+      - method:MollieClient.transfers->TransfersApi
+      - builder:CreateTransferRequired
+    examples:
+      - create_transfer.rs
+    guides:
+      - docs/guides/payouts-and-transfers.md
+
+  - id: transfers.get
+    title: Get transfer
+    tier_s:
+      - method:TransfersApi.get
+    examples:
+      - get_transfer.rs
+
+  - id: connect_balance_transfers.create
+    title: Create connect balance transfer
+    tier_s:
+      - facade:ConnectBalanceTransfersApi
+      - method:ConnectBalanceTransfersApi.create
+      - builder:CreateConnectBalanceTransferRequired
+    examples:
+      - create_connect_balance_transfer.rs
+
+  - id: connect_balance_transfers.list
+    title: List connect balance transfers
+    tier_s:
+      - method:ConnectBalanceTransfersApi.stream_pages
+    examples:
+      - list_connect_balance_transfers.rs
+
+  - id: payment_links.create
+    title: Create payment link
+    tier_s:
+      - facade:PaymentLinksApi
+      - method:PaymentLinksApi.create
+      - builder:CreatePaymentLinkRequired
+    examples:
+      - create_payment_link.rs
+
+  - id: payment_links.list
+    title: List payment links
+    tier_s:
+      - method:PaymentLinksApi.stream_items
+    examples:
+      - list_payment_links.rs
+
+  - id: mandates.create
+    title: Create mandate
+    tier_s:
+      - facade:MandatesApi
+      - method:MandatesApi.create
+      - builder:CreateSepaMandateRequired
+    examples:
+      - create_mandate.rs
+
+  - id: mandates.list
+    title: List mandates
+    tier_s:
+      - method:MandatesApi.stream_pages
+    examples:
+      - list_mandates.rs
+
+  - id: mandates.revoke
+    title: Revoke mandate
+    tier_s:
+      - method:MandatesApi.revoke
+    examples:
+      - revoke_mandate.rs
+
+  - id: subscriptions.create
+    title: Create subscription
+    tier_s:
+      - facade:SubscriptionsApi
+      - method:SubscriptionsApi.create
+      - builder:CreateSubscriptionRequired
+    examples:
+      - create_subscription.rs
+
+  - id: subscriptions.list
+    title: List subscriptions
+    tier_s:
+      - method:SubscriptionsApi.list_all
+      - method:SubscriptionsApi.stream_items
+    examples:
+      - list_subscriptions.rs
+      - list_all_subscriptions.rs
+
+  - id: subscriptions.cancel
+    title: Cancel subscription
+    tier_s:
+      - method:SubscriptionsApi.cancel
+    examples:
+      - cancel_subscription.rs
+
+  - id: captures.create
+    title: Create capture
+    tier_s:
+      - facade:CapturesApi
+      - method:CapturesApi.create
+      - builder:CreateCaptureRequired
+    examples:
+      - create_capture.rs
+
+  - id: captures.list
+    title: List captures
+    tier_s:
+      - method:CapturesApi.stream_pages
+    examples:
+      - list_captures.rs
+
+  - id: terminals.get
+    title: Get terminal
+    tier_s:
+      - facade:TerminalsApi
+      - method:TerminalsApi.get
+    examples:
+      - get_terminal.rs
+
+  - id: terminals.list
+    title: List terminals
+    tier_s:
+      - method:TerminalsApi.stream_items
+    examples:
+      - list_terminals.rs
+
+  - id: terminals.pairing
+    title: Terminal pairing codes
+    tier_s:
+      - method:TerminalsApi.request_pairing_code
+      - method:TerminalsApi.list_pairing_codes
+    examples:
+      - terminals_request_pairing_code.rs
+      - terminals_list_pairing_codes.rs
+
+  - id: oauth.tokens
+    title: OAuth token lifecycle
+    tier_s:
+      - facade:OAuthApi
+    examples:
+      - oauth_generate_tokens.rs
+      - oauth_revoke_tokens.rs
+    guides:
+      - docs/guides/oauth-connect.md
+
+  - id: webhooks.create
+    title: Create webhook
+    tier_s:
+      - facade:WebhooksApi
+      - method:WebhooksApi.create
+    examples:
+      - create_webhook.rs
+    guides:
+      - docs/guides/handle-signed-webhook.md
+
+  - id: webhooks.get
+    title: Get webhook
+    tier_s:
+      - method:WebhooksApi.get
+    examples:
+      - get_webhook.rs
+
+  - id: webhooks.list
+    title: List webhooks
+    tier_s:
+      - method:WebhooksApi.list
+    examples:
+      - list_webhooks.rs
+
+  - id: webhooks.test
+    title: Test webhook
+    tier_s:
+      - method:WebhooksApi.test
+    examples:
+      - test_webhook.rs
+
+  - id: sessions.create
+    title: Create session
+    tier_s:
+      - facade:SessionsApi
+      - method:SessionsApi.create
+    examples:
+      - create_session.rs
+
+  - id: sessions.get
+    title: Get session
+    tier_s:
+      - method:SessionsApi.get
+    examples:
+      - get_session.rs
+
+  - id: unmatched_credit_transfers.list
+    title: List unmatched credit transfers
+    tier_s:
+      - facade:UnmatchedCreditTransfersApi
+      - method:UnmatchedCreditTransfersApi.stream_pages
+    examples:
+      - list_unmatched_credit_transfers.rs
+
+  - id: unmatched_credit_transfers.get
+    title: Get unmatched credit transfer
+    tier_s:
+      - method:UnmatchedCreditTransfersApi.get
+    examples:
+      - get_unmatched_credit_transfer.rs
+
+  - id: verify_payee
+    title: Verify payee
+    tier_s:
+      - facade:VerifyPayeeApi
+      - builder:VerifyPayeeRequired
+    examples:
+      - verify_payee.rs

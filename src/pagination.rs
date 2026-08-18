@@ -49,6 +49,8 @@ impl PageCursor {
     pub fn from_list_link_for_base(href: &str, base_url: Option<&str>) -> Option<Self> {
         let url = reqwest::Url::parse(href).ok()?;
         if !list_link_origin_allowed(&url, base_url) {
+            let host = url.host_str().unwrap_or("invalid-host");
+            crate::contract_drift::emit_off_origin_pagination_link(host);
             return None;
         }
         let from = url

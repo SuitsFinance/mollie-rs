@@ -62,6 +62,7 @@ pub mod auth;
 #[cfg(test)]
 mod capabilities_fixture;
 pub mod client;
+pub mod contract_drift;
 pub mod country_code;
 pub mod create_payment;
 pub mod datetime;
@@ -87,6 +88,8 @@ pub mod payment_method;
 pub mod phone_number;
 #[cfg(test)]
 mod postman_error_fixtures;
+pub mod provider_enums;
+pub mod response_limits;
 pub mod route_capabilities;
 /// Application tracing-subscriber helpers (`app-helpers` feature, default on).
 #[cfg(feature = "app-helpers")]
@@ -106,6 +109,11 @@ use reqwest::{Client as ReqwestClient, ClientBuilder as ReqwestClientBuilder};
 pub use address::{Address, POSTAL_CODE_OPTIONAL_COUNTRIES};
 pub use auth::{ApiKey, BasicAuth, Credential, OAuthAccessToken};
 pub use client::{MollieClient, MollieClientBuilder, DEFAULT_BASE_URL};
+pub use contract_drift::{
+    emit_contract_drift, global_contract_drift_observer, set_global_contract_drift_observer,
+    ContractDriftKind, ContractDriftObserver, ContractDriftScopeGuard, ContractDriftSignal,
+    NoopContractDriftObserver, SharedContractDriftObserver, CONTRACT_DRIFT_DETAIL_MAX_LEN,
+};
 pub use country_code::CountryCode;
 pub use create_payment::{
     CreatePaymentRequired, PaymentDescription, RedirectUrl, PAYMENT_DESCRIPTION_MAX_LEN,
@@ -161,6 +169,11 @@ pub use pagination::{
 };
 pub use payment_method::PaymentMethod;
 pub use phone_number::PhoneNumber;
+pub use provider_enums::{
+    parse_payment_status, payment_status_from_generated, payment_status_to_generated,
+    PaymentStatusKnown, PaymentStatusValue,
+};
+pub use response_limits::{ResponseLimits, DEFAULT_MAX_ERROR_BODY_BYTES, DEFAULT_MAX_JSON_BYTES};
 pub use route_capabilities::{
     retry_class_for_operation, route_capability, RouteAccess, RouteCapability, ROUTE_CAPABILITIES,
 };
@@ -178,7 +191,7 @@ pub use write_requests::{
     ConnectBalanceTransferParty, CreateCaptureRequired, CreateConnectBalanceTransferRequired,
     CreatePaymentLinkRequired, CreatePayoutRequired, CreateRefundRequired,
     CreateSepaMandateRequired, CreateSubscriptionRequired, CreateTransferRequired,
-    VerifyPayeeRequired,
+    UpdatePaymentRequired, VerifyPayeeRequired,
 };
 
 /// Re-export of the `tracing` crate for application instrumentation.
@@ -247,12 +260,16 @@ pub struct Client {
     pub(crate) retry_policy: transport::RetryPolicy,
     /// Optional request lifecycle hook (metrics / correlation / test doubles).
     pub(crate) request_hook: Option<hooks::SharedRequestHook>,
+    /// Optional contract-drift observer (unknown enums / off-origin next links).
+    pub(crate) contract_drift_observer: Option<contract_drift::SharedContractDriftObserver>,
     /// Request timeout retained so credential rebuilds can preserve it.
     pub(crate) timeout: std::time::Duration,
     /// Connect timeout retained so credential rebuilds can preserve it.
     pub(crate) connect_timeout: std::time::Duration,
     /// User-Agent string retained for credential rebuilds (no secrets).
     pub(crate) user_agent: Option<String>,
+    /// Maximum buffered response body sizes for JSON and error decoding.
+    pub(crate) response_limits: ResponseLimits,
 }
 
 impl std::fmt::Debug for Client {
@@ -270,9 +287,17 @@ impl std::fmt::Debug for Client {
                 "request_hook",
                 &self.request_hook.as_ref().map(|_| "<hook>"),
             )
+            .field(
+                "contract_drift_observer",
+                &self
+                    .contract_drift_observer
+                    .as_ref()
+                    .map(|_| "<contract_drift_observer>"),
+            )
             .field("timeout", &self.timeout)
             .field("connect_timeout", &self.connect_timeout)
             .field("user_agent", &self.user_agent)
+            .field("response_limits", &self.response_limits)
             .finish_non_exhaustive()
     }
 }
@@ -340,10 +365,12 @@ impl Client {
             profile_id: None,
             retry_policy: transport::RetryPolicy::disabled(),
             request_hook: None,
+            contract_drift_observer: None,
             // Defaults match historical Client::new (15s). Builders override.
             timeout: std::time::Duration::from_secs(15),
             connect_timeout: std::time::Duration::from_secs(15),
             user_agent: None,
+            response_limits: ResponseLimits::default(),
         }
     }
 
@@ -377,6 +404,17 @@ impl Client {
     /// Returns the configured User-Agent, if known.
     pub fn user_agent(&self) -> Option<&str> {
         self.user_agent.as_deref()
+    }
+
+    /// Returns the configured response body limits.
+    pub fn response_limits(&self) -> ResponseLimits {
+        self.response_limits
+    }
+
+    /// Returns a client with custom response body buffering limits.
+    pub fn with_response_limits(mut self, limits: ResponseLimits) -> Self {
+        self.response_limits = limits;
+        self
     }
 
     /// Returns a client with the given retry policy (clones transport settings).
@@ -554,6 +592,20 @@ impl Client {
     /// Returns the configured request hook, if any.
     pub fn request_hook(&self) -> Option<&hooks::SharedRequestHook> {
         self.request_hook.as_ref()
+    }
+
+    /// Attaches a shared contract-drift observer (TEL-001).
+    pub fn with_contract_drift_observer(
+        mut self,
+        observer: contract_drift::SharedContractDriftObserver,
+    ) -> Self {
+        self.contract_drift_observer = Some(observer);
+        self
+    }
+
+    /// Returns the configured contract-drift observer, if any.
+    pub fn contract_drift_observer(&self) -> Option<&contract_drift::SharedContractDriftObserver> {
+        self.contract_drift_observer.as_ref()
     }
 
     /// Rejects sticky test mode for an operation that Mollie exposes only in
@@ -754,6 +806,10 @@ impl Client {
                 profile_id: self.profile_id.clone(),
                 testmode: self.testmode,
             };
+            let _drift_scope = contract_drift::ContractDriftScopeGuard::enter(
+                operation.id(),
+                self.contract_drift_observer.clone(),
+            );
             if let Some(hook) = self.request_hook.as_ref() {
                 hook.before_request(&hook_ctx, &mut request);
             }

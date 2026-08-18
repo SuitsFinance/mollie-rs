@@ -67,6 +67,8 @@ pub enum MollieErrorKey {
     DemoProfileLimitReached,
     /// Demo account profile cannot be edited (HTTP 403).
     DemoProfileNotEditable,
+    /// Terminal pairing not allowed for this credential/account (HTTP 403).
+    TerminalPairingForbidden,
     /// Generic forbidden (HTTP 403 fallback).
     Forbidden,
     /// No entity exists for the given token/id (HTTP 404).
@@ -119,6 +121,7 @@ impl MollieErrorKey {
             Self::AccessTokenProfileRestricted => "ACCESS_TOKEN_PROFILE_RESTRICTED",
             Self::DemoProfileLimitReached => "DEMO_PROFILE_LIMIT_REACHED",
             Self::DemoProfileNotEditable => "DEMO_PROFILE_NOT_EDITABLE",
+            Self::TerminalPairingForbidden => "TERMINAL_PAIRING_FORBIDDEN",
             Self::Forbidden => "FORBIDDEN",
             Self::EntityNotFound => "ENTITY_NOT_FOUND",
             Self::NotFound => "NOT_FOUND",
@@ -201,6 +204,17 @@ impl MollieErrorCatalogEntry {
         code: 40303,
         key: MollieErrorKey::DemoProfileNotEditable,
         message_key: "errors.forbidden.demo_profile_not_editable",
+    };
+
+    /// ## `TERMINAL_PAIRING_FORBIDDEN`
+    /// Terminal pairing not allowed (HTTP 403).
+    /// - `code`: 40304
+    /// - `http_status_code`: 403
+    ///
+    pub const TERMINAL_PAIRING_FORBIDDEN: Self = Self {
+        code: 40304,
+        key: MollieErrorKey::TerminalPairingForbidden,
+        message_key: "errors.forbidden.terminal_pairing",
     };
 
     /// ## `FORBIDDEN`
@@ -484,6 +498,12 @@ impl MollieErrorCatalogEntry {
             }
             if detail.contains("cannot be edited") && detail.contains("demo") {
                 return Self::DEMO_PROFILE_NOT_EDITABLE;
+            }
+            // Provider-history / POS: pairing denied for account or credential.
+            if detail.contains("pairing")
+                || (title.contains("forbidden") && detail.contains("terminal"))
+            {
+                return Self::TERMINAL_PAIRING_FORBIDDEN;
             }
         }
 
@@ -888,6 +908,29 @@ mod tests {
             MollieErrorCatalogEntry::ACCESS_TOKEN_PROFILE_RESTRICTED
         );
         assert_eq!(entry.code(), 40301);
+    }
+
+    #[test]
+    fn classifies_terminal_pairing_forbidden_from_fixture_detail() {
+        let raw = include_str!("../tests/fixtures/provider_history/terminal_pairing_403.json");
+        let v: serde_json::Value = serde_json::from_str(raw).expect("fixture json");
+        let body = types::ErrorResponse {
+            detail: v["detail"].as_str().unwrap().to_string(),
+            field: None,
+            links: sample_links("https://docs.mollie.com/errors"),
+            status: v["status"].as_u64().unwrap() as i64,
+            title: v["title"].as_str().unwrap().to_string(),
+        };
+        let entry = MollieErrorCatalogEntry::classify_api(&body);
+        assert_eq!(entry, MollieErrorCatalogEntry::TERMINAL_PAIRING_FORBIDDEN);
+        assert_eq!(entry.code(), 40304);
+        assert_eq!(entry.key(), MollieErrorKey::TerminalPairingForbidden);
+        assert_ne!(entry, MollieErrorCatalogEntry::RATE_LIMIT_EXCEEDED);
+        assert_ne!(
+            entry,
+            MollieErrorCatalogEntry::ACCESS_TOKEN_PROFILE_RESTRICTED
+        );
+        assert_ne!(entry.key(), MollieErrorKey::Forbidden);
     }
 
     #[test]

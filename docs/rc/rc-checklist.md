@@ -17,7 +17,11 @@ Library release-candidate gates for the **safety-invariant** band. This is not M
 | Mutation discovery | `python scripts/detect_high_risk_operations.py` | PASS |
 | Tier-S request allowlists | `python scripts/check_tier_s_request_contracts.py` | PASS |
 | Tier-S public API snapshot | `python scripts/check_tier_s_public_api.py` | PASS |
+| Tier-S workflow examples | `python scripts/check_workflow_examples.py` | PASS (39 workflows) |
+| Live gate unit tests | `cargo test --test live_smoke -- --exact write_gate…` | PASS |
+| Hostile transport | `cargo test --test http_contract` | PASS (23) |
 | Hostile static review | `docs/rc/hostile-security-review.md` | PASS (static); live NOT RUN |
+| Live Tier 1/2 evidence paste | `docs/rc/live-assurance-evidence.md` | OPEN (no secrets in agent) |
 | Package dry-run | `cargo package` | CI |
 
 ## Band

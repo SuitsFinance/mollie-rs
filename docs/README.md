@@ -52,6 +52,8 @@ Generated — rebuilt by tooling, not by hand (except where noted):
 | [`route-coverage.md`](route-coverage.md) | Client generation |
 | [`route-examples.md`](route-examples.md) | `scripts/check_route_examples.sh` |
 | [`example-support-matrix.md`](example-support-matrix.md) | Examples / `scripts/rebuild_example_support_matrix.py` |
+| [`rc/workflow-example-matrix.md`](rc/workflow-example-matrix.md) | Tier-S workflows → examples; `scripts/check_workflow_examples.py` |
+| [`registries/tier-s-workflow-examples.yaml`](registries/tier-s-workflow-examples.yaml) | Machine source for EX-001 CI gate |
 | [`postman-response-matrix.md`](postman-response-matrix.md) | `scripts/generate_postman_matrix.py` |
 | [`api-drift-report.md`](api-drift-report.md), [`api-drift-report-upstream.md`](api-drift-report-upstream.md) | `scripts/report_api_drift.py` |
 | [`registries/operation-registry.yaml`](registries/operation-registry.yaml) | `scripts/export_operation_registry.py` |

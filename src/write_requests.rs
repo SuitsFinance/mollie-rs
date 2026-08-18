@@ -1,10 +1,10 @@
 //! Validated builders for Mollie write request bodies.
 
-use serde_json::json;
+use serde_json::{json, Value};
 
 use crate::{
-    types, ApplicationFee, Date, MandateId, MollieError, MollieResult, Money, PaymentDescription,
-    WebhookUrl,
+    types, ApplicationFee, Date, MandateId, MollieError, MollieResult, Money, NullableField,
+    PaymentDescription, WebhookUrl,
 };
 
 /// The validated required fields for creating a refund.
@@ -498,8 +498,10 @@ pub struct CreatePayoutRequired {
     pub balance_id: crate::BalanceId,
     /// Optional amount; omit for full available balance (minus reserve).
     pub amount: Option<Money>,
-    /// Optional bank-statement description (max 255).
-    pub description: Option<String>,
+    /// Optional bank-statement description (max 255) with omit / null / value.
+    ///
+    /// See `docs/registries/field-semantics.yaml` (`PayoutRequest.description`).
+    pub description: NullableField<String>,
     /// Optional body `testmode` for organization-level credentials.
     pub testmode: Option<bool>,
 }
@@ -510,7 +512,7 @@ impl CreatePayoutRequired {
         Self {
             balance_id,
             amount: None,
-            description: None,
+            description: NullableField::Omitted,
             testmode: None,
         }
     }
@@ -525,7 +527,7 @@ impl CreatePayoutRequired {
         Self {
             balance_id,
             amount: Some(amount),
-            description: None,
+            description: NullableField::Omitted,
             testmode: None,
         }
     }
@@ -550,8 +552,20 @@ impl CreatePayoutRequired {
                 "payout description must be 1..=255 characters",
             ));
         }
-        self.description = Some(trimmed.to_string());
+        self.description = NullableField::Value(trimmed.to_string());
         Ok(self)
+    }
+
+    /// Sends explicit JSON `null` for `description`.
+    pub fn clear_description(mut self) -> Self {
+        self.description = NullableField::Null;
+        self
+    }
+
+    /// Omits `description` from the write body (default).
+    pub fn omit_description(mut self) -> Self {
+        self.description = NullableField::Omitted;
+        self
     }
 
     /// Sets body-level testmode for organization credentials.
@@ -560,7 +574,45 @@ impl CreatePayoutRequired {
         self
     }
 
+    /// Canonical write-only JSON body (REQ-sep + INV-NULL-01).
+    pub fn to_write_json(&self) -> MollieResult<Value> {
+        let mut object = serde_json::Map::new();
+        object.insert(
+            "balanceId".to_string(),
+            Value::String(self.balance_id.as_str().to_string()),
+        );
+        if let Some(amount) = self.amount.as_ref() {
+            let amount = amount.clone().into_amount();
+            object.insert(
+                "amount".to_string(),
+                json!({
+                    "currency": amount.currency,
+                    "value": amount.value,
+                }),
+            );
+        }
+        match &self.description {
+            NullableField::Omitted => {}
+            NullableField::Null => {
+                object.insert("description".to_string(), Value::Null);
+            }
+            NullableField::Value(description) => {
+                object.insert(
+                    "description".to_string(),
+                    Value::String(description.clone()),
+                );
+            }
+        }
+        if let Some(testmode) = self.testmode {
+            object.insert("testmode".to_string(), Value::Bool(testmode));
+        }
+        Ok(Value::Object(object))
+    }
+
     /// Builds a create-payout body that serializes write fields only.
+    ///
+    /// Explicit `description: null` cannot be represented on the generated
+    /// `Option` field; use [`Self::to_write_json`] for exact null encoding.
     pub fn into_request(self) -> MollieResult<types::PayoutRequest> {
         let mut body: types::EntityPayout = serde_json::from_value(json!({
             "balanceId": self.balance_id.as_str(),
@@ -573,7 +625,7 @@ impl CreatePayoutRequired {
                 value: amount.value,
             })));
         }
-        if let Some(description) = self.description {
+        if let NullableField::Value(description) = self.description {
             body.description = Some(
                 description
                     .parse::<types::EntityPayoutDescription>()
@@ -587,6 +639,196 @@ impl CreatePayoutRequired {
             .map(|value| types::TestmodeCreate::from(Some(value)));
         Ok(types::PayoutRequest(body))
     }
+}
+
+/// Validated fields for `PATCH /payments/{id}` with INV-NULL-01 `dueDate`.
+#[derive(Clone, Debug, Default)]
+pub struct UpdatePaymentRequired {
+    /// Optional new description.
+    pub description: Option<PaymentDescription>,
+    /// Bank-transfer `dueDate` omit / null / value.
+    pub due_date: NullableField<String>,
+    /// Optional redirect URL.
+    pub redirect_url: Option<String>,
+    /// Optional webhook URL.
+    pub webhook_url: Option<String>,
+    /// Optional method restriction / change.
+    pub method: Option<String>,
+    /// Optional metadata replace.
+    pub metadata: Option<Value>,
+    /// Optional body testmode for organization credentials.
+    pub testmode: Option<bool>,
+}
+
+impl UpdatePaymentRequired {
+    /// Empty update body (all fields omitted).
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    /// Sets a validated description.
+    pub fn with_description(mut self, description: impl Into<String>) -> MollieResult<Self> {
+        self.description = Some(PaymentDescription::parse(description)?);
+        Ok(self)
+    }
+
+    /// Sets `dueDate` (`YYYY-MM-DD`).
+    pub fn with_due_date(mut self, value: impl Into<String>) -> MollieResult<Self> {
+        let value = value.into();
+        validate_due_date_yyyy_mm_dd(&value)?;
+        self.due_date = NullableField::Value(value);
+        Ok(self)
+    }
+
+    /// Sends explicit JSON `null` for `dueDate`.
+    pub fn clear_due_date(mut self) -> Self {
+        self.due_date = NullableField::Null;
+        self
+    }
+
+    /// Omits `dueDate` (default).
+    pub fn omit_due_date(mut self) -> Self {
+        self.due_date = NullableField::Omitted;
+        self
+    }
+
+    /// Sets redirect URL (http/https).
+    pub fn with_redirect_url(mut self, value: impl Into<String>) -> MollieResult<Self> {
+        let value = value.into();
+        validate_http_url(&value, "redirectUrl")?;
+        self.redirect_url = Some(value);
+        Ok(self)
+    }
+
+    /// Sets webhook URL.
+    pub fn with_webhook_url(mut self, value: impl Into<String>) -> MollieResult<Self> {
+        self.webhook_url = Some(WebhookUrl::parse(value)?.into_string());
+        Ok(self)
+    }
+
+    /// Sets payment method identifier.
+    pub fn with_method(mut self, value: impl AsRef<str>) -> MollieResult<Self> {
+        crate::PaymentMethod::parse(value.as_ref())?;
+        self.method = Some(value.as_ref().to_string());
+        Ok(self)
+    }
+
+    /// Sets metadata object/value.
+    pub fn with_metadata(mut self, value: Value) -> Self {
+        self.metadata = Some(value);
+        self
+    }
+
+    /// Sets body-level testmode.
+    pub fn with_testmode(mut self, value: bool) -> Self {
+        self.testmode = Some(value);
+        self
+    }
+
+    /// Canonical write-only JSON body with INV-NULL-01 `dueDate`.
+    pub fn to_write_json(&self) -> MollieResult<Value> {
+        let mut object = serde_json::Map::new();
+        if let Some(description) = self.description.as_ref() {
+            object.insert(
+                "description".to_string(),
+                Value::String(description.as_str().to_string()),
+            );
+        }
+        match &self.due_date {
+            NullableField::Omitted => {}
+            NullableField::Null => {
+                object.insert("dueDate".to_string(), Value::Null);
+            }
+            NullableField::Value(value) => {
+                object.insert("dueDate".to_string(), Value::String(value.clone()));
+            }
+        }
+        if let Some(value) = self.redirect_url.as_ref() {
+            object.insert("redirectUrl".to_string(), Value::String(value.clone()));
+        }
+        if let Some(value) = self.webhook_url.as_ref() {
+            object.insert("webhookUrl".to_string(), Value::String(value.clone()));
+        }
+        if let Some(value) = self.method.as_ref() {
+            object.insert("method".to_string(), Value::String(value.clone()));
+        }
+        if let Some(value) = self.metadata.as_ref() {
+            object.insert("metadata".to_string(), value.clone());
+        }
+        if let Some(value) = self.testmode {
+            object.insert("testmode".to_string(), Value::Bool(value));
+        }
+        Ok(Value::Object(object))
+    }
+
+    /// Builds generated update body when null `dueDate` is not required.
+    pub fn into_request(self) -> MollieResult<types::UpdatePaymentBody> {
+        let mut body = types::UpdatePaymentBody::default();
+        if let Some(description) = self.description {
+            body.description = Some(
+                description
+                    .into_string()
+                    .parse::<types::Description>()
+                    .map_err(|error| {
+                        MollieError::invalid_request(format!("update payment description: {error}"))
+                    })?,
+            );
+        }
+        if let NullableField::Value(due_date) = self.due_date {
+            body.due_date = Some(types::DueDate::from(due_date));
+        }
+        if let Some(redirect_url) = self.redirect_url {
+            body.redirect_url = Some(types::RedirectUrl::from(Some(redirect_url)));
+        }
+        if let Some(webhook_url) = self.webhook_url {
+            body.webhook_url = Some(types::WebhookUrl::from(Some(webhook_url)));
+        }
+        if let Some(method) = self.method {
+            let method = crate::PaymentMethod::parse(method)?;
+            body.method = Some(types::MethodRequest::from(method.into_method()));
+        }
+        if let Some(metadata) = self.metadata {
+            body.metadata = Some(types::Metadata::from(metadata));
+        }
+        body.testmode = self.testmode.map(types::TestmodePatch::from);
+        Ok(body)
+    }
+}
+
+fn validate_due_date_yyyy_mm_dd(value: &str) -> MollieResult<()> {
+    let bytes = value.as_bytes();
+    let ok = bytes.len() == 10
+        && bytes[4] == b'-'
+        && bytes[7] == b'-'
+        && bytes[..4].iter().all(u8::is_ascii_digit)
+        && bytes[5..7].iter().all(u8::is_ascii_digit)
+        && bytes[8..].iter().all(u8::is_ascii_digit);
+    if !ok {
+        return Err(MollieError::invalid_request(format!(
+            "dueDate must be YYYY-MM-DD, got `{value}`"
+        )));
+    }
+    Ok(())
+}
+
+fn validate_http_url(value: &str, label: &str) -> MollieResult<()> {
+    let Some((scheme, rest)) = value.split_once("://") else {
+        return Err(MollieError::invalid_request(format!(
+            "invalid {label} `{value}`: expected absolute http(s) URL"
+        )));
+    };
+    let scheme = scheme.to_ascii_lowercase();
+    if scheme != "https" && scheme != "http" {
+        return Err(MollieError::invalid_request(format!(
+            "invalid {label} `{value}`: scheme must be `http` or `https`"
+        )));
+    }
+    if rest.is_empty() || rest.starts_with('/') {
+        return Err(MollieError::invalid_request(format!(
+            "invalid {label} `{value}`: missing host after `{scheme}://`"
+        )));
+    }
+    Ok(())
 }
 
 /// Validated required fields for creating a business-account SEPA transfer.
@@ -918,10 +1160,11 @@ fn validate_interval(value: &str) -> MollieResult<()> {
 #[cfg(test)]
 mod tests {
     use super::{
-        CreateCaptureRequired, CreatePaymentLinkRequired, CreateRefundRequired,
-        CreateSepaMandateRequired, CreateSubscriptionRequired,
+        CreateCaptureRequired, CreatePaymentLinkRequired, CreatePayoutRequired,
+        CreateRefundRequired, CreateSepaMandateRequired, CreateSubscriptionRequired,
+        UpdatePaymentRequired,
     };
-    use crate::{types, ApplicationFee, Money, WebhookUrl};
+    use crate::{types, ApplicationFee, BalanceId, Money, NullableField, WebhookUrl};
 
     #[test]
     /// Ensures refund builders do not accept response-owned fields.
@@ -1100,5 +1343,54 @@ mod tests {
             .with_redirect_url("ftp://example.com/x")
             .unwrap_err();
         assert!(error.to_string().contains("http"));
+    }
+
+    #[test]
+    fn payout_description_omit_null_value_write_json() {
+        let balance = BalanceId::parse("bal_gVMhHKqSSRYJyPsuoPNFH").unwrap();
+        let base = CreatePayoutRequired::full_balance(balance);
+
+        let omitted = base.to_write_json().unwrap();
+        assert_eq!(omitted["balanceId"], "bal_gVMhHKqSSRYJyPsuoPNFH");
+        assert!(omitted.get("description").is_none());
+        assert!(omitted.get("id").is_none());
+        assert!(omitted.get("status").is_none());
+        assert!(omitted.get("createdAt").is_none());
+        assert!(omitted.get("_links").is_none());
+
+        let null_body = base.clone().clear_description().to_write_json().unwrap();
+        assert!(null_body.get("description").unwrap().is_null());
+        assert_eq!(base.description, NullableField::Omitted);
+
+        let value_body = base
+            .clone()
+            .with_description("Weekly payout")
+            .unwrap()
+            .to_write_json()
+            .unwrap();
+        assert_eq!(value_body["description"], "Weekly payout");
+    }
+
+    #[test]
+    fn update_payment_due_date_tri_state() {
+        let omitted = UpdatePaymentRequired::new().to_write_json().unwrap();
+        assert_eq!(omitted, serde_json::json!({}));
+
+        let null_body = UpdatePaymentRequired::new()
+            .clear_due_date()
+            .to_write_json()
+            .unwrap();
+        assert!(null_body.get("dueDate").unwrap().is_null());
+
+        let value_body = UpdatePaymentRequired::new()
+            .with_due_date("2026-09-01")
+            .unwrap()
+            .with_description("Updated")
+            .unwrap()
+            .to_write_json()
+            .unwrap();
+        assert_eq!(value_body["dueDate"], "2026-09-01");
+        assert_eq!(value_body["description"], "Updated");
+        assert!(value_body.get("status").is_none());
     }
 }

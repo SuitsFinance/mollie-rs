@@ -6,18 +6,24 @@ PaymentRequest.dueDate:
   nullable: true
   null_equals_omitted: false
   rust: NullableField
+  tier_s_builder: CreatePaymentRequired.due_date
+  wire_helper: CreatePaymentRequired::to_write_json
 
 UpdatePaymentRequestBody.dueDate:
   required: false
   nullable: true
   null_equals_omitted: false
   rust: NullableField
+  tier_s_builder: UpdatePaymentRequired.due_date
+  wire_helper: UpdatePaymentRequired::to_write_json
 
 PayoutRequest.description:
   required: false
   nullable: true
   null_equals_omitted: false
   rust: NullableField
+  tier_s_builder: CreatePayoutRequired.description
+  wire_helper: CreatePayoutRequired::to_write_json
 
 EntityOrganization.registrationNumber:
   required: false

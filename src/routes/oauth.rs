@@ -31,7 +31,14 @@ impl Client {
         let response = self
             .send(request, routes::Operation::OauthGenerateTokens)
             .await?;
-        routes::response::json(response, &[200u16], &[429u16], &resolved_idempotency_key).await
+        routes::response::json(
+            response,
+            &[200u16],
+            &[429u16],
+            &resolved_idempotency_key,
+            self.response_limits(),
+        )
+        .await
     }
 
     /// Revoke an OAuth access or refresh token using client credentials (Basic auth).
@@ -59,6 +66,13 @@ impl Client {
         let response = self
             .send(request, routes::Operation::OauthRevokeTokens)
             .await?;
-        routes::response::json(response, &[204u16], &[429u16], &resolved_idempotency_key).await
+        routes::response::json(
+            response,
+            &[204u16],
+            &[429u16],
+            &resolved_idempotency_key,
+            self.response_limits(),
+        )
+        .await
     }
 }

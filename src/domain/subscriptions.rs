@@ -1,13 +1,21 @@
 //! Subscription-domain facade for customer-scoped subscriptions.
 #![warn(missing_docs)]
 
-use crate::domain::common::{client_with_key, next_cursor_from_links, validate_page_limit};
-use crate::pagination::{Page, PageCursor};
+use std::future::Future;
+use std::pin::Pin;
+
+use crate::domain::common::{
+    client_with_key, next_cursor_from_links, stream_items, stream_pages, validate_page_limit,
+};
+use crate::pagination::{AsyncPaginator, ItemStream, Page, PageCursor, PaginationGuard};
 use crate::types::{self, ListSubscriptionsResponse, SubscriptionResponse};
 use crate::{
     CreateSubscriptionRequired, CustomerId, IdempotencyKey, IntoMollieFuture, MollieClient,
     MollieResponse, MollieResult, ResponseEnvelope, SubscriptionId,
 };
+
+type SubscriptionPageFut =
+    Pin<Box<dyn Future<Output = MollieResult<Page<types::ListSubscriptionResponse>>> + Send>>;
 
 /// Subscription operations scoped to a [`MollieClient`].
 #[derive(Debug)]
@@ -112,6 +120,76 @@ impl SubscriptionsApi<'_> {
             .into_mollie_result()
             .await?;
         Ok(page_from_list_subscriptions(envelope))
+    }
+
+    /// Lists all subscriptions for a customer within [`PaginationGuard`] budgets.
+    pub async fn list_all(
+        &self,
+        customer_id: &CustomerId,
+        limit: Option<u32>,
+        mut guard: PaginationGuard,
+    ) -> MollieResult<Vec<types::ListSubscriptionResponse>> {
+        let mut items = Vec::new();
+        let mut cursor: Option<PageCursor> = None;
+        loop {
+            let page = self.list_page(customer_id, cursor.as_ref(), limit).await?;
+            guard.observe_page(&page)?;
+            let next = page.next.clone();
+            items.extend(page.items);
+            match next {
+                Some(next) => cursor = Some(next),
+                None => break,
+            }
+        }
+        Ok(items)
+    }
+
+    /// Streams subscription pages for a customer within [`PaginationGuard`] budgets.
+    pub fn stream_pages(
+        &self,
+        customer_id: &CustomerId,
+        limit: Option<u32>,
+        guard: PaginationGuard,
+    ) -> AsyncPaginator<
+        impl FnMut(Option<PageCursor>) -> SubscriptionPageFut,
+        types::ListSubscriptionResponse,
+    > {
+        let client = self.client.clone();
+        let customer = customer_id.clone();
+        stream_pages(guard, move |cursor| -> SubscriptionPageFut {
+            let client = client.clone();
+            let customer = customer.clone();
+            Box::pin(async move {
+                let _ = validate_page_limit(limit)?;
+                SubscriptionsApi { client: &client }
+                    .list_page(&customer, cursor.as_ref(), limit)
+                    .await
+            })
+        })
+    }
+
+    /// Streams subscription items for a customer within [`PaginationGuard`] budgets.
+    pub fn stream_items(
+        &self,
+        customer_id: &CustomerId,
+        limit: Option<u32>,
+        guard: PaginationGuard,
+    ) -> ItemStream<
+        impl FnMut(Option<PageCursor>) -> SubscriptionPageFut,
+        types::ListSubscriptionResponse,
+    > {
+        let client = self.client.clone();
+        let customer = customer_id.clone();
+        stream_items(guard, move |cursor| -> SubscriptionPageFut {
+            let client = client.clone();
+            let customer = customer.clone();
+            Box::pin(async move {
+                let _ = validate_page_limit(limit)?;
+                SubscriptionsApi { client: &client }
+                    .list_page(&customer, cursor.as_ref(), limit)
+                    .await
+            })
+        })
     }
 }
 

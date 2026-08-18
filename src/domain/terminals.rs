@@ -4,8 +4,13 @@
 //! and never auto-retry pairing churn.
 #![warn(missing_docs)]
 
-use crate::domain::common::{client_with_key, next_cursor_from_links, validate_page_limit};
-use crate::pagination::{Page, PageCursor, PaginationGuard};
+use std::future::Future;
+use std::pin::Pin;
+
+use crate::domain::common::{
+    client_with_key, next_cursor_from_links, stream_items, stream_pages, validate_page_limit,
+};
+use crate::pagination::{AsyncPaginator, ItemStream, Page, PageCursor, PaginationGuard};
 use crate::types::{
     self, EntityPairingCode, EntityTerminal, ListTerminalsResponse,
     TerminalsListPairingCodesResponse, TerminalsRequestPairingCodeBody,
@@ -14,6 +19,9 @@ use crate::{
     IdempotencyKey, IntoMollieFuture, MollieClient, MollieError, MollieResponse, MollieResult,
     ResponseEnvelope,
 };
+
+type TerminalPageFut =
+    Pin<Box<dyn Future<Output = MollieResult<Page<types::ListEntityTerminal>>> + Send>>;
 
 /// Terminal and pairing-code operations scoped to a [`MollieClient`].
 #[derive(Debug)]
@@ -64,6 +72,44 @@ impl TerminalsApi<'_> {
             }
         }
         Ok(items)
+    }
+
+    /// Streams terminal pages within [`PaginationGuard`] budgets.
+    pub fn stream_pages(
+        &self,
+        limit: Option<u32>,
+        guard: PaginationGuard,
+    ) -> AsyncPaginator<impl FnMut(Option<PageCursor>) -> TerminalPageFut, types::ListEntityTerminal>
+    {
+        let client = self.client.clone();
+        stream_pages(guard, move |cursor| -> TerminalPageFut {
+            let client = client.clone();
+            Box::pin(async move {
+                let _ = validate_page_limit(limit)?;
+                TerminalsApi { client: &client }
+                    .list_page(cursor.as_ref(), limit)
+                    .await
+            })
+        })
+    }
+
+    /// Streams terminal items within [`PaginationGuard`] budgets.
+    pub fn stream_items(
+        &self,
+        limit: Option<u32>,
+        guard: PaginationGuard,
+    ) -> ItemStream<impl FnMut(Option<PageCursor>) -> TerminalPageFut, types::ListEntityTerminal>
+    {
+        let client = self.client.clone();
+        stream_items(guard, move |cursor| -> TerminalPageFut {
+            let client = client.clone();
+            Box::pin(async move {
+                let _ = validate_page_limit(limit)?;
+                TerminalsApi { client: &client }
+                    .list_page(cursor.as_ref(), limit)
+                    .await
+            })
+        })
     }
 
     /// Fetches a terminal by id (`term_…`).

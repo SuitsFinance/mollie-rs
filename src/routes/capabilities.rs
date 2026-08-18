@@ -45,6 +45,13 @@ impl Client {
         let response = self
             .send(request, routes::Operation::ListCapabilities)
             .await?;
-        routes::response::json(response, &[200u16], &[429u16], &resolved_idempotency_key).await
+        routes::response::json(
+            response,
+            &[200u16],
+            &[429u16],
+            &resolved_idempotency_key,
+            self.response_limits(),
+        )
+        .await
     }
 }

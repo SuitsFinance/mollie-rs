@@ -2,13 +2,65 @@
 
 ## [Unreleased]
 
+## [0.8.0] (unreleased)
+
+### Breaking
+
+- **Removed `MollieClientBuilder::http_client`.** Callers can no longer inject a
+  prebuilt `reqwest::Client` on the safe builder path (it bypassed redirect-none
+  / TLS floor last-apply). Use `configure_http` for limited customization, or
+  `MollieClient::from_generated` / `Client::new_with_client` for full transport
+  ownership.
+- **`CreatePayoutRequired.description`** is now `NullableField<String>` (was
+  `Option<String>`) so omit / null / value match Mollie write semantics. Prefer
+  `with_description` / `clear_description` / `omit_description` and
+  `to_write_json` when exact null encoding is required.
+
+### Security / hardening
+
+- **`ResponseLimits`:** configurable ceilings for success JSON (default 8 MiB)
+  and provider error bodies (default 64 KiB) on all generated route decode paths.
+- Builder always last-applies redirect-none, TLS 1.2+, auth/UA headers, and
+  timeouts after `configure_http`.
+- `with_credential` preserves response body limits.
+- CI `cargo-semver-checks` job is **fail-closed** (no `continue-on-error` / no
+  swallowed exit). Tier-S snapshot remains blocking in the contract job.
+- **Provider models (Phase 3):** `CreatePaymentRequired.due_date` and
+  `UpdatePaymentRequired` use `NullableField` with `to_write_json` omit/null/value
+  bodies; `PaymentStatusValue` (`OpenEnum`) preserves unknown payment statuses;
+  Billink covered as first-class `PaymentMethod`.
+- **Pagination consistency (Phase 4):** `stream_pages` / `stream_items` on
+  captures, mandates, subscriptions, and terminals; subscriptions `list_all`;
+  matrix in `docs/rc/pagination-matrix.md`.
+- **Contract drift telemetry (Phase 5 / TEL-001):** opt-in
+  `ContractDriftObserver` (client or global) with redacted
+  `ContractDriftSignal`s for unknown open-enum values and off-origin
+  pagination links; observer panics are isolated from the request path.
+- **Workflow example matrix (Phase 6 / EX-001):** Tier-S money-path workflows
+  mapped to compile-checked `examples/*.rs` via
+  `docs/registries/tier-s-workflow-examples.yaml` and CI gate
+  `scripts/check_workflow_examples.py` (see `docs/rc/workflow-example-matrix.md`).
+- **Tier-S snapshot:** refreshed for captures/mandates/subscriptions/terminals
+  stream + `SubscriptionsApi.list_all` surface from Phase 4.
+- **Live assurance docs (Phase 7 / REL-001):** runbook + evidence paste pad in
+  `docs/rc/live-assurance-evidence.md`; hostile review residuals refreshed for
+  builder `http_client` removal and fail-closed semver. Credentialed live tiers
+  remain operator-run (not default CI).
+- **Terminal pairing 403 (TERM-403):** catalog key
+  `TERMINAL_PAIRING_FORBIDDEN` (40304) and `MollieError::terminal_pairing_forbidden`,
+  classified from pairing-denied provider bodies (fixture-backed).
+- **Transport proxy policy (HTTP-003):** builder Debug does not leak
+  `configure_http` proxy userinfo; `no_proxy` configure path covered by tests.
+
 ### Docs
 
+- RC baseline pack under `docs/rc/` (baseline, residuals, acceptance matrix,
+  transport security policy).
+- `docs/API-STABILITY.md`: explicit Tier-S vs Tier-G vs Kernel policy and gate map.
 - **Sales Invoices provider maturity (SUI-2369):** record `sales_invoices_api` as
   GA in `docs/registries/provider-maturity.yaml`; project `provider_maturity`
-  onto `docs/registries/operation-registry.yaml`; document provider maturity in
-  `docs/API-STABILITY.md`. Tier coverage stays Generated only (no API shape
-  change).
+  onto `docs/registries/operation-registry.yaml`. Tier coverage stays Generated
+  only (no API shape change).
 
 ## [0.7.1] (2026-08-12)
 
