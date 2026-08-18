@@ -626,9 +626,13 @@ impl CreatePayoutRequired {
             })));
         }
         if let NullableField::Value(description) = self.description {
-            body.description = Some(description.parse::<types::EntityPayoutDescription>().map_err(
-                |error| MollieError::invalid_request(format!("payout description: {error}")),
-            )?);
+            body.description = Some(
+                description
+                    .parse::<types::EntityPayoutDescription>()
+                    .map_err(|error| {
+                        MollieError::invalid_request(format!("payout description: {error}"))
+                    })?,
+            );
         }
         body.testmode = self
             .testmode

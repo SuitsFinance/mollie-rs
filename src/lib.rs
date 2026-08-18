@@ -86,9 +86,9 @@ pub mod operation_safety;
 pub mod pagination;
 pub mod payment_method;
 pub mod phone_number;
-pub mod provider_enums;
 #[cfg(test)]
 mod postman_error_fixtures;
+pub mod provider_enums;
 pub mod response_limits;
 pub mod route_capabilities;
 /// Application tracing-subscriber helpers (`app-helpers` feature, default on).
@@ -604,9 +604,7 @@ impl Client {
     }
 
     /// Returns the configured contract-drift observer, if any.
-    pub fn contract_drift_observer(
-        &self,
-    ) -> Option<&contract_drift::SharedContractDriftObserver> {
+    pub fn contract_drift_observer(&self) -> Option<&contract_drift::SharedContractDriftObserver> {
         self.contract_drift_observer.as_ref()
     }
 

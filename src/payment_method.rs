@@ -419,7 +419,10 @@ mod tests {
 
     #[test]
     fn billink_is_first_class_supported_method() {
-        assert_eq!(PaymentMethod::parse("billink").unwrap(), PaymentMethod::BILLINK);
+        assert_eq!(
+            PaymentMethod::parse("billink").unwrap(),
+            PaymentMethod::BILLINK
+        );
         assert_eq!(PaymentMethod::BILLINK.as_str(), "billink");
         assert!(PaymentMethod::SUPPORTED.contains(&PaymentMethod::BILLINK));
         let method: types::Method = PaymentMethod::BILLINK.into_method();

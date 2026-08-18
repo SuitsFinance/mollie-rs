@@ -98,10 +98,7 @@ pub struct ContractDriftScopeGuard {
 
 impl ContractDriftScopeGuard {
     /// Installs operation + optional client observer for the duration of a request.
-    pub fn enter(
-        operation: &'static str,
-        observer: Option<SharedContractDriftObserver>,
-    ) -> Self {
+    pub fn enter(operation: &'static str, observer: Option<SharedContractDriftObserver>) -> Self {
         let previous = REQUEST_SCOPE.with(|cell| {
             let mut scope = cell.borrow_mut();
             let prev = scope.clone();

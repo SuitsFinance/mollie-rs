@@ -355,11 +355,12 @@ impl MollieClient {
     }
 
     /// Attaches a contract-drift observer (unknown enums, off-origin next links).
-    pub fn with_contract_drift_observer(self, observer: impl ContractDriftObserver + 'static) -> Self {
+    pub fn with_contract_drift_observer(
+        self,
+        observer: impl ContractDriftObserver + 'static,
+    ) -> Self {
         Self {
-            inner: self
-                .inner
-                .with_contract_drift_observer(Arc::new(observer)),
+            inner: self.inner.with_contract_drift_observer(Arc::new(observer)),
         }
     }
 
@@ -686,16 +687,16 @@ impl MollieClientBuilder {
     }
 
     /// Attaches a contract-drift observer (TEL-001).
-    pub fn contract_drift_observer(mut self, observer: impl ContractDriftObserver + 'static) -> Self {
+    pub fn contract_drift_observer(
+        mut self,
+        observer: impl ContractDriftObserver + 'static,
+    ) -> Self {
         self.contract_drift_observer = Some(Arc::new(observer));
         self
     }
 
     /// Attaches a shared contract-drift observer.
-    pub fn shared_contract_drift_observer(
-        mut self,
-        observer: SharedContractDriftObserver,
-    ) -> Self {
+    pub fn shared_contract_drift_observer(mut self, observer: SharedContractDriftObserver) -> Self {
         self.contract_drift_observer = Some(observer);
         self
     }
@@ -1069,11 +1070,9 @@ mod tests {
                     Credential::api_key("test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
                         .expect("api key should be valid"),
                 )
-                .configure_http(move |b| {
-                    match reqwest::Proxy::all(proxy_url.as_str()) {
-                        Ok(p) => b.proxy(p),
-                        Err(_) => b,
-                    }
+                .configure_http(move |b| match reqwest::Proxy::all(proxy_url.as_str()) {
+                    Ok(p) => b.proxy(p),
+                    Err(_) => b,
                 });
             let dbg = format!("{builder:?}");
             assert!(
@@ -1089,7 +1088,9 @@ mod tests {
                 "Debug should only note that configure_http was set"
             );
             // Build still succeeds with a loopback proxy target (no network required to construct).
-            builder.build().expect("client with proxy configure should build");
+            builder
+                .build()
+                .expect("client with proxy configure should build");
         }
 
         #[test]

@@ -1,4 +1,4 @@
-﻿//! Provider-history corpus smoke tests (INV-CORPUS / Phase 8 seed).
+//! Provider-history corpus smoke tests (INV-CORPUS / Phase 8 seed).
 
 use mollie_rs::{OpenEnum, OPEN_ENUM_MAX_RAW_LEN};
 use std::str::FromStr;
@@ -82,5 +82,8 @@ fn terminal_pairing_403_fixture_is_structured_forbidden_not_retry_or_auth() {
     assert_ne!(err.status(), Some(StatusCode::TOO_MANY_REQUESTS));
     // Constructor parity with catalog
     let known = MollieError::terminal_pairing_forbidden();
-    assert_eq!(known.catalog_entry().key(), MollieErrorKey::TerminalPairingForbidden);
+    assert_eq!(
+        known.catalog_entry().key(),
+        MollieErrorKey::TerminalPairingForbidden
+    );
 }
