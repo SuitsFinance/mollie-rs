@@ -1,4 +1,5 @@
-﻿# Informational canary: official Mollie SDK release tags (not codegen sources).
+# Informational canary for official Mollie SDK release tags.
+# This does not participate in code generation or block releases.
 name: Upstream SDK canary
 
 on:
@@ -6,43 +7,100 @@ on:
     - cron: "0 6 * * 1"
   workflow_dispatch:
 
+permissions:
+  contents: read
+
+concurrency:
+  group: upstream-sdk-canary
+  cancel-in-progress: true
+
 jobs:
   canary:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
       - uses: actions/checkout@v7
+
       - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
-      - name: Probe latest release tags (informational)
+
+      - name: Probe official SDK release tags
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
+
           mkdir -p docs/generated
+
           python - <<'PY'
-          import json, urllib.request
+          import json
+          import os
+          import urllib.error
+          import urllib.request
           from datetime import datetime, timezone
+
           repos = [
-            "mollie/mollie-api-node",
-            "mollie/mollie-api-golang",
-            "mollie/mollie-api-python",
-            "mollie/mollie-api-java",
-            "mollie/mollie-api-csharp",
-            "mollie/mollie-api-php",
+              "mollie/mollie-api-node",
+              "mollie/mollie-api-golang",
+              "mollie/mollie-api-python",
+              "mollie/mollie-api-java",
+              "mollie/mollie-api-csharp",
+              "mollie/mollie-api-php",
           ]
-          out = {"generated_at": datetime.now(timezone.utc).isoformat(), "sdks": {}}
+
+          headers = {
+              "Accept": "application/vnd.github+json",
+              "User-Agent": "mollie-rs-upstream-canary",
+              "X-GitHub-Api-Version": "2022-11-28",
+          }
+
+          token = os.environ.get("GITHUB_TOKEN")
+          if token:
+              headers["Authorization"] = f"Bearer {token}"
+
+          out = {
+              "schema_version": 1,
+              "generated_at": datetime.now(timezone.utc).isoformat(),
+              "informational_only": True,
+              "sdks": {},
+          }
+
           for repo in repos:
               url = f"https://api.github.com/repos/{repo}/releases/latest"
+              req = urllib.request.Request(url, headers=headers)
+
               try:
-                  req = urllib.request.Request(url, headers={"Accept": "application/vnd.github+json", "User-Agent": "mollie-rs-canary"})
                   with urllib.request.urlopen(req, timeout=30) as resp:
                       data = json.load(resp)
-                  out["sdks"][repo] = {"tag": data.get("tag_name"), "published_at": data.get("published_at"), "html_url": data.get("html_url")}
+
+                  out["sdks"][repo] = {
+                      "tag": data.get("tag_name"),
+                      "published_at": data.get("published_at"),
+                      "html_url": data.get("html_url"),
+                  }
+              except urllib.error.HTTPError as exc:
+                  out["sdks"][repo] = {
+                      "error": f"HTTP {exc.code}: {exc.reason}"
+                  }
               except Exception as exc:
-                  out["sdks"][repo] = {"error": str(exc)}
+                  out["sdks"][repo] = {
+                      "error": f"{type(exc).__name__}: {exc}"
+                  }
+
           path = "docs/generated/upstream-canary.json"
+
           with open(path, "w", encoding="utf-8") as f:
               json.dump(out, f, indent=2, sort_keys=True)
               f.write("\n")
-          print(json.dumps(out, indent=2))
+
+          print(json.dumps(out, indent=2, sort_keys=True))
           PY
-        continue-on-error: true
+
+      - name: Upload canary snapshot
+        uses: actions/upload-artifact@v6
+        with:
+          name: upstream-sdk-canary
+          path: docs/generated/upstream-canary.json
+          retention-days: 30
