@@ -1,7 +1,7 @@
 # Mollie-rs production assessment (current)
 
 **Repository:** SuitsFinance/mollie-rs  
-**Version:** **0.7.0**  
+**Version:** **0.8.0**  
 **Authoritative readiness:** [`docs/release-readiness.md`](release-readiness.md)  
 **MSRV:** 1.88  
 

@@ -1,4 +1,4 @@
- Mollie API Rust SDK
+# Mollie API Rust SDK
 
 [![CI](https://github.com/SuitsFinance/mollie-rs/actions/workflows/ci.yml/badge.svg)](https://github.com/SuitsFinance/mollie-rs/actions/workflows/ci.yml)
 [![crates.io](https://img.shields.io/crates/v/mollie-rs.svg)](https://crates.io/crates/mollie-rs)
@@ -6,9 +6,9 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![MSRV](https://img.shields.io/badge/MSRV-1.88-orange.svg)](docs/compatibility.md)
 
-**Version:** `0.7.1` · **MSRV:** `1.88`
+**Version:** `0.8.0` · **MSRV:** `1.88`
 
-Typed Rust SDK for the Mollie API. Built and maintained by **Suits Finance B.V.**
+Typed async Rust SDK for the [Mollie payments API](https://docs.mollie.com/) — validated domain facades plus **124** generated route methods. Built and maintained by **Suits Finance B.V.**
 
 > **Unofficial community SDK.** This project is owned and maintained by Suits Finance B.V. It is not affiliated with, endorsed by, or supported by Mollie B.V. “Mollie” is a trademark of Mollie B.V., used here only to describe API compatibility. For official product documentation see [docs.mollie.com](https://docs.mollie.com/).
 
@@ -31,17 +31,17 @@ Read [`docs/release-readiness.md`](docs/release-readiness.md) and [`docs/audits/
 
 ```toml
 [dependencies]
-mollie-rs = "0.7"
+mollie-rs = "0.8"
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
 ```
 
 Default features include `app-helpers` (`.env` loading via `dotenvy` and `init_tracing` via `tracing-subscriber`). Library embeddings that must not load `.env` or install a global subscriber:
 
 ```toml
-mollie-rs = { version = "0.7", default-features = false }
+mollie-rs = { version = "0.8", default-features = false }
 ```
 
-### Production features (0.7)
+### Production features (0.8)
 
 - **Retries:** disabled by default; enable with `RetryPolicy::default_safe()` (reads + sticky-key writes only).
 - **Idempotency:** prefer `IdempotencyKey` on facade `create` methods; avoid long-lived sticky keys.
