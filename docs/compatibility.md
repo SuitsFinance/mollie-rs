@@ -6,8 +6,8 @@
 
 | Field | Current |
 | ----- | ------- |
-| Crate version | `0.7.0` |
-| Install example | `mollie-rs = "0.7"` |
+| Crate version | `0.8.0` |
+| Install example | `mollie-rs = "0.8"` |
 | MSRV (`package.rust-version`) | **1.88** |
 | Default toolchain pin | `rust-toolchain.toml` → `1.88.0` |
 
@@ -54,7 +54,7 @@ Examples: `RetryPolicy`, paginators, Next-gen webhook verifiers, route capabilit
 Library embeddings that must not load `.env` or install a global subscriber:
 
 ```toml
-mollie-rs = { version = "0.7", default-features = false }
+mollie-rs = { version = "0.8", default-features = false }
 ```
 
 `tracing` spans/events remain available; only the **subscriber installer** is feature-gated.
@@ -62,7 +62,7 @@ mollie-rs = { version = "0.7", default-features = false }
 Enable credential zeroization when secrets must not linger in process memory:
 
 ```toml
-mollie-rs = { version = "0.7", features = ["zeroize"] }
+mollie-rs = { version = "0.8", features = ["zeroize"] }
 ```
 
 ## Generated vs provider specification

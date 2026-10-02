@@ -31,7 +31,7 @@ Mollie API
 | Item | Value | Evidence |
 | --- | --- | --- |
 | HEAD | `c4e909131a3797c69309c017661628b3a92700d5` | `git rev-parse HEAD` |
-| Crate | `mollie-rs` `0.7.1` | `Cargo.toml` |
+| Crate | `mollie-rs` `0.8.0` | `Cargo.toml` |
 | MSRV | `1.88` | `Cargo.toml` `rust-version` |
 | Upstream OpenAPI pin SHA-256 | `0cbba39eed3c1b5ddd6cb815170a106a0877d45d22403364dfb4d8c18d99e993` | `specs/upstream-pin.toml` |
 | Upstream pin date | 2026-08-18 | `specs/upstream-pin.toml` |

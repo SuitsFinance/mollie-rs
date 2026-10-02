@@ -1,6 +1,7 @@
 # Production checklist (mollie-rs)
 
-**Crate version:** 0.7.0
+**Crate version:** 0.8.0
+
 Use this checklist when shipping a Mollie integration that depends on `mollie-rs`.
 
 ## Three readiness levels
@@ -64,7 +65,7 @@ Passing unit tests does **not** imply levels 2 or 3.
 
 ## Known gaps (honest)
 
-As of 0.7.0:
+As of 0.8.0:
 
 - Local OpenAPI pin and the official contract both contain **124** operations.
 - Domain facades cover payments, refunds, captures, subscriptions, mandates, payment links, webhooks, payouts, transfers, OAuth, sessions, terminals, verify-payee, and unmatched credit transfers. Business-account and remaining Connect BA convenience surfaces remain generated (Tier G) without dedicated facades.
