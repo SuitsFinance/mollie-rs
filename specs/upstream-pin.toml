@@ -9,11 +9,11 @@ url = "https://raw.githubusercontent.com/mollie/openapi/main/specs.yaml"
 repository = "https://github.com/mollie/openapi"
 ref = "main"
 path = "specs.yaml"
-# Snapshot verified 2026-08-14 (fetch script re-checks on each CI run).
-sha256 = "0cbba39eed3c1b5ddd6cb815170a106a0877d45d22403364dfb4d8c18d99e993"
-operation_count = 124
-pinned_date = "2026-08-18"
-notes = "Re-pin 2026-08-18: upstream main digest 0cbba39e…; still 124 operationIds; compare_upstream inventory 0 missing/0 extra vs local pin. Local specs-3.0.yaml not regenerated in this bump (content drift remains advisory until deliberate adapt/codegen)."
+# Snapshot verified 2026-08-19 (fetch script re-checks on each CI run).
+sha256 = "3fb1b5127a6b023afaabd8ff318746fec2fc139b96de5c72a8fd994f3ccf6329"
+operation_count = 128
+pinned_date = "2026-08-19"
+notes = "Re-pin 2026-08-19: upstream main digest 3fb1b512… and 128 operationIds; local specs-3.0.yaml remains at 124 operationIds (upstream drift advisory until deliberate adapt/codegen)."
 
 [local]
 spec = "specs-3.0.yaml"
